@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+    <script src="EventListener.js"></script>
+    <script>
+        function testA(data) {
+            return 1
+        }
+
+        function testB(data) {
+            console.log(data)
+            return 2
+        }
+        EventListener.init()
+            .add('testEvent', testA)
+            .add('testEvent', testA)
+            .add('testEvent', testB, {a: 1})
+            .add('testEvent', testB, {a: 2})
+            .add('testEvent', testA)
+            .add('testEvent', testA)
+
+        EventListener.init()
+            .destroy('testEvent', testA)
+            .call('testEvent')
+            .destroy('testEvent', testB)
+
+        console.log(EventListener.init())
+    </script>
+
+</body>
+</html>
