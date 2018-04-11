@@ -2,10 +2,10 @@
 let instance;
 let isStatic = false;
 
-class EventListener {
+class Listener {
     constructor() {
         if (!isStatic) {
-            throw Error('This is a static class. Try to call "EventListener.init()"');
+            throw Error('This is a static class. Try to call "Listener.init()"');
         }
 
         /**
@@ -18,18 +18,18 @@ class EventListener {
 
     /**
      *
-     * @returns {EventListener}
+     * @returns {Listener}
      */
     static init() {
         isStatic = true
-        return instance = (instance ? instance : new EventListener())
+        return instance = (instance ? instance : new Listener())
     }
 
     /**
      *
      * @param {string} eventName
      * @param {Function} listener
-     * @returns {EventListener}
+     * @returns {Listener}
      */
     destroy(eventName, listener) {
         if (!listener) {
@@ -44,12 +44,13 @@ class EventListener {
      * Calls specific event
      *
      * @param {string} eventName
-     * @returns {EventListener}
+     * @param {*} [options]
+     * @returns {Listener}
      */
-    call(eventName) {
-        const events = this.get(eventName)
-        for (let item of events) {
-            item.listener(item.params)
+    call(eventName, options) {
+        const listeners = this.get(eventName)
+        for (let listener of listeners) {
+            listener(options)
         }
         return this;
     }
@@ -70,11 +71,10 @@ class EventListener {
      *
      * @param {string} eventName
      * @param {Function} listener
-     * @param {*} [params]
-     * @returns {EventListener}
+     * @returns {Listener}
      */
-    set(eventName, listener, params) {
-        this._events[eventName] = [this._getItem(listener, params)]
+    set(eventName, listener) {
+        this._events[eventName] = [listener]
         return this
     }
 
@@ -84,25 +84,15 @@ class EventListener {
      *
      * @param {string} eventName
      * @param {Function} listener
-     * @param {*} [params]
-     * @returns {EventListener}
+     * @returns {Listener}
      */
-    add(eventName, listener, params) {
+    add(eventName, listener) {
         if (!this._events.hasOwnProperty(eventName)) {
             this._events[eventName] = []
         }
-        this._events[eventName].push(this._getItem(listener, params))
+        this._events[eventName].push(listener)
         return this;
     }
-
-    /**
-     *
-     * @param {Function} listener
-     * @param {*} params
-     * @returns {{listener: Function, params: *}}
-     * @private
-     */
-    _getItem(listener, params) {
-        return {listener: listener, params: params}
-    }
 }
+
+export default Listener
