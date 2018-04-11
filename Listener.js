@@ -26,16 +26,21 @@ class Listener {
     }
 
     /**
+     * @param {*} [options]
+     * @callback eventListener
+     */
+
+    /**
      *
      * @param {string} eventName
-     * @param {Function} listener
+     * @param {eventListener} [listener]
      * @returns {Listener}
      */
     destroy(eventName, listener) {
         if (!listener) {
             delete(this._events[eventName])
         } else {
-            this._events[eventName] = this._events[eventName].filter(event => event.listener !== listener)
+            this._events[eventName] = this._events[eventName].filter(event => event !== listener)
         }
         return this
     }
@@ -70,7 +75,7 @@ class Listener {
      * If event has already exists this method will rewrite it
      *
      * @param {string} eventName
-     * @param {Function} listener
+     * @param {eventListener} listener
      * @returns {Listener}
      */
     set(eventName, listener) {
@@ -83,7 +88,7 @@ class Listener {
      * If event has already exists this method will add to existed
      *
      * @param {string} eventName
-     * @param {Function} listener
+     * @param {eventListener} listener
      * @returns {Listener}
      */
     add(eventName, listener) {
