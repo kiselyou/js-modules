@@ -17,7 +17,7 @@ class Event {
      *
      * @param {string} eventName
      * @param {eventListener} [listener]
-     * @returns {Event}
+     * @returns {void}
      */
     static remove(eventName, listener) {
         if (!listener) {
@@ -25,7 +25,6 @@ class Event {
         } else {
             events[eventName] = events[eventName].filter(event => event !== listener)
         }
-        return this
     }
 
     /**
@@ -33,14 +32,13 @@ class Event {
      *
      * @param {string} eventName
      * @param {*} [options]
-     * @returns {Event}
+     * @returns {void}
      */
     static run(eventName, options) {
         const listeners = this.get(eventName)
         for (let listener of listeners) {
             listener(options)
         }
-        return this;
     }
 
     /**
@@ -50,7 +48,7 @@ class Event {
      * @returns {Array}
      */
     static get(eventName) {
-        return events[eventName] ? events[eventName] : [];
+        return events[eventName] ? events[eventName] : []
     }
 
     /**
@@ -58,14 +56,13 @@ class Event {
      *
      * @param {string} eventName
      * @param {eventListener} listener
-     * @returns {Event}
+     * @returns {void}
      */
     static add(eventName, listener) {
         if (!events.hasOwnProperty(eventName)) {
             events[eventName] = []
         }
         events[eventName].push(listener)
-        return this;
     }
 }
 

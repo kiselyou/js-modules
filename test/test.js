@@ -28,7 +28,6 @@ describe('Event.registrate', () => {
     Event.add(EVENT_TEST_2, run)
     Event.add(EVENT_TEST_2, stop)
 
-
     it('Call function "jump"', () => {
         counter = 0 //clear counter
         Event.run(EVENT_TEST_1, jump)
@@ -37,7 +36,7 @@ describe('Event.registrate', () => {
 
     it('Destroy function "jump"', () => {
         Event.remove(EVENT_TEST_1, jump)
-        const countListeners = Event.get(EVENT_TEST_1).length;
+        const countListeners = Event.get(EVENT_TEST_1).length
         assert.equal(countListeners, 0)
     })
 
@@ -49,7 +48,7 @@ describe('Event.registrate', () => {
 
     it('Destroy all functions for event "EVENT_TEST_2"', () => {
         Event.remove(EVENT_TEST_2)
-        const countListeners = Event.get(EVENT_TEST_2).length;
+        const countListeners = Event.get(EVENT_TEST_2).length
         assert.equal(countListeners, 0)
     })
 });
