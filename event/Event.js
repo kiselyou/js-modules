@@ -34,7 +34,7 @@ class Event {
      * @param {*} [options]
      * @returns {void}
      */
-    static run(eventName, options) {
+    static emit(eventName, options) {
         const listeners = this.get(eventName)
         for (let listener of listeners) {
             listener(options)
@@ -58,11 +58,13 @@ class Event {
      * @param {eventListener} listener
      * @returns {void}
      */
-    static add(eventName, listener) {
+    static on(eventName, listener) {
         if (!events.hasOwnProperty(eventName)) {
             events[eventName] = []
         }
-        events[eventName].push(listener)
+        if (events[eventName].indexOf(listener) === -1) {
+            events[eventName].push(listener)
+        }
     }
 }
 
