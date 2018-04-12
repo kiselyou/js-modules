@@ -1,10 +1,11 @@
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
 import { describe, it } from 'mocha'
 import Event from '../../event/Event'
 
 describe('Event.registrate', () => {
     const EVENT_TEST_START = 'EVENT_TEST_START'
     const EVENT_TEST_STOP = 'EVENT_TEST_STOP'
+    const EVENT_TEST_JUMP = 'EVENT_TEST_JUMP'
     let counter = 0
 
     const start = () => {
@@ -47,12 +48,19 @@ describe('Event.registrate', () => {
     })
 
     it('Run few listener in the specific event', () => {
-        Event.emit(EVENT_TEST_START, start)
+        Event.emit(EVENT_TEST_START)
         assert.equal(counter, 0)
     })
 
     it('Remove event', () => {
         Event.remove(EVENT_TEST_START)
         assert.equal(Event.get(EVENT_TEST_START).length, 0)
+    })
+
+    it('Give parameters to listener', () => {
+        Event.on(EVENT_TEST_JUMP, (options) => {
+            expect({r: 10, g: 100, b: 255}).to.deep.equal(options)
+        })
+        Event.emit(EVENT_TEST_JUMP, {r: 10, g: 100, b: 255})
     })
 });
