@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import { describe, it } from 'mocha'
-import Event from './../Event'
+import Event from '../event/Event'
 
 describe('Event.registrate', () => {
     const EVENT_TEST_1 = 'EVENT_TEST_1'
