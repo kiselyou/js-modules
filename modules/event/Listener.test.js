@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import { describe, it } from 'mocha'
-import Listener from '../../event/Listener'
+import Listener from './Listener'
 
 describe('Listener.registrate', () => {
     const EVENT_TEST_START = 'EVENT_TEST_START'
