@@ -46,6 +46,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.json', '.pcss'],
     alias: {
       '@base': path.resolve(__dirname, './src'),
+      '@module': path.resolve(__dirname, './modules'),
     },
   },
   plugins: [HtmlWebpackPluginConfig]
