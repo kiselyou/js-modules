@@ -1,0 +1,48 @@
+:root {
+  --headerHeight: 100px
+}
+
+.sidebar {
+  width: 100%;
+  min-width: 400px;
+
+
+  & .header {
+    display: flex;
+    justify-content: space-between;
+    height: var(--headerHeight);
+    position: relative;
+
+    & .corner {
+      width: var(--headerHeight);
+      height: var(--headerHeight);
+      position: absolute;
+      background-image: linear-gradient(to bottom right, transparent 50%, transparent, transparent 50%);
+      left: 0;
+      top: 0;
+    }
+
+    & .title {
+      width: 100%;
+      height: calc(var(--headerHeight) / 2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    & .figure {
+      width: calc(var(--headerHeight) / 2);
+      height: calc(var(--headerHeight) / 2);
+      background: #fff;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  & .body {
+    border: 1px solid var(--color-border-middle);
+    border-top: none;
+    min-height: 50px;
+  }
+}
