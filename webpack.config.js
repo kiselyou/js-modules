@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const isProd = process.env.NODE_ENV !== 'development'
 
@@ -9,17 +10,26 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   inject: 'body',
 });
 
+const ExtractTextPluginConfig = new ExtractTextPlugin('[hash]/bundle.min.css')
+
 module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve('public'),
-    filename: '[name].[hash].bundle.js'
+    filename: '[hash]/bundle.min.js'
   },
   module: {
     rules: [
       {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader'
+        })
+      },
+      {
         test: /\.pcss$/,
-        exclude: /\.config.css$/,
+        exclude: /node_modules/,
         use: [
           'style-loader',
           {
@@ -46,11 +56,11 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json', '.pcss', 'css'],
+    extensions: ['.js', '.jsx', '.json', '.pcss', '.css'],
     alias: {
       '@base': path.resolve(__dirname, './src'),
       '@module': path.resolve(__dirname, './modules'),
     },
   },
-  plugins: [HtmlWebpackPluginConfig]
+  plugins: [HtmlWebpackPluginConfig, ExtractTextPluginConfig]
 };
