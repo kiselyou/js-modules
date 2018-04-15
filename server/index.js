@@ -1,11 +1,11 @@
 import { publicPath, basePath } from './lib/path'
+import path from 'path'
 import express from 'express'
 
 const app = express();
-// const publicCatalog = path.join(__dirname + '/../src')
-const publicCatalog = basePath('/../src')
 
-app.use('/src', express.static(publicCatalog));
+app.use(express.static('public'))
+app.use('/public', express.static(path.join(__dirname + '/../public')));
 
 app.get('/', function(req, res) {
     res.sendFile(publicPath('index.html'));

@@ -1,10 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const isProd = process.env.NODE_ENV !== 'development'
+
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: './src/index.html',
   filename: 'index.html',
-  inject: 'body'
+  inject: 'body',
 });
 
 module.exports = {
@@ -17,8 +19,9 @@ module.exports = {
     rules: [
       {
         test: /\.pcss$/,
+        exclude: /\.config.css$/,
         use: [
-          {loader: 'style-loader'},
+          'style-loader',
           {
             loader: 'css-loader',
             options: {
@@ -27,7 +30,7 @@ module.exports = {
               localIdentName: '[folder]-[local]--[hash:base64:5]',
             }
           },
-          {loader: 'postcss-loader'}
+          'postcss-loader'
         ],
       },
       {
@@ -43,7 +46,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json', '.pcss'],
+    extensions: ['.js', '.jsx', '.json', '.pcss', 'css'],
     alias: {
       '@base': path.resolve(__dirname, './src'),
       '@module': path.resolve(__dirname, './modules'),
