@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const WebpackAutoInject = require('webpack-auto-inject-version');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const version = process.env.npm_package_version;
 
 const isProd = process.env.NODE_ENV !== 'development'
@@ -31,6 +32,11 @@ const UglifyJsPluginConfig =  new UglifyJsPlugin({
   sourceMap: true,
   extractComments: true
 });
+
+const CopyWebpackPluginConfig = new CopyWebpackPlugin([
+  { from: 'src/images', to: version +'/images' },
+  'src/icon.ico'
+])
 
 module.exports = {
   entry: './src/index.js',
@@ -93,6 +99,7 @@ module.exports = {
     HtmlWebpackPluginConfig,
     ExtractTextPluginConfig,
     WebpackAutoInjectConfig,
-    UglifyJsPluginConfig
+    UglifyJsPluginConfig,
+    CopyWebpackPluginConfig
   ]
 };
