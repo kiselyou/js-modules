@@ -1,6 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const WebpackAutoInject = require('webpack-auto-inject-version');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const version = process.env.npm_package_version;
 
 const isProd = process.env.NODE_ENV !== 'development'
 
@@ -10,13 +13,30 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   inject: 'body',
 });
 
-const ExtractTextPluginConfig = new ExtractTextPlugin('[hash]/bundle.min.css')
+const ExtractTextPluginConfig = new ExtractTextPlugin(version + '/bundle.min.css')
+
+const WebpackAutoInjectConfig = new WebpackAutoInject({
+  components: {
+    AutoIncreaseVersion: true
+  },
+  componentsOptions: {
+      InjectAsComment: {
+        tag: 'Build version: {version} - {date}', // default
+        dateFormat: 'dddd, mmmm dS, yyyy, h:MM:ss TT' // default
+      }
+  }
+})
+
+const UglifyJsPluginConfig =  new UglifyJsPlugin({
+  sourceMap: true,
+  extractComments: true
+});
 
 module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve('public'),
-    filename: '[hash]/bundle.min.js'
+    filename: version + '/bundle.min.js'
   },
   module: {
     rules: [
@@ -24,7 +44,14 @@ module.exports = {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader'
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true
+              }
+            }
+          ]
         })
       },
       {
@@ -62,5 +89,10 @@ module.exports = {
       '@module': path.resolve(__dirname, './modules'),
     },
   },
-  plugins: [HtmlWebpackPluginConfig, ExtractTextPluginConfig]
+  plugins: [
+    HtmlWebpackPluginConfig,
+    ExtractTextPluginConfig,
+    WebpackAutoInjectConfig,
+    UglifyJsPluginConfig
+  ]
 };
