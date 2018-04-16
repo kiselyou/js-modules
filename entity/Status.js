@@ -19,7 +19,7 @@ class Status {
      *
      * @type {number}
      */
-    this.value = 0
+    this.value = Status.UNKNOWN
 
     /**
      *

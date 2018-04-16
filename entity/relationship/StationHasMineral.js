@@ -1,7 +1,7 @@
 import uuidV4 from 'uuid/v4'
 
 /**
- * Для производства оборудования заводам станции нужны минералы
+ * Склад минералов.
  */
 class StationHasMineral {
   constructor() {

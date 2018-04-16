@@ -17,31 +17,35 @@ class Factory {
     this.name = null
 
     /**
+     * Размер склада. Едениц
      *
      * @type {number}
      */
-    this.amountMax = 1000
+    this.stockSize = 1000
 
     /**
+     * Минимальная стоимость товара
      *
      * @type {number}
      */
     this.priceMin = 1
 
     /**
+     * Максимальная стоимость товара
      *
      * @type {number}
      */
     this.priceMax = 1000
 
     /**
-     * Время сбоки одной еденицы. Милисекунд
+     * Время сборки одной единицы. Миллисекунд
      *
      * @type {number}
      */
     this.buildTime = 10000
 
     /**
+     * Оборудование которое производит текущий завод
      *
      * @type {Equipment}
      */

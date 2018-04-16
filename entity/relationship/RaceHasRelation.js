@@ -1,5 +1,8 @@
 import uuidV4 from 'uuid/v4'
 
+/**
+ * Отношение между расами
+ */
 class RaceHasRelation {
   constructor() {
     /**
