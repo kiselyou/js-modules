@@ -12,6 +12,12 @@ class Race {
      * @type {string}
      */
     this.name = null
+
+    /**
+     *
+     * @type {string}
+     */
+    this.monitorId = null
   }
 }
 

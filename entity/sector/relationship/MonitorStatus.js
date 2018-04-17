@@ -1,9 +1,6 @@
 import uuidV4 from 'uuid/v4'
 
-/**
- * Отношение между расами
- */
-class RaceHasRelation {
+class MonitorStatus {
   constructor() {
     /**
      * @type {string}
@@ -14,20 +11,20 @@ class RaceHasRelation {
      *
      * @type {string}
      */
-    this.raceId = null
+    this.monitorId = null
 
     /**
      *
      * @type {string}
      */
-    this.withRaceId = null
+    this.withMonitorId = null
 
     /**
      *
-     * @type {number}
+     * @type {string}
      */
     this.statusId = null
   }
 }
 
-export default RaceHasRelation
+export default MonitorStatus

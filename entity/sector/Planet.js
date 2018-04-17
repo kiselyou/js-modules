@@ -18,7 +18,7 @@ class Planet {
      *
      * @type {number}
      */
-    this.population = null
+    this.population = 0
 
     /**
      *
@@ -43,6 +43,18 @@ class Planet {
      * @type {Vector2}
      */
     this.position = new Vector2()
+
+    /**
+     *
+     * @type {string}
+     */
+    this.monitorId = null
+
+    /**
+     *
+     * @type {string}
+     */
+    this.bankAccountId = null
   }
 }
 

@@ -18,6 +18,24 @@ class Player {
      * @type {string}
      */
     this.raceId = null
+
+    /**
+     *
+     * @type {string}
+     */
+    this.monitorId = null
+
+    /**
+     *
+     * @type {string}
+     */
+    this.sectorId = null
+
+    /**
+     *
+     * @type {string}
+     */
+    this.bankAccountId = null
   }
 }
 
