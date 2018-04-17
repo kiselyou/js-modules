@@ -1,9 +1,9 @@
 import uuidV4 from 'uuid/v4'
 
 /**
- * Склад минералов.
+ * Склад оборудования
  */
-class StationHasMineral {
+class FactoryHasEquipment {
   constructor() {
     /**
      * @type {string}
@@ -14,14 +14,14 @@ class StationHasMineral {
      *
      * @type {string}
      */
-    this.stationId = null
+    this.factoryId = null
 
     /**
      *
      * @type {string}
      */
-    this.mineralId = null
+    this.equipmentId = null
   }
 }
 
-export default StationHasMineral
+export default FactoryHasEquipment

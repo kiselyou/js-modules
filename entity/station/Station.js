@@ -1,6 +1,7 @@
 import uuidV4 from 'uuid/v4'
+import { Vector2 } from 'three'
 
-class StationHasFactory {
+class Station {
   constructor() {
     /**
      * @type {string}
@@ -11,14 +12,20 @@ class StationHasFactory {
      *
      * @type {string}
      */
-    this.stationId = null
+    this.sectorId = null
+
+    /**
+     *
+     * @type {Vector2}
+     */
+    this.position = new Vector2()
 
     /**
      *
      * @type {string}
      */
-    this.factoryId = null
+    this.babkAccountId = null
   }
 }
 
-export default StationHasFactory
+export default Station

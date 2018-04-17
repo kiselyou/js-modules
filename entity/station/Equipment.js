@@ -17,7 +17,7 @@ class Equipment {
      *
      * @type {number}
      */
-    this.weight = null
+    this.weight = 1
   }
 }
 

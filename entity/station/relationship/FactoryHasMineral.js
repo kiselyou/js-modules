@@ -1,9 +1,9 @@
 import uuidV4 from 'uuid/v4'
 
 /**
- * Цена по которой станция продает/покупает минерал
+ * Склад минералов
  */
-class StationHasMineralPrice {
+class FactoryHasMineral {
   constructor() {
     /**
      * @type {string}
@@ -14,18 +14,14 @@ class StationHasMineralPrice {
      *
      * @type {string}
      */
-    this.stationId = null
+    this.factoryId = null
 
     /**
      *
      * @type {string}
      */
     this.mineralId = null
-
-    /**
-     *
-     * @type {number}
-     */
-    this.price = null
   }
 }
+
+export default FactoryHasMineral

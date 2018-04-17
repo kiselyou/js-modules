@@ -1,7 +1,9 @@
 import uuidV4 from 'uuid/v4'
-import { Vector2 } from 'three'
 
-class Station {
+/**
+ * Привязка завода к станции
+ */
+class StationHasFactory {
   constructor() {
     /**
      * @type {string}
@@ -12,20 +14,14 @@ class Station {
      *
      * @type {string}
      */
-    this.factoryId = null
+    this.stationId = null
 
     /**
      *
      * @type {string}
      */
-    this.sectorId = null
-
-    /**
-     *
-     * @type {Vector2}
-     */
-    this.position = new Vector2()
+    this.factoryId = null
   }
 }
 
-export default Station
+export default StationHasFactory
