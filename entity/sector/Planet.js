@@ -1,5 +1,6 @@
 import uuidV4 from 'uuid/v4'
 import { Vector2 }  from 'three'
+import Monitor from './Monitor'
 
 class Planet {
   constructor() {
@@ -24,7 +25,7 @@ class Planet {
      *
      * @type {number}
      */
-    this.size = 1000
+    this.size = 100
 
     /**
      *
@@ -46,15 +47,66 @@ class Planet {
 
     /**
      *
-     * @type {string}
+     * @type {Monitor}
      */
-    this.monitorId = null
+    this.monitor = new Monitor()
 
     /**
      *
      * @type {string}
      */
     this.bankAccountId = null
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {Planet}
+   */
+  setName(name) {
+    this.name = name
+    return this
+  }
+
+  /**
+   *
+   * @param {number} population
+   * @returns {Planet}
+   */
+  setPopulation(population) {
+    this.population = population
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Planet}
+   */
+  setSize(value) {
+    this.size = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} x
+   * @param {number} y
+   * @returns {Planet}
+   */
+  setPosition(x, y) {
+    this.position.set(x, y)
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Planet}
+   */
+  setSectorId(id) {
+    this.sectorId = id
+    return this
   }
 }
 
