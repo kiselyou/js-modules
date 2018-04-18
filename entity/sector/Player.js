@@ -1,4 +1,7 @@
 import uuidV4 from 'uuid/v4'
+import { Vector2 }  from 'three'
+import Monitor from './Monitor'
+import BankAccount from './BankAccount'
 
 class Player {
   constructor() {
@@ -23,19 +26,66 @@ class Player {
      *
      * @type {string}
      */
-    this.monitorId = null
-
-    /**
-     *
-     * @type {string}
-     */
     this.sectorId = null
 
     /**
      *
-     * @type {string}
+     * @type {Monitor}
      */
-    this.bankAccountId = null
+    this.monitor = new Monitor()
+
+    /**
+     *
+     * @type {BankAccount}
+     */
+    this.bankAccount = new BankAccount()
+
+    /**
+     *
+     * @type {Vector2}
+     */
+    this.position = new Vector2()
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {Player}
+   */
+  setName(name) {
+    this.name = name
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Player}
+   */
+  setSectorId(id) {
+    this.sectorId = id
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Player}
+   */
+  setRaceId(id) {
+    this.raceId = id
+    return this
+  }
+
+  /**
+   *
+   * @param {number} x
+   * @param {number} y
+   * @returns {Player}
+   */
+  setPosition(x, y) {
+    this.position.set(x, y)
+    return this
   }
 }
 

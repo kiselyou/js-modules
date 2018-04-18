@@ -25,6 +25,20 @@ class MonitorStatus {
      */
     this.statusId = null
   }
+
+  /**
+   *
+   * @param {string} monitorId
+   * @param {string} withMonitorId
+   * @param {string} statusId
+   * @returns {MonitorStatus}
+   */
+  setStatus(monitorId, withMonitorId, statusId) {
+    this.monitorId = monitorId
+    this.withMonitorId = withMonitorId
+    this.statusId = statusId
+    return this
+  }
 }
 
 export default MonitorStatus

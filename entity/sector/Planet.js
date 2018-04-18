@@ -1,6 +1,7 @@
 import uuidV4 from 'uuid/v4'
 import { Vector2 }  from 'three'
 import Monitor from './Monitor'
+import BankAccount from './BankAccount'
 
 class Planet {
   constructor() {
@@ -53,9 +54,9 @@ class Planet {
 
     /**
      *
-     * @type {string}
+     * @type {BankAccount}
      */
-    this.bankAccountId = null
+    this.bankAccount = new BankAccount()
   }
 
   /**
@@ -106,6 +107,16 @@ class Planet {
    */
   setSectorId(id) {
     this.sectorId = id
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Planet}
+   */
+  setRaceId(id) {
+    this.raceId = id
     return this
   }
 }

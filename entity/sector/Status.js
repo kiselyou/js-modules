@@ -30,6 +30,26 @@ class Status {
 
   /**
    *
+   * @param {number} value
+   * @returns {Status}
+   */
+  setValue(value) {
+    this.value = value
+    return this
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {Status}
+   */
+  setName(name) {
+    this.name = name
+    return this
+  }
+
+  /**
+   *
    * @type {number}
    */
   static UNKNOWN = 0

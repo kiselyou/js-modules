@@ -1,4 +1,5 @@
 import uuidV4 from 'uuid/v4'
+import Monitor from './Monitor'
 
 class Race {
   constructor() {
@@ -15,9 +16,19 @@ class Race {
 
     /**
      *
-     * @type {string}
+     * @type {Monitor}
      */
-    this.monitorId = null
+    this.monitor = new Monitor()
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {Race}
+   */
+  setName(name) {
+    this.name = name
+    return Race
   }
 }
 
