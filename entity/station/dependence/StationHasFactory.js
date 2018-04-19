@@ -14,13 +14,17 @@ class StationHasFactory {
      *
      * @type {string}
      */
-    this.stationId = null
-
-    /**
-     *
-     * @type {string}
-     */
     this.factoryId = null
+  }
+
+  /**
+   *
+   * @param {string} factoryId
+   * @returns {StationHasFactory}
+   */
+  setFactoryId(factoryId) {
+    this.factoryId = factoryId
+    return this
   }
 }
 

@@ -17,7 +17,27 @@ class Mineral {
      *
      * @type {number}
      */
-    this.weight = null
+    this.weight = 1
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {Mineral}
+   */
+  setName(name) {
+    this.name = name
+    return this
+  }
+
+  /**
+   *
+   * @param {number} weight
+   * @returns {Mineral}
+   */
+  setWeight(weight) {
+    this.weight = weight
+    return this
   }
 }
 
