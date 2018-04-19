@@ -13,6 +13,12 @@ class Station {
      *
      * @type {string}
      */
+    this.name = null
+
+    /**
+     *
+     * @type {string}
+     */
     this.sectorId = null
 
     /**
@@ -26,6 +32,16 @@ class Station {
      * @type {Array.<StationHasFactory>}
      */
     this.stationHasFactory = []
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {Station}
+   */
+  setName(name) {
+    this.name = name
+    return this
   }
 
   /**
