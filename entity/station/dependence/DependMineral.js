@@ -4,18 +4,12 @@ import uuidV4 from 'uuid/v4'
  * Привязка минерала к заводу.
  * Зависимость производства
  */
-class FactoryDependsMineral {
+class DependMineral {
   constructor() {
     /**
      * @type {string}
      */
     this.id = uuidV4()
-
-    /**
-     *
-     * @type {string}
-     */
-    this.factoryId = null
 
     /**
      *
@@ -37,6 +31,36 @@ class FactoryDependsMineral {
      */
     this.price = 1
   }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {DependMineral}
+   */
+  setUnits(value) {
+    this.units = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {DependMineral}
+   */
+  setPriceMax(value) {
+    this.price = value
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {DependMineral}
+   */
+  setMineralId(id) {
+    this.mineralId = id
+    return this
+  }
 }
 
-export default FactoryDependsMineral
+export default DependMineral

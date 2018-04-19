@@ -3,18 +3,12 @@ import uuidV4 from 'uuid/v4'
 /**
  * Завод производит оборудование
  */
-class FactoryProduceEquipment {
+class ProduceEquipment {
   constructor() {
     /**
      * @type {string}
      */
     this.id = uuidV4()
-
-    /**
-     *
-     * @type {string}
-     */
-    this.factoryId = null
 
     /**
      *
@@ -50,6 +44,56 @@ class FactoryProduceEquipment {
      */
     this.priceMax = 30
   }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {ProduceEquipment}
+   */
+  setUnits(value) {
+    this.units = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {ProduceEquipment}
+   */
+  setPriceCurrent(value) {
+    this.priceCurrent = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {ProduceEquipment}
+   */
+  setPriceMin(value) {
+    this.priceMin = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {ProduceEquipment}
+   */
+  setPriceMax(value) {
+    this.priceMax = value
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {ProduceEquipment}
+   */
+  setEquipmentId(id) {
+    this.equipmentId = id
+    return this
+  }
 }
 
-export default FactoryProduceEquipment
+export default ProduceEquipment
