@@ -1,7 +1,8 @@
 import uuidV4 from 'uuid/v4'
 import { Vector2 }  from 'three'
-import Monitor from './Monitor'
-import BankAccount from './BankAccount'
+import Monitor from './dependence/Monitor'
+import BankAccount from './dependence/BankAccount'
+import PlayerHasStation from './dependence/PlayerHasStation'
 
 class Player {
   constructor() {
@@ -45,6 +46,12 @@ class Player {
      * @type {Vector2}
      */
     this.position = new Vector2()
+
+    /**
+     *
+     * @type {Array.<PlayerHasStation>}
+     */
+    this.playerHasStation = []
   }
 
   /**
@@ -85,6 +92,19 @@ class Player {
    */
   setPosition(x, y) {
     this.position.set(x, y)
+    return this
+  }
+
+  /**
+   *
+   * @param {string} stationId
+   * @returns {Player}
+   */
+  addStation(stationId) {
+    this.playerHasStation.push(
+      new PlayerHasStation()
+        .setStationId(stationId)
+    )
     return this
   }
 }

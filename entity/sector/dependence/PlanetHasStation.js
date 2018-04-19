@@ -11,13 +11,17 @@ class PlanetHasStation {
      *
      * @type {string}
      */
-    this.planetId = null
-
-    /**
-     *
-     * @type {string}
-     */
     this.stationId = null
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {PlanetHasStation}
+   */
+  setStationId(id) {
+    this.stationId = id
+    return this
   }
 }
 

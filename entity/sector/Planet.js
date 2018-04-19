@@ -1,7 +1,8 @@
 import uuidV4 from 'uuid/v4'
 import { Vector2 }  from 'three'
-import Monitor from './Monitor'
-import BankAccount from './BankAccount'
+import Monitor from './dependence/Monitor'
+import BankAccount from './dependence/BankAccount'
+import PlanetHasStation from './dependence/PlanetHasStation'
 
 class Planet {
   constructor() {
@@ -57,6 +58,12 @@ class Planet {
      * @type {BankAccount}
      */
     this.bankAccount = new BankAccount()
+
+    /**
+     *
+     * @type {Array.<PlanetHasStation>}
+     */
+    this.planetHasStation = []
   }
 
   /**
@@ -117,6 +124,19 @@ class Planet {
    */
   setRaceId(id) {
     this.raceId = id
+    return this
+  }
+
+  /**
+   *
+   * @param {string} stationId
+   * @returns {Planet}
+   */
+  addStation(stationId) {
+    this.planetHasStation.push(
+      new PlanetHasStation()
+        .setStationId(stationId)
+    )
     return this
   }
 }

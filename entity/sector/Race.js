@@ -1,5 +1,5 @@
 import uuidV4 from 'uuid/v4'
-import Monitor from './Monitor'
+import Monitor from './dependence/Monitor'
 
 class Race {
   constructor() {

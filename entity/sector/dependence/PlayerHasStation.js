@@ -11,13 +11,17 @@ class PlayerHasStation {
      *
      * @type {string}
      */
-    this.playerId = null
-
-    /**
-     *
-     * @type {string}
-     */
     this.stationId = null
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {PlayerHasStation}
+   */
+  setStationId(id) {
+    this.stationId = id
+    return this
   }
 }
 

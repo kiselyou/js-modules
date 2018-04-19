@@ -17,25 +17,17 @@ class MonitorStatus {
      *
      * @type {string}
      */
-    this.withMonitorId = null
-
-    /**
-     *
-     * @type {string}
-     */
     this.statusId = null
   }
 
   /**
    *
    * @param {string} monitorId
-   * @param {string} withMonitorId
    * @param {string} statusId
    * @returns {MonitorStatus}
    */
-  setStatus(monitorId, withMonitorId, statusId) {
+  setStatus(monitorId, statusId) {
     this.monitorId = monitorId
-    this.withMonitorId = withMonitorId
     this.statusId = statusId
     return this
   }
