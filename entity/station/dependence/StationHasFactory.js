@@ -8,7 +8,7 @@ class StationHasFactory {
     /**
      * @type {string}
      */
-    this.className = this.constructor.name
+    this.entity = this.constructor.name
 
     /**
      * @type {string}
