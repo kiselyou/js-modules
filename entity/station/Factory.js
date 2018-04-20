@@ -1,6 +1,4 @@
 import uuidV4 from 'uuid/v4'
-import DependMineral from './dependence/DependMineral'
-import DependEquipment from './dependence/DependEquipment'
 import ProduceEquipment from './dependence/ProduceEquipment'
 
 /**
@@ -8,6 +6,11 @@ import ProduceEquipment from './dependence/ProduceEquipment'
  */
 class Factory {
   constructor() {
+    /**
+     * @type {string}
+     */
+    this.className = this.constructor.name
+
     /**
      * @type {string}
      */
@@ -25,57 +28,29 @@ class Factory {
      *
      * @type {number}
      */
-    this.stockEquipmentSize = 3000
+    this.sizeStockEquipment = 3000
 
     /**
      * Размер склада с минералами
      *
      * @type {number}
      */
-    this.stockMineralSize = 3000
+    this.sizeStockMineral = 3000
 
     /**
      *
      * @type {Array.<ProduceEquipment>}
      */
     this.produceEquipment = []
-
-    /**
-     *
-     * @type {Array.<DependMineral>}
-     */
-    this.dependMineral = []
-
-    /**
-     *
-     * @type {Array.<DependEquipment>}
-     */
-    this.dependEquipment = []
   }
 
   /**
    *
-   * @param {string} mineralId
+   * @param {string} name
    * @returns {Factory}
    */
-  addDependMineral(mineralId) {
-    this.dependMineral.push(
-      new DependMineral()
-        .setMineralId(mineralId)
-    )
-    return this
-  }
-
-  /**
-   *
-   * @param {string} equipmentId
-   * @returns {Factory}
-   */
-  addDependEquipment(equipmentId) {
-    this.dependEquipment.push(
-      new DependEquipment()
-        .setEquipmentId(equipmentId)
-    )
+  setName(name) {
+    this.name = name
     return this
   }
 

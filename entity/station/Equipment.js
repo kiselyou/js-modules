@@ -5,6 +5,11 @@ class Equipment {
     /**
      * @type {string}
      */
+    this.className = this.constructor.name
+
+    /**
+     * @type {string}
+     */
     this.id = uuidV4()
 
     /**
@@ -18,6 +23,42 @@ class Equipment {
      * @type {number}
      */
     this.weight = 1
+
+    /**
+     *
+     * @type {string}
+     */
+    this.description = null
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {Equipment}
+   */
+  setName(name) {
+    this.name = name
+    return this
+  }
+
+  /**
+   *
+   * @param {string} value
+   * @returns {Equipment}
+   */
+  setDescription(value) {
+    this.description = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} weight
+   * @returns {Equipment}
+   */
+  setWeight(weight) {
+    this.weight = weight
+    return this
   }
 }
 

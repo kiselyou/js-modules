@@ -1,6 +1,6 @@
 import Status from '../entity/sector/Status'
 
-export const CollectionStatus = [
+export const CollectionStatus = () => [
   new Status()
     .setName('Не известно')
     .setValue(Status.UNKNOWN),

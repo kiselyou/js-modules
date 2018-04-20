@@ -1,10 +1,17 @@
 import uuidV4 from 'uuid/v4'
+import DependMineral from './DependMineral'
+import DependEquipment from './DependEquipment'
 
 /**
  * Завод производит оборудование
  */
 class ProduceEquipment {
   constructor() {
+    /**
+     * @type {string}
+     */
+    this.className = this.constructor.name
+
     /**
      * @type {string}
      */
@@ -43,6 +50,44 @@ class ProduceEquipment {
      * @type {number}
      */
     this.priceMax = 30
+
+    /**
+     *
+     * @type {Array.<DependMineral>}
+     */
+    this.dependMineral = []
+
+    /**
+     *
+     * @type {Array.<DependEquipment>}
+     */
+    this.dependEquipment = []
+  }
+
+  /**
+   *
+   * @param {string} mineralId
+   * @returns {ProduceEquipment}
+   */
+  addDependMineral(mineralId) {
+    this.dependMineral.push(
+      new DependMineral()
+        .setMineralId(mineralId)
+    )
+    return this
+  }
+
+  /**
+   *
+   * @param {string} equipmentId
+   * @returns {ProduceEquipment}
+   */
+  addDependEquipment(equipmentId) {
+    this.dependEquipment.push(
+      new DependEquipment()
+        .setEquipmentId(equipmentId)
+    )
+    return this
   }
 
   /**

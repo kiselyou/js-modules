@@ -5,6 +5,11 @@ class MonitorStatus {
     /**
      * @type {string}
      */
+    this.className = this.constructor.name
+
+    /**
+     * @type {string}
+     */
     this.id = uuidV4()
 
     /**

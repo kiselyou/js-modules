@@ -1,6 +1,6 @@
 import Mineral from '../entity/station/Mineral'
 
-export default CollectionMineral = () => {
+export const CollectionMineral = () => {
   return [
     new Mineral()
       .setName('Руда')

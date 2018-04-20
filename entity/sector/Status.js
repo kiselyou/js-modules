@@ -13,6 +13,11 @@ class Status {
     /**
      * @type {string}
      */
+    this.className = this.constructor.name
+
+    /**
+     * @type {string}
+     */
     this.id = uuidV4()
 
     /**
@@ -52,37 +57,49 @@ class Status {
    *
    * @type {number}
    */
-  static UNKNOWN = 0
+  static get UNKNOWN() {
+    return 0
+  }
 
   /**
    *
    * @type {number}
    */
-  static EXCELLENT = 1
+  static get EXCELLENT() {
+    return 1
+  }
 
   /**
    *
    * @type {number}
    */
-  static GOOD = 2
+  static get GOOD() {
+    return 2
+  }
 
   /**
    *
    * @type {number}
    */
-  static NEUTRAL = 3
+  static get NEUTRAL() {
+    return 3
+}
 
   /**
    *
    * @type {number}
    */
-  static RANCOROUS = 4
+  static get RANCOROUS() {
+    return 4
+  }
 
   /**
    *
    * @type {number}
    */
-  static WAR = 5
+  static get WAR() {
+    return 5
+  }
 }
 
 export default Status
