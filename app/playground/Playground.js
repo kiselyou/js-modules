@@ -1,9 +1,11 @@
 import {
   PerspectiveCamera,
   Scene,
-  WebGLRenderer
+  WebGLRenderer,
+  GridHelper,
+  AxesHelper
 } from 'three'
-
+import OrbitControls from 'three-orbitcontrols'
 import PlanetControls from './PlanetControls'
 
 let i = 0
@@ -26,7 +28,7 @@ class Playground {
      *
      * @type {PerspectiveCamera}
      */
-    this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10)
+    this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000)
 
     /**
      *
@@ -39,10 +41,20 @@ class Playground {
      * @type {PlanetControls}
      */
     this.planets = new PlanetControls(this.scene)
-    this.planets
-      .add().add().add()
-      .add().add().add()
-      .add().add().add()
+    for (let i = 0; i < 20; i++) {
+      this.planets.add()
+    }
+
+    this.camera.position.z = -5
+    this.camera.position.y = 15
+    this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
+    this.cameraControls.update()
+
+    const gridHelper = new GridHelper(50, 50 );
+    this.scene.add(gridHelper);
+
+    const axisHelper = new AxesHelper(10);
+    this.scene.add(axisHelper);
   }
 
   /**
