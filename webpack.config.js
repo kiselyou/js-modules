@@ -9,7 +9,7 @@ const version = process.env.npm_package_version;
 const isProd = process.env.NODE_ENV !== 'development'
 
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
-  template: './src/index.html',
+  template: './app/index.html',
   filename: 'index.html',
   inject: 'body',
 });
@@ -34,12 +34,12 @@ const UglifyJsPluginConfig =  new UglifyJsPlugin({
 });
 
 const CopyWebpackPluginConfig = new CopyWebpackPlugin([
-  { from: 'src/images', to: version +'/images' },
-  'src/icon.ico'
+  { from: 'app/images', to: version +'/images' },
+  'app/icon.ico'
 ])
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './app/index.js',
   output: {
     path: path.resolve('public'),
     filename: version + '/bundle.min.js'
@@ -91,8 +91,9 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.pcss', '.css'],
     alias: {
-      '@base': path.resolve(__dirname, './src'),
+      '@base': path.resolve(__dirname, './app'),
       '@module': path.resolve(__dirname, './modules'),
+      '@entity': path.resolve(__dirname, './entity'),
     },
   },
   plugins: [

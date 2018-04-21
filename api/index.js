@@ -12,11 +12,10 @@ import { install } from './../migration/install'
  * @returns {Promise.<void>}
  */
 async function migrate(collectionName, data) {
-  console.log(collectionName)
   const collection = await mgDB(collectionName)
   collection.insertOne(data, (err, res) => {
-    console.log(err, res)
-  });
+    // console.log(err, res)
+  })
 }
 
 
