@@ -34,7 +34,7 @@ const UglifyJsPluginConfig =  new UglifyJsPlugin({
 });
 
 const CopyWebpackPluginConfig = new CopyWebpackPlugin([
-  { from: 'app/images', to: version +'/images' },
+  { from: 'app/web/images', to: version +'/images' },
   'app/icon.ico'
 ])
 
@@ -91,8 +91,8 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.pcss', '.css'],
     alias: {
-      '@base': path.resolve(__dirname, './app'),
-      '@module': path.resolve(__dirname, './modules'),
+      '@app': path.resolve(__dirname, './app'),
+      '@module': path.resolve(__dirname, './module'),
       '@entity': path.resolve(__dirname, './entity'),
     },
   },
