@@ -65,7 +65,11 @@ export const map = [
       .setPopulation(7444443881)
       .setParams({ radius: 6.371 })
       .setTextures({
-        map: CONST.KEY_PLANET_EARTH_MAP
+        map: CONST.KEY_PLANET_EARTH_MAP,
+        bump: CONST.KEY_PLANET_EARTH_BUMP,
+        spec: CONST.KEY_PLANET_EARTH_SPEC,
+        cloudMap: CONST.KEY_PLANET_EARTH_CLOUD_MAP,
+        cloudMapTrans: CONST.KEY_PLANET_EARTH_CLOUD_MAP_TRANS,
       })
       .setId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')

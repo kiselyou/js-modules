@@ -1,5 +1,6 @@
 import Planet from '@entity/sector/Planet'
-import { Mesh, MeshStandardMaterial, SphereGeometry } from 'three'
+import ModelPlanetClouds from './ModelPlanetClouds'
+import { Mesh, MeshPhongMaterial, SphereGeometry, Color } from 'three'
 
 class ModelPlanet extends Planet {
   /**
@@ -14,7 +15,7 @@ class ModelPlanet extends Planet {
      *
      * @type {Mesh}
      */
-    this.model = new Mesh()
+    this.planet = new Mesh()
 
     /**
      *
@@ -26,6 +27,12 @@ class ModelPlanet extends Planet {
      * @type {Loader}
      */
     this.loader = loader
+
+    /**
+     *
+     * @type {ModelPlanetClouds}
+     */
+    this.modelClouds = new ModelPlanetClouds(this)
   }
 
   /**
@@ -34,16 +41,26 @@ class ModelPlanet extends Planet {
    */
   buildMesh() {
     const segments = this.params.segments
-    this.model.geometry = new SphereGeometry(this.params.radius, segments, segments)
+    this.planet.geometry = new SphereGeometry(this.params.radius, segments, segments)
 
-    this.model.material = new MeshStandardMaterial({
+    this.planet.material = new MeshPhongMaterial({
       map: this.loader.getTexture(this.params.texturesKey.map),
+      bumpScale: this.params.texturesKey.bump ? 0.2 : null,
+      bumpMap: this.loader.getTexture(this.params.texturesKey.bump) || null,
+      specularMap: this.loader.getTexture(this.params.texturesKey.spec) || null,
+      specular: new Color('grey'),
     });
 
-    this.model.position.copy(this.position)
-    this.model.castShadow = true
-    this.model.receiveShadow = true
-    this.scene.add(this.model)
+    if (this.params.texturesKey.cloudMap && this.params.texturesKey.cloudMapTrans) {
+      this.modelClouds.buildClouds()
+      // this._planetClouds = this._buildClouds();
+      // this._planet.add(this._planetClouds);
+    }
+
+    this.planet.position.copy(this.position)
+    this.planet.castShadow = true
+    this.planet.receiveShadow = true
+    this.scene.add(this.planet)
   }
 
   /**
@@ -63,9 +80,13 @@ class ModelPlanet extends Planet {
    * @returns {void}
    */
   update(delta) {
-    if (this.model) {
-      this.model.rotation.x += 0.001
-      this.model.rotation.y += 0.002
+    if (this.planet) {
+      this.planet.rotation.x += 0.001// * delta
+      this.planet.rotation.y += 0.002// * delta
+
+      if (this.modelClouds.enabled) {
+        this.modelClouds.update(delta)
+      }
     }
   }
 }
