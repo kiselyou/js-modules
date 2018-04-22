@@ -57,12 +57,16 @@ class Factory {
   /**
    *
    * @param {string} equipmentId
+   * @param {string|Array.<string>} dependMineralId
+   * @param {string|Array.<string>} [dependEquipmentId]
    * @returns {Factory}
    */
-  addProduceEquipment(equipmentId) {
+  addProduceEquipment(equipmentId, dependMineralId, dependEquipmentId = []) {
     this.produceEquipment.push(
       new ProduceEquipment()
         .setEquipmentId(equipmentId)
+        .addDependEquipment(dependMineralId)
+        .addDependMineral(dependEquipmentId)
     )
     return this
   }

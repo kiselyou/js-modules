@@ -61,9 +61,9 @@ class Playground {
   }
 
   userInfo() {
-    Ajax.get('http://localhost:3000/user/data/1', {userId: 1})
+    Ajax.post('http://localhost:3000/user/data/1')
       .then((res) => {
-        console.log(res)
+        console.log(res, JSON.parse(res))
       })
   }
 

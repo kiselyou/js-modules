@@ -1,8 +1,8 @@
 import path from 'path'
 import express from 'express'
-import * as routing from './config/routing'
+import routes from './routes'
 import { config } from './config/develop'
-import { mgDB } from './db/mongo'
+import * as core from './core'
 
 const app = express()
 
@@ -33,9 +33,11 @@ app.get('/', function(req, res) {
   res.sendFile('/../../public/index.html')
 })
 
-app.get('/user/data/:id', (req, res) => {
-  routing['userData'](req, res)
-})
+for (const route of routes) {
+  app[route.method](route.path, (req, res) => {
+    route.action(req, res, core)
+  })
+}
 
 app.listen(config.server.port, config.server.host, () => {
   console.log(`Example app listening host ${config.server.host} on port ${config.server.port}`)

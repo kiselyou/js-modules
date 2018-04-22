@@ -5,7 +5,7 @@
     "main": "./app/index.js",
     "scripts": {
         "server:start": "nodemon ./api/index.js --exec babel-node --presets es2015",
-        "server:migrate": "nodemon ./api/migrate.js --exec babel-node --presets es2015",
+        "server:migrate": "nodemon ./api/migrate/install.js --exec babel-node --presets es2015",
         "client:start": "webpack-dev-server --mode development",
         "client:build": "webpack --mode production --env.patch",
         "test": "mocha --require babel-register ./modules -name '*.test.js' --recursive",

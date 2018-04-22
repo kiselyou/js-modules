@@ -66,27 +66,33 @@ class ProduceEquipment {
 
   /**
    *
-   * @param {string} mineralId
+   * @param {(string|Array.<string>)} mineralId
    * @returns {ProduceEquipment}
    */
   addDependMineral(mineralId) {
-    this.dependMineral.push(
-      new DependMineral()
-        .setMineralId(mineralId)
-    )
+    if (typeof mineralId === 'string') {
+      this.dependMineral.push(new DependMineral().setMineralId(mineralId))
+    } else {
+      for (let id of mineralId) {
+        this.dependMineral.push(new DependMineral().setMineralId(id))
+      }
+    }
     return this
   }
 
   /**
    *
-   * @param {string} equipmentId
+   * @param {(string|Array.<string>)} equipmentId
    * @returns {ProduceEquipment}
    */
   addDependEquipment(equipmentId) {
-    this.dependEquipment.push(
-      new DependEquipment()
-        .setEquipmentId(equipmentId)
-    )
+    if (typeof equipmentId === 'string') {
+      this.dependEquipment.push(new DependEquipment().setEquipmentId(equipmentId))
+    } else {
+      for (let id of equipmentId) {
+        this.dependEquipment.push(new DependEquipment().setEquipmentId(id))
+      }
+    }
     return this
   }
 
