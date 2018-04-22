@@ -8,3 +8,6 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 let playground = new Playground()
 playground.init('root', 'root-canvas')
+playground.userInfo()
+
+

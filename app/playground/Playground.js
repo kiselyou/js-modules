@@ -2,13 +2,13 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
+  Clock,
   GridHelper,
   AxesHelper
 } from 'three'
 import OrbitControls from 'three-orbitcontrols'
-import PlanetControls from './PlanetControls'
-
-let i = 0
+import PlayerControls from './controls/PlayerControls'
+import Ajax from '@module/ajax/Ajax'
 
 class Playground {
   constructor() {
@@ -17,6 +17,12 @@ class Playground {
      * @type {Scene}
      */
     this.scene = new Scene()
+
+    /**
+     *
+     * @type {Clock}
+     */
+    this.clock = new Clock();
 
     /**
      *
@@ -38,14 +44,11 @@ class Playground {
 
     /**
      *
-     * @type {PlanetControls}
+     * @type {PlayerControls}
      */
-    this.planets = new PlanetControls(this.scene)
-    for (let i = 0; i < 20; i++) {
-      this.planets.add()
-    }
+    this.player = new PlayerControls(this.scene)
 
-    this.camera.position.z = -5
+    this.camera.position.z = -15
     this.camera.position.y = 15
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
     this.cameraControls.update()
@@ -55,6 +58,13 @@ class Playground {
 
     const axisHelper = new AxesHelper(10);
     this.scene.add(axisHelper);
+  }
+
+  userInfo() {
+    Ajax.get('http://localhost:3000/user/data/1', {userId: 1})
+      .then((res) => {
+        console.log(res)
+      })
   }
 
   /**
@@ -81,7 +91,8 @@ class Playground {
    * @returns {Playground}
    */
   animateStart() {
-    this.planets.update()
+    let delta = this.clock.getDelta();
+    this.player.update(delta)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()

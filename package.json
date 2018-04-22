@@ -1,10 +1,11 @@
 {
     "name": "modules",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "description": "",
     "main": "./app/index.js",
     "scripts": {
         "server:start": "nodemon ./api/index.js --exec babel-node --presets es2015",
+        "server:migrate": "nodemon ./api/migrate.js --exec babel-node --presets es2015",
         "client:start": "webpack-dev-server --mode development",
         "client:build": "webpack --mode production --env.patch",
         "test": "mocha --require babel-register ./modules -name '*.test.js' --recursive",
@@ -51,6 +52,8 @@
         "webpack-dev-server": "^3.1.1"
     },
     "dependencies": {
+        "qs": "^6.5.1",
+        "body-parser": "^1.18.2",
         "copy-webpack-plugin": "^4.5.1",
         "express": "^4.16.3",
         "mongodb": "^3.0.7",

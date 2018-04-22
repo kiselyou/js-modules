@@ -1,44 +1,42 @@
 import path from 'path'
 import express from 'express'
-
+import * as routing from './config/routing'
+import { config } from './config/develop'
 import { mgDB } from './db/mongo'
-import { install } from './../migration/install'
 
+const app = express()
 
-/**
- *
- * @param {string} collectionName
- * @param {Array} data
- * @returns {Promise.<void>}
- */
-async function migrate(collectionName, data) {
-  const collection = await mgDB(collectionName)
-  collection.insertOne(data, (err, res) => {
-    // console.log(err, res)
-  })
-}
+// Add headers
+app.use((req, res, next) => {
 
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', config.allowIP)
 
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
 
-// const collection = db.collection('iron');
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type')
 
-for (let collectionData of install) {
-  for (let entity of collectionData) {
-    migrate(entity.constructor.name, entity)
-  }
-}
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true)
 
-// console.log(install[0][0].constructor.name)
-
-const app = express();
+  // Pass to next layer of middleware
+  next()
+})
 
 app.use(express.static('public'))
-app.use('/public', express.static(path.join(__dirname + '/../public')));
+app.use('/public', express.static(path.join(__dirname + '/../public')))
 
 app.get('/', function(req, res) {
-    res.sendFile('/../../public/index.html');
-});
+  res.sendFile('/../../public/index.html')
+})
 
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
-});
+app.get('/user/data/:id', (req, res) => {
+  routing['userData'](req, res)
+})
+
+app.listen(config.server.port, config.server.host, () => {
+  console.log(`Example app listening host ${config.server.host} on port ${config.server.port}`)
+})

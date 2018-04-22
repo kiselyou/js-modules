@@ -36,7 +36,12 @@ class PlanetControls {
     return this
   }
 
-  update() {
+  /**
+   *
+   * @param {number} delta
+   * @returns {void}
+   */
+  update(delta) {
     for (let mesh of this.planets) {
       mesh.rotation.x += 0.01
       mesh.rotation.y += 0.02

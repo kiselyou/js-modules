@@ -33,7 +33,7 @@ class Race {
    */
   setName(name) {
     this.name = name
-    return Race
+    return this
   }
 }
 
