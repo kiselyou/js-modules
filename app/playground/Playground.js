@@ -8,9 +8,26 @@ import {
 } from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import PlayerControls from './controls/PlayerControls'
+import LightControls from './controls/LightControls'
 
 class Playground {
-  constructor() {
+  /**
+   *
+   * @param {{userInfo: object, loader: Loader}} data
+   */
+  constructor(data) {
+    /**
+     *
+     * @type {Object}
+     */
+    this.userInfo = data.userInfo
+
+    /**
+     *
+     * @type {Loader}
+     */
+    this.loader = data.loader
+
     /**
      *
      * @type {Scene}
@@ -33,30 +50,37 @@ class Playground {
      *
      * @type {PerspectiveCamera}
      */
-    this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000)
+    this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10000)
 
     /**
      *
      * @type {WebGLRenderer}
      */
-    this.renderer = new WebGLRenderer({antialias: true})
+    this.renderer = new WebGLRenderer({ antialias: true })
 
     /**
      *
      * @type {PlayerControls}
      */
     this.playerControls = new PlayerControls(this.scene)
+    this.playerControls.copy(this.userInfo)
+
+    /**
+     *
+     * @type {LightControls}
+     */
+    this.lightControls = new LightControls(this.scene, this.loader)
 
     this.camera.position.z = -15
     this.camera.position.y = 15
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
     this.cameraControls.update()
 
-    const gridHelper = new GridHelper(50, 50 );
-    this.scene.add(gridHelper);
+    const gridHelper = new GridHelper(50, 50 )
+    this.scene.add(gridHelper)
 
-    const axisHelper = new AxesHelper(10);
-    this.scene.add(axisHelper);
+    const axisHelper = new AxesHelper(10)
+    this.scene.add(axisHelper)
   }
 
   /**

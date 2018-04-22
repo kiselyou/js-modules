@@ -39,13 +39,13 @@ class Planet {
 
     /**
      *
-     * @type {string}
+     * @type {string|?}
      */
     this.raceId = null
 
     /**
      *
-     * @type {string}
+     * @type {string|?}
      */
     this.sectorId = null
 
@@ -72,6 +72,12 @@ class Planet {
      * @type {Array.<PlanetHasStation>}
      */
     this.planetHasStation = []
+
+    /**
+     *
+     * @type {string|?}
+     */
+    this.parentId = null
   }
 
   /**
@@ -127,6 +133,16 @@ class Planet {
    */
   setPosition(x, y, z) {
     this.position.set(x, y, z)
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Planet}
+   */
+  setParentId(id) {
+    this.parentId = id
     return this
   }
 

@@ -28,6 +28,8 @@ class ModelPlanet extends Planet {
     this.model.material = new MeshNormalMaterial()
     this.model.position.copy(this.position)
     this.scene.add(this.model)
+    console.log(this)
+
   }
 
   /**
