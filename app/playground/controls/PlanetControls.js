@@ -4,14 +4,20 @@ class PlanetControls {
   /**
    *
    * @param {Scene} scene
+   * @param {Loader} loader
    */
-  constructor(scene) {
+  constructor(scene, loader) {
 
     /**
      *
      * @type {Scene}
      */
     this.scene = scene
+
+    /**
+     * @type {Loader}
+     */
+    this.loader = loader
 
     /**
      *
@@ -27,7 +33,7 @@ class PlanetControls {
    */
   copy(data) {
     for (const planet of data.planet) {
-      this.planets.push(new ModelPlanet(this.scene).copy(planet))
+      this.planets.push(new ModelPlanet(this.scene, this.loader).copy(planet))
     }
     return this
   }

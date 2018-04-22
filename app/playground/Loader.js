@@ -2,7 +2,8 @@ import { TextureLoader } from 'three'
 import * as CONST from '@app/constants'
 
 class Loader {
-  constructor() {
+  constructor(userInfo) {
+
     /**
      *
      * @type {TextureLoader}
@@ -25,6 +26,8 @@ class Loader {
   async startLoad() {
     this._textures[CONST.KEY_LIGHT_CONTROLS_1] = await this._textureLoader.load('./app/web/images/light-controls/1.png')
     this._textures[CONST.KEY_LIGHT_CONTROLS_2] = await this._textureLoader.load('./app/web/images/light-controls/2.png')
+
+    this._textures[CONST.KEY_PLANET_EARTH_MAP] = await this._textureLoader.load('./app/web/images/planets/earth/1k_earth_map.jpg')
   }
 
   /**

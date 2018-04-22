@@ -2,7 +2,12 @@ import PlanetControls from './PlanetControls'
 import Sector from '@entity/sector/Sector'
 
 class SectorControls extends Sector {
-  constructor(scene) {
+  /**
+   *
+   * @param {Scene} scene
+   * @param {Loader} loader
+   */
+  constructor(scene, loader) {
     super()
 
     /**
@@ -11,10 +16,15 @@ class SectorControls extends Sector {
     this.scene = scene
 
     /**
+     * @type {Loader}
+     */
+    this.loader = loader
+
+    /**
      *
      * @type {PlanetControls}
      */
-    this.planetsControls = new PlanetControls(this.scene)
+    this.planetsControls = new PlanetControls(this.scene, this.loader)
   }
 
   /**

@@ -1,8 +1,13 @@
 import Planet from '@entity/sector/Planet'
-import { Mesh, MeshNormalMaterial, SphereGeometry } from "three";
+import { Mesh, MeshStandardMaterial, SphereGeometry } from 'three'
 
 class ModelPlanet extends Planet {
-  constructor(scene) {
+  /**
+   *
+   * @param {Scene} scene
+   * @param {Loader} loader
+   */
+  constructor(scene, loader) {
     super()
 
     /**
@@ -16,6 +21,11 @@ class ModelPlanet extends Planet {
      * @type {Scene}
      */
     this.scene = scene
+
+    /**
+     * @type {Loader}
+     */
+    this.loader = loader
   }
 
   /**
@@ -25,11 +35,15 @@ class ModelPlanet extends Planet {
   buildMesh() {
     const segments = this.params.segments
     this.model.geometry = new SphereGeometry(this.params.radius, segments, segments)
-    this.model.material = new MeshNormalMaterial()
-    this.model.position.copy(this.position)
-    this.scene.add(this.model)
-    console.log(this)
 
+    this.model.material = new MeshStandardMaterial({
+      map: this.loader.getTexture(this.params.texturesKey.map),
+    });
+
+    this.model.position.copy(this.position)
+    this.model.castShadow = true
+    this.model.receiveShadow = true
+    this.scene.add(this.model)
   }
 
   /**
@@ -50,8 +64,8 @@ class ModelPlanet extends Planet {
    */
   update(delta) {
     if (this.model) {
-      this.model.rotation.x += 0.01
-      this.model.rotation.y += 0.02
+      this.model.rotation.x += 0.001
+      this.model.rotation.y += 0.002
     }
   }
 }

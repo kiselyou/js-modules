@@ -263,7 +263,7 @@ export function LensFlare() {
 
 	};
 
-};
+}
 
 LensFlare.prototype = Object.create( THREE.Mesh.prototype );
 LensFlare.prototype.constructor = LensFlare;

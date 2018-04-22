@@ -6,13 +6,20 @@ class PlayerControls extends Player {
   /**
    *
    * @param {Scene} scene
+   * @param {Loader} loader
    */
-  constructor(scene) {
+  constructor(scene, loader) {
     super()
     /**
      * @type {Scene}
      */
     this.scene = scene
+
+    /**
+     *
+     * @type {Loader}
+     */
+    this.loader = loader
 
     /**
      *
@@ -24,7 +31,7 @@ class PlayerControls extends Player {
      *
      * @type {SectorControls}
      */
-    this.sectorControls = new SectorControls(scene)
+    this.sectorControls = new SectorControls(this.scene, this.loader)
   }
 
   /**

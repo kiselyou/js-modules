@@ -4,7 +4,8 @@ import {
   WebGLRenderer,
   Clock,
   GridHelper,
-  AxesHelper
+  AxesHelper,
+  PCFSoftShadowMap
 } from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import PlayerControls from './controls/PlayerControls'
@@ -62,7 +63,7 @@ class Playground {
      *
      * @type {PlayerControls}
      */
-    this.playerControls = new PlayerControls(this.scene)
+    this.playerControls = new PlayerControls(this.scene, this.loader)
     this.playerControls.copy(this.userInfo)
 
     /**
@@ -92,6 +93,13 @@ class Playground {
   init(parentId, canvasId) {
     this.renderer.domElement.id = canvasId
     this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = PCFSoftShadowMap;
+    this.renderer.setPixelRatio(window.devicePixelRatio)
+    // this.renderer.setClearColor(0x1C1C1C)
+    this.renderer.gammaInput = true;
+    this.renderer.gammaOutput = true;
+
     document.getElementById(parentId).appendChild(this.renderer.domElement)
     window.addEventListener('resize', () => {
       this.camera.aspect = window.innerWidth / window.innerHeight

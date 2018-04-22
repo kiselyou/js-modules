@@ -6,7 +6,8 @@ import Station from './../../entity/station/Station'
 import Factory from './../../entity/station/Factory'
 import Equipment from './../../entity/station/Equipment'
 import Mineral from './../../entity/station/Mineral'
-import Status from "./../../entity/sector/Status";
+import Status from './../../entity/sector/Status'
+import * as CONST from './../../app/constants'
 
 export const map = [
   [
@@ -63,6 +64,9 @@ export const map = [
       .setPosition(10, 0, 10)
       .setPopulation(7444443881)
       .setParams({ radius: 6.371 })
+      .setTextures({
+        map: CONST.KEY_PLANET_EARTH_MAP
+      })
       .setId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
