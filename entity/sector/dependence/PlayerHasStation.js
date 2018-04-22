@@ -28,6 +28,26 @@ class PlayerHasStation {
     this.stationId = id
     return this
   }
+
+  /**
+   *
+   * @param {object} data
+   * @returns {PlayerHasStation}
+   */
+  copy(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'entity':
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
+    return this
+  }
 }
 
 export default PlayerHasStation

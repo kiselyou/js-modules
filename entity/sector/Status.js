@@ -35,6 +35,16 @@ class Status {
 
   /**
    *
+   * @param {string} id
+   * @returns {Status}
+   */
+  setId(id) {
+    this.id = id
+    return this
+  }
+
+  /**
+   *
    * @param {number} value
    * @returns {Status}
    */

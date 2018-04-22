@@ -1,5 +1,5 @@
 import uuidV4 from 'uuid/v4'
-import { Vector2 }  from 'three'
+import { Vector3 }  from 'three'
 
 class Sector {
   constructor() {
@@ -21,15 +21,25 @@ class Sector {
 
     /**
      *
-     * @type {Vector2}
+     * @type {Vector3}
      */
-    this.size = new Vector2(1000, 1000)
+    this.size = new Vector3(1000, 1000)
 
     /**
      *
-     * @type {Vector2}
+     * @type {Vector3}
      */
-    this.position = new Vector2()
+    this.position = new Vector3()
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Sector}
+   */
+  setId(id) {
+    this.id = id
+    return this
   }
 
   /**
@@ -46,10 +56,11 @@ class Sector {
    *
    * @param {number} x
    * @param {number} y
+   * @param {number} z
    * @returns {Sector}
    */
-  setSize(x, y) {
-    this.size.set(x, y)
+  setSize(x, y, z) {
+    this.size.set(x, y, z)
     return this
   }
 
@@ -57,10 +68,35 @@ class Sector {
    *
    * @param {number} x
    * @param {number} y
+   * @param {number} y
    * @returns {Sector}
    */
-  setPosition(x, y) {
-    this.position.set(x, y)
+  setPosition(x, y, z) {
+    this.position.set(x, y, z)
+    return this
+  }
+
+  /**
+   *
+   * @param {object} data
+   * @returns {Sector}
+   */
+  copy(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'entity':
+            break
+          case 'size':
+          case 'position':
+            this[property].copy(data[property])
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
     return this
   }
 }

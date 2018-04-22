@@ -24,6 +24,25 @@ class BankAccount {
      */
     this.sum = 0
   }
+
+  /**
+   *
+   * @param {object} data
+   * @returns {BankAccount}
+   */
+  copy(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'entity':
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
+  }
 }
 
 export default BankAccount

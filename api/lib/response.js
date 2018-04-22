@@ -2,7 +2,7 @@
 /**
  *
  * @param {object} res
- * @param {{}|[]} data
+ * @param {object|Array} data
  */
 export function responseJSON(res, data) {
   const str = JSON.stringify(data)

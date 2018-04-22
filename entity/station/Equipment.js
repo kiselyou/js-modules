@@ -33,6 +33,16 @@ class Equipment {
 
   /**
    *
+   * @param {string} id
+   * @returns {Equipment}
+   */
+  setId(id) {
+    this.id = id
+    return this
+  }
+
+  /**
+   *
    * @param {string} name
    * @returns {Equipment}
    */

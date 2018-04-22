@@ -29,6 +29,34 @@ class Monitor {
         .setStatus(withMonitorId, statusId)
     )
   }
+
+  /**
+   *
+   * @param {object} data
+   * @returns {Monitor}
+   */
+  copy(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'entity':
+            break
+          case 'playerHasStation':
+            for (const item of data[property]) {
+              this.monitorStatus.push(
+                new MonitorStatus()
+                  .copy(item)
+              )
+            }
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
+    return this
+  }
 }
 
 export default Monitor

@@ -1,5 +1,4 @@
-import { SphereGeometry, MeshNormalMaterial, Mesh } from 'three'
-import { randInt } from '@module/helper/Helper'
+import ModelPlanet from './models/ModelPlanet'
 
 class PlanetControls {
   /**
@@ -16,23 +15,20 @@ class PlanetControls {
 
     /**
      *
-     * @type {Array.<Mesh>}
+     * @type {Array.<ModelPlanet>}
      */
     this.planets = []
   }
 
   /**
    *
+   * @param {object} data
    * @returns {PlanetControls}
    */
-  add() {
-    const geometry = new SphereGeometry(0.2, 20, 20)
-    const material = new MeshNormalMaterial()
-    const mesh = new Mesh(geometry, material)
-    mesh.position.z = - randInt(1, 16)
-    mesh.position.x = randInt( - 6, 6)
-    this.planets.push(mesh)
-    this.scene.add(mesh)
+  copy(data) {
+    for (const planet of data.planet) {
+      this.planets.push(new ModelPlanet(this.scene).copy(planet))
+    }
     return this
   }
 
@@ -42,9 +38,8 @@ class PlanetControls {
    * @returns {void}
    */
   update(delta) {
-    for (let mesh of this.planets) {
-      mesh.rotation.x += 0.01
-      mesh.rotation.y += 0.02
+    for (let model of this.planets) {
+      model.update(delta)
     }
   }
 }

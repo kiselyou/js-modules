@@ -1,5 +1,5 @@
 import uuidV4 from 'uuid/v4'
-import { Vector2 }  from 'three'
+import { Vector3 }  from 'three'
 import Monitor from './dependence/Monitor'
 import BankAccount from './dependence/BankAccount'
 import PlanetHasStation from './dependence/PlanetHasStation'
@@ -30,9 +30,12 @@ class Planet {
 
     /**
      *
-     * @type {number}
+     * @type {{radius: number, segments: number}}
      */
-    this.size = 100
+    this.params = {
+      radius: 2,
+      segments: 30
+    }
 
     /**
      *
@@ -48,9 +51,9 @@ class Planet {
 
     /**
      *
-     * @type {Vector2}
+     * @type {Vector3}
      */
-    this.position = new Vector2()
+    this.position = new Vector3()
 
     /**
      *
@@ -69,6 +72,16 @@ class Planet {
      * @type {Array.<PlanetHasStation>}
      */
     this.planetHasStation = []
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Planet}
+   */
+  setId(id) {
+    this.id = id
+    return this
   }
 
   /**
@@ -93,11 +106,15 @@ class Planet {
 
   /**
    *
-   * @param {number} value
+   * @param {{[radius]: number, [segments]: number}} params
    * @returns {Planet}
    */
-  setSize(value) {
-    this.size = value
+  setParams(params) {
+    for (const property in params) {
+      if (params.hasOwnProperty(property)) {
+        this.params[property] = params[property]
+      }
+    }
     return this
   }
 
@@ -105,10 +122,11 @@ class Planet {
    *
    * @param {number} x
    * @param {number} y
+   * @param {number} z
    * @returns {Planet}
    */
-  setPosition(x, y) {
-    this.position.set(x, y)
+  setPosition(x, y, z) {
+    this.position.set(x, y, z)
     return this
   }
 
@@ -142,6 +160,39 @@ class Planet {
       new PlanetHasStation()
         .setStationId(stationId)
     )
+    return this
+  }
+
+  /**
+   *
+   * @param {object} data
+   * @returns {Planet}
+   */
+  copy(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'entity':
+            break
+          case 'monitor':
+          case 'bankAccount':
+          case 'position':
+            this[property].copy(data[property])
+            break
+          case 'playerHasStation':
+            for (const item of data[property]) {
+              this.planetHasStation.push(
+                new PlanetHasStation()
+                  .copy(item)
+              )
+            }
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
     return this
   }
 }

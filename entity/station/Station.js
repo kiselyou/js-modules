@@ -41,6 +41,16 @@ class Station {
 
   /**
    *
+   * @param {string} id
+   * @returns {Station}
+   */
+  setId(id) {
+    this.id = id
+    return this
+  }
+
+  /**
+   *
    * @param {string} name
    * @returns {Station}
    */

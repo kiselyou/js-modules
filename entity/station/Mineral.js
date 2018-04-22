@@ -27,6 +27,16 @@ class Mineral {
 
   /**
    *
+   * @param {string} id
+   * @returns {Mineral}
+   */
+  setId(id) {
+    this.id = id
+    return this
+  }
+
+  /**
+   *
    * @param {string} name
    * @returns {Mineral}
    */

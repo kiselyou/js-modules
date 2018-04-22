@@ -28,6 +28,16 @@ class Race {
 
   /**
    *
+   * @param {string} id
+   * @returns {Race}
+   */
+  setId(id) {
+    this.id = id
+    return this
+  }
+
+  /**
+   *
    * @param {string} name
    * @returns {Race}
    */

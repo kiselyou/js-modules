@@ -61,6 +61,16 @@ class Player {
 
   /**
    *
+   * @param {string} id
+   * @returns {Player}
+   */
+  setId(id) {
+    this.id = id
+    return this
+  }
+
+  /**
+   *
    * @param {string} name
    * @returns {Player}
    */
@@ -110,6 +120,39 @@ class Player {
       new PlayerHasStation()
         .setStationId(stationId)
     )
+    return this
+  }
+
+  /**
+   *
+   * @param {object} data
+   * @returns {Player}
+   */
+  copy(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'entity':
+            break
+          case 'monitor':
+          case 'bankAccount':
+          case 'position':
+            this[property].copy(data[property])
+            break
+          case 'playerHasStation':
+            for (const item of data[property]) {
+              this.playerHasStation.push(
+                new PlayerHasStation()
+                  .copy(item)
+              )
+            }
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
     return this
   }
 }

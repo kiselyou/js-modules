@@ -1,7 +1,9 @@
 import PlanetControls from './PlanetControls'
+import Sector from '@entity/sector/Sector'
 
-class SectorControls {
+class SectorControls extends Sector {
   constructor(scene) {
+    super()
 
     /**
      * @type {Scene}
@@ -12,10 +14,18 @@ class SectorControls {
      *
      * @type {PlanetControls}
      */
-    this.planets = new PlanetControls(this.scene)
-    for (let i = 0; i < 20; i++) {
-      this.planets.add()
-    }
+    this.planetsControls = new PlanetControls(this.scene)
+  }
+
+  /**
+   *
+   * @param {object} data
+   * @returns {SectorControls}
+   */
+  copy(data) {
+    this.planetsControls.copy(data)
+    super.copy(data.sector)
+    return this
   }
 
   /**
@@ -24,7 +34,7 @@ class SectorControls {
    * @returns {void}
    */
   update(delta) {
-    this.planets.update(delta)
+    this.planetsControls.update(delta)
   }
 }
 

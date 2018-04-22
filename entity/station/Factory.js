@@ -46,6 +46,16 @@ class Factory {
 
   /**
    *
+   * @param {string} id
+   * @returns {Factory}
+   */
+  setId(id) {
+    this.id = id
+    return this
+  }
+
+  /**
+   *
    * @param {string} name
    * @returns {Factory}
    */

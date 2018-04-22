@@ -8,7 +8,6 @@ import {
 } from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import PlayerControls from './controls/PlayerControls'
-import Ajax from '@module/ajax/Ajax'
 
 class Playground {
   constructor() {
@@ -46,7 +45,7 @@ class Playground {
      *
      * @type {PlayerControls}
      */
-    this.player = new PlayerControls(this.scene)
+    this.playerControls = new PlayerControls(this.scene)
 
     this.camera.position.z = -15
     this.camera.position.y = 15
@@ -58,13 +57,6 @@ class Playground {
 
     const axisHelper = new AxesHelper(10);
     this.scene.add(axisHelper);
-  }
-
-  userInfo() {
-    Ajax.post('http://localhost:3000/user/data/1')
-      .then((res) => {
-        console.log(res, JSON.parse(res))
-      })
   }
 
   /**
@@ -92,7 +84,7 @@ class Playground {
    */
   animateStart() {
     let delta = this.clock.getDelta();
-    this.player.update(delta)
+    this.playerControls.update(delta)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
