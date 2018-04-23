@@ -35,6 +35,14 @@ class PlayerControls extends Player {
   }
 
   /**
+   * @returns {void}
+   */
+  async beforeStart() {
+    await this.raceControls.beforeStart()
+    await this.sectorControls.beforeStart()
+  }
+
+  /**
    *
    * @param {Object} data
    * @returns {PlayerControls}

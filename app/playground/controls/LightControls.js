@@ -25,7 +25,7 @@ class LightControls {
      *
      * @type {Vector3}
      */
-    this.position = new Vector3(1200, 2500, 1500)
+    this.position = new Vector3(1000, 0, 1000)
 
     /**
      *
@@ -39,14 +39,14 @@ class LightControls {
      *
      * @type {PointLight}
      */
-    this.pointLight = new PointLight(0XFFFFFF, 1.5, 2000)
+    this.pointLight = new PointLight(0XFFFFFF, 1.5, 4000)
     this.pointLight.position.copy(this.position)
-    this.pointLight.castShadow = true;
+    this.pointLight.castShadow = true
 
     const textureFlare1 = this.loader.getTexture(CONST.KEY_LIGHT_CONTROLS_1)
     const textureFlare2 = this.loader.getTexture(CONST.KEY_LIGHT_CONTROLS_2)
     const lensFlare = new LensFlare()
-    lensFlare.addElement(new LensFlareElement(textureFlare1, 1500, 0))
+    lensFlare.addElement(new LensFlareElement(textureFlare1, 1000, 0))
     lensFlare.addElement(new LensFlareElement(textureFlare2, 60, 0.6))
     lensFlare.addElement(new LensFlareElement(textureFlare2, 80, 0.7))
     lensFlare.addElement(new LensFlareElement(textureFlare2, 120, 0.9))

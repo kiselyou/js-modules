@@ -1,5 +1,7 @@
 import PlanetControls from './PlanetControls'
 import Sector from '@entity/sector/Sector'
+import SkyBoxControls from './SkyBoxControls'
+import { Vector3 } from 'three'
 
 class SectorControls extends Sector {
   /**
@@ -22,9 +24,29 @@ class SectorControls extends Sector {
 
     /**
      *
+     * @type {SkyBoxControls}
+     */
+    this.skyBoxControls = new SkyBoxControls(this.scene, this.loader)
+
+    /**
+     *
      * @type {PlanetControls}
      */
     this.planetsControls = new PlanetControls(this.scene, this.loader)
+
+    /**
+     * TODO: temp
+     * @type {Vector3}
+     */
+    this.playerPosition = new Vector3()
+  }
+
+  /**
+   * @returns {void}
+   */
+  async beforeStart() {
+    await this.skyBoxControls.beforeStart()
+    await this.planetsControls.beforeStart()
   }
 
   /**
@@ -45,6 +67,7 @@ class SectorControls extends Sector {
    */
   update(delta) {
     this.planetsControls.update(delta)
+    this.skyBoxControls.update(delta, this.playerPosition)
   }
 }
 

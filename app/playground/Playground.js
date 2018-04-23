@@ -90,7 +90,7 @@ class Playground {
    * @param {string} canvasId
    * @returns {Playground}
    */
-  init(parentId, canvasId) {
+  async init(parentId, canvasId) {
     this.renderer.domElement.id = canvasId
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.renderer.shadowMap.enabled = true;
@@ -105,7 +105,8 @@ class Playground {
       this.camera.aspect = window.innerWidth / window.innerHeight
       this.renderer.setSize(window.innerWidth, window.innerHeight)
       this.camera.updateProjectionMatrix()
-    });
+    })
+    await this.playerControls.beforeStart()
     this.animateStart()
     return this
   }

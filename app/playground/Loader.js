@@ -52,6 +52,8 @@ class Loader {
 
     this._textures[CONST.KEY_PLANET_MARS_MAP] = await this._textureLoader.load('./app/web/images/planets/mars/1k_mars_map.jpg')
     this._textures[CONST.KEY_PLANET_MARS_BUMP] = await this._textureLoader.load('./app/web/images/planets/mars/1k_mars_bump.jpg')
+
+    this._textures[CONST.KEY_SECTOR_ALPHA] = await this._textureLoader.load('./app/web/images/skybox/sector_alpha.jpg')
   }
 
   /**

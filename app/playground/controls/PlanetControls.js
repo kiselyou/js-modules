@@ -27,6 +27,13 @@ class PlanetControls {
   }
 
   /**
+   * @returns {void}
+   */
+  async beforeStart() {
+
+  }
+
+  /**
    *
    * @param {object} data
    * @returns {PlanetControls}
