@@ -65,8 +65,12 @@ export const map = [
       .setPopulation(7444443881)
       .setParams({ radius: 6.371 })
       .setTextures({
+        specular: 0xDDFFFD,
         map: CONST.KEY_PLANET_EARTH_MAP,
-        bump: CONST.KEY_PLANET_EARTH_BUMP,
+        bump: {
+          key: CONST.KEY_PLANET_EARTH_BUMP,
+          scale: 0.1
+        },
         spec: CONST.KEY_PLANET_EARTH_SPEC,
         cloudMap: CONST.KEY_PLANET_EARTH_CLOUD_MAP,
         cloudMapTrans: CONST.KEY_PLANET_EARTH_CLOUD_MAP_TRANS,
@@ -78,6 +82,14 @@ export const map = [
       .setName('Луна')
       .setPosition(18, 0, -4)
       .setParams({ radius: 1.737 })
+      .setTextures({
+        specular: 0x191C22,
+        map: CONST.KEY_PLANET_MOON_MAP,
+        bump: {
+          key: CONST.KEY_PLANET_MOON_BUMP,
+          scale: 0.01
+        },
+      })
       .setId('ccc3fe37-1b8c-489c-bbbb-0b3e04783a71')
       .setParentId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
@@ -87,6 +99,14 @@ export const map = [
       .setPosition(-18, 0, -8)
       .setParams({ radius: 3.39 })
       .setPopulation(5000)
+      .setTextures({
+        specular: 0x191C22,
+        map: CONST.KEY_PLANET_MARS_MAP,
+        bump: {
+          key: CONST.KEY_PLANET_MARS_BUMP,
+          scale: 0.01
+        },
+      })
       .setId('ccc3fe37-1b8c-489c-bbbb-0b3e04784d72')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),

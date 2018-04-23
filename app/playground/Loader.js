@@ -46,6 +46,12 @@ class Loader {
     this._textures[CONST.KEY_PLANET_EARTH_SPEC] = await this._textureLoader.load('./app/web/images/planets/earth/1k_earth_spec.jpg')
     this._images[CONST.KEY_PLANET_EARTH_CLOUD_MAP] = await this._imageLoader.load('./app/web/images/planets/earth/1k_earth_cloud_map.jpg')
     this._images[CONST.KEY_PLANET_EARTH_CLOUD_MAP_TRANS] = await this._imageLoader.load('./app/web/images/planets/earth/1k_earth_cloud_map_trans.jpg')
+
+    this._textures[CONST.KEY_PLANET_MOON_MAP] = await this._textureLoader.load('./app/web/images/planets/moon/1k_moon_map.jpg')
+    this._textures[CONST.KEY_PLANET_MOON_BUMP] = await this._textureLoader.load('./app/web/images/planets/moon/1k_moon_bump.jpg')
+
+    this._textures[CONST.KEY_PLANET_MARS_MAP] = await this._textureLoader.load('./app/web/images/planets/mars/1k_mars_map.jpg')
+    this._textures[CONST.KEY_PLANET_MARS_BUMP] = await this._textureLoader.load('./app/web/images/planets/mars/1k_mars_bump.jpg')
   }
 
   /**
@@ -60,7 +66,7 @@ class Loader {
   /**
    *
    * @param {string} key
-   * @returns {Image|?}
+   * @returns {HTMLImageElement|?}
    */
   getImage(key) {
     return this._images.hasOwnProperty(key) ? this._images[key] : null

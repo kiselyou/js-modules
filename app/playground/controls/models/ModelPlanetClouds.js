@@ -1,17 +1,7 @@
-import { Mesh, MeshStandardMaterial, Texture, SphereGeometry, DoubleSide } from 'three'
+import { Mesh, MeshStandardMaterial, Texture, SphereGeometry, Vector3, DoubleSide } from 'three'
 
 class ModelPlanetClouds {
-  /**
-   *
-   * @param {ModelPlanet} modelPlanet
-   */
-  constructor(modelPlanet) {
-    /**
-     *
-     * @type {ModelPlanet}
-     */
-    this.modelPlanet = modelPlanet
-
+  constructor() {
     /**
      *
      * @type {number}
@@ -38,23 +28,27 @@ class ModelPlanetClouds {
 
     /**
      *
-     * @type {number}
-     */
-    this.speed = 0.005
-
-    /**
-     *
      * @type {boolean}
      */
     this.enabled = false
+
+    /**
+     *
+     * @type {Vector3}
+     */
+    this.speed = new Vector3( - 0.009, 0.009, - 0.009 )
   }
 
   /**
    * Build clouds of planet
    *
+   * @param {number} planetRadius
+   * @param {number} segments
+   * @param {HTMLImageElement} imageMap
+   * @param {HTMLImageElement} imageTrans
    * @returns {Mesh}
    */
-  buildClouds() {
+  getMeshClouds(planetRadius, segments, imageMap, imageTrans) {
     let canvasResult = document.createElement('canvas')
     canvasResult.width = this.width
     canvasResult.height = this.height
@@ -68,17 +62,13 @@ class ModelPlanetClouds {
       opacity: 0.9
     })
 
-    let imageMap = this.modelPlanet.getImageCloudMap()
     imageMap.addEventListener('load', () => {
-
       let canvasMap = document.createElement('canvas')
       canvasMap.width = imageMap.width
       canvasMap.height = imageMap.height
       let contextMap = canvasMap.getContext('2d')
       contextMap.drawImage(imageMap, 0, 0)
       let dataMap = contextMap.getImageData(0, 0, canvasMap.width, canvasMap.height)
-
-      let imageTrans = this.modelPlanet.getImageCloudMapTrans()
 
       // create dataTrans ImageData for cloud map trans
       let canvasTrans = document.createElement('canvas')
@@ -102,12 +92,10 @@ class ModelPlanetClouds {
       this.clouds.material.map.needsUpdate = true
     }, false)
 
-    const size = this.modelPlanet.params.radius
-    const radius = size + (size / 100 * this.cloudsSize)
-    const segments = this.modelPlanet.params.segments
+    const radius = planetRadius + (planetRadius / 100 * this.cloudsSize)
     this.clouds.geometry = new SphereGeometry(radius, segments, segments)
-    this.modelPlanet.group.add(this.clouds)
     this.enabled = true
+    return this.clouds
   }
 
   /**
@@ -116,9 +104,11 @@ class ModelPlanetClouds {
    * @returns {void}
    */
   update(delta) {
-    this.clouds.rotation.x -= 0.005 * delta
-    this.clouds.rotation.y += 0.005 * delta
-    this.clouds.rotation.z -= 0.005 * delta
+    if (this.enabled) {
+      this.clouds.rotation.x += this.speed.x * delta
+      this.clouds.rotation.y += this.speed.y * delta
+      this.clouds.rotation.z += this.speed.z * delta
+    }
   }
 }
 

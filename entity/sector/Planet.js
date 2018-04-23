@@ -30,14 +30,18 @@ class Planet {
 
     /**
      *
-     * @type {{radius: number, segments: number, texturesKey: {map: string|?, bump: string|?, cloudMap: string|?, cloudMapTrans: string|?, spec: string|?}}}
+     * @type {{radius: number, segments: number, texturesKey: {specular: number, map: string|?, bump: {key: string|?, scale: number|?}, cloudMap: string|?, cloudMapTrans: string|?, spec: string|?}}}
      */
     this.params = {
       radius: 2,
       segments: 30,
       texturesKey: {
+        specular: 0x000000,
         map: null,
-        bump: null,
+        bump: {
+          key: null,
+          scale: null
+        },
         cloudMap: null,
         cloudMapTrans: null,
         spec: null
@@ -133,7 +137,7 @@ class Planet {
 
   /**
    *
-   * @param {{map: string, [bump]: string, [cloudMap]: string, [cloudMapTrans]: string, [spec]: string}} params
+   * @param {{[specular]: number, map: string, [bump]: {key: string, scale: number}, [cloudMap]: string, [cloudMapTrans]: string, [spec]: string}} params
    * @returns {Planet}
    */
   setTextures(params) {
