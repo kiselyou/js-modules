@@ -1,6 +1,6 @@
 import Planet from '@entity/sector/Planet'
 import ModelPlanetClouds from './ModelPlanetClouds'
-import { Mesh, MeshPhongMaterial, SphereGeometry, Color } from 'three'
+import { Mesh, Group, MeshPhongMaterial, SphereGeometry, Color } from 'three'
 
 class ModelPlanet extends Planet {
   /**
@@ -16,6 +16,12 @@ class ModelPlanet extends Planet {
      * @type {Mesh}
      */
     this.planet = new Mesh()
+
+    /**
+     *
+     * @type {Group}
+     */
+    this.group = new Group()
 
     /**
      *
@@ -44,23 +50,62 @@ class ModelPlanet extends Planet {
     this.planet.geometry = new SphereGeometry(this.params.radius, segments, segments)
 
     this.planet.material = new MeshPhongMaterial({
-      map: this.loader.getTexture(this.params.texturesKey.map),
-      bumpScale: this.params.texturesKey.bump ? 0.2 : null,
-      bumpMap: this.loader.getTexture(this.params.texturesKey.bump) || null,
-      specularMap: this.loader.getTexture(this.params.texturesKey.spec) || null,
-      specular: new Color('grey'),
+      map: this.getTextureMap(),
+      bumpScale: this.params.texturesKey.bump ? 0.1 : null,
+      bumpMap: this.getTextureBump(),
+      specularMap: this.getTextureSpec(),
+      specular: new Color(0xDDFFFD),
     });
 
     if (this.params.texturesKey.cloudMap && this.params.texturesKey.cloudMapTrans) {
       this.modelClouds.buildClouds()
-      // this._planetClouds = this._buildClouds();
-      // this._planet.add(this._planetClouds);
     }
 
-    this.planet.position.copy(this.position)
     this.planet.castShadow = true
     this.planet.receiveShadow = true
-    this.scene.add(this.planet)
+    this.group.position.copy(this.position)
+    this.group.add(this.planet)
+    this.scene.add(this.group)
+  }
+
+  /**
+   *
+   * @returns {Texture|?}
+   */
+  getTextureMap() {
+    return this.loader.getTexture(this.params.texturesKey.map)
+  }
+
+  /**
+   *
+   * @returns {Texture|?}
+   */
+  getTextureBump() {
+    return this.loader.getTexture(this.params.texturesKey.bump)
+  }
+
+  /**
+   *
+   * @returns {Texture|?}
+   */
+  getTextureSpec() {
+    return this.loader.getTexture(this.params.texturesKey.spec)
+  }
+
+  /**
+   *
+   * @returns {Image|?}
+   */
+  getImageCloudMap() {
+    return this.loader.getImage(this.params.texturesKey.cloudMap)
+  }
+
+  /**
+   *
+   * @returns {Image|?}
+   */
+  getImageCloudMapTrans() {
+    return this.loader.getImage(this.params.texturesKey.cloudMapTrans)
   }
 
   /**
@@ -81,8 +126,9 @@ class ModelPlanet extends Planet {
    */
   update(delta) {
     if (this.planet) {
-      this.planet.rotation.x += 0.001// * delta
-      this.planet.rotation.y += 0.002// * delta
+      this.planet.rotation.x += 0.009 * delta
+      this.planet.rotation.y += 0.009 * delta
+      this.planet.rotation.y += 0.009 * delta
 
       if (this.modelClouds.enabled) {
         this.modelClouds.update(delta)

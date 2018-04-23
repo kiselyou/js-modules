@@ -38,6 +38,12 @@ class ModelPlanetClouds {
 
     /**
      *
+     * @type {number}
+     */
+    this.speed = 0.005
+
+    /**
+     *
      * @type {boolean}
      */
     this.enabled = false
@@ -46,85 +52,73 @@ class ModelPlanetClouds {
   /**
    * Build clouds of planet
    *
-   * @private
    * @returns {Mesh}
    */
   buildClouds() {
-    const canvasResult = document.createElement('canvas')
+    let canvasResult = document.createElement('canvas')
     canvasResult.width = this.width
     canvasResult.height = this.height
-    const contextResult = canvasResult.getContext('2d')
+
+    let contextResult = canvasResult.getContext('2d')
 
     this.clouds.material = new MeshStandardMaterial({
       map: new Texture(canvasResult),
       side: DoubleSide,
       transparent: true,
-      opacity: 0.8
+      opacity: 0.9
     })
 
-    // const imageMap = new Image()
-    const imageMap = this.modelPlanet.loader.getImage(this.modelPlanet.params.texturesKey.cloudMap)
-    // const imageMap = texture.image
-
-    console.log(imageMap)
-
+    let imageMap = this.modelPlanet.getImageCloudMap()
     imageMap.addEventListener('load', () => {
-      console.log(1)
 
-      // create dataMap ImageData for cloud map
-      const canvasMap = document.createElement('canvas')
+      let canvasMap = document.createElement('canvas')
       canvasMap.width = imageMap.width
       canvasMap.height = imageMap.height
-      const contextMap = canvasMap.getContext('2d')
+      let contextMap = canvasMap.getContext('2d')
       contextMap.drawImage(imageMap, 0, 0)
-      const dataMap = contextMap.getImageData(0, 0, canvasMap.width, canvasMap.height)
+      let dataMap = contextMap.getImageData(0, 0, canvasMap.width, canvasMap.height)
 
-      // load cloud map trans
-      const imageTrans = this.modelPlanet.loader.getImage(this.modelPlanet.params.texturesKey.cloudMapTrans)
-    console.log(imageTrans)
-      imageTrans.addEventListener('load', () => {
-        // create dataTrans ImageData for cloud map trans
-        const canvasTrans = document.createElement('canvas')
-        canvasTrans.width = imageTrans.width
-        canvasTrans.height = imageTrans.height
-        const contextTrans = canvasTrans.getContext('2d')
-        contextTrans.drawImage(imageTrans, 0, 0)
-        const dataTrans = contextTrans.getImageData(0, 0, canvasTrans.width, canvasTrans.height)
-        //merge dataMap + dataTrans into dataResult
-        const dataResult = contextMap.createImageData(canvasMap.width, canvasMap.height)
-        for (let y = 0, offset = 0; y < imageMap.height; y++) {
-          for (let x = 0; x < imageMap.width; x++, offset += 4) {
-            dataResult.data[offset] = dataMap.data[offset]
-            dataResult.data[offset + 1] = dataMap.data[offset + 1]
-            dataResult.data[offset + 2] = dataMap.data[offset + 2]
-            dataResult.data[offset + 3] = 255 - dataTrans.data[offset]
-          }
+      let imageTrans = this.modelPlanet.getImageCloudMapTrans()
+
+      // create dataTrans ImageData for cloud map trans
+      let canvasTrans = document.createElement('canvas')
+      canvasTrans.width = imageTrans.width
+      canvasTrans.height = imageTrans.height
+      let contextTrans = canvasTrans.getContext('2d')
+      contextTrans.drawImage(imageTrans, 0, 0)
+      let dataTrans = contextTrans.getImageData(0, 0, canvasTrans.width, canvasTrans.height)
+      // merge dataMap + dataTrans into dataResult
+      let dataResult = contextMap.createImageData(canvasMap.width, canvasMap.height)
+      for (let y = 0, offset = 0; y < imageMap.height; y++) {
+        for (let x = 0; x < imageMap.width; x++, offset += 4) {
+          dataResult.data[offset] = dataMap.data[offset]
+          dataResult.data[offset + 1] = dataMap.data[offset + 1]
+          dataResult.data[offset + 2] = dataMap.data[offset + 2]
+          dataResult.data[offset + 3] = 255 - dataTrans.data[offset]
         }
-        // update texture with result
-        contextResult.putImageData(dataResult, 0, 0)
-        this.clouds.material.map.needsUpdate = true
-        this.enabled = true
-      })
+      }
 
-      // imageTrans.src = this.modelPlanet.loader.getTexture(keyCloudMapTrans)
+      contextResult.putImageData(dataResult, 0, 0)
+      this.clouds.material.map.needsUpdate = true
     }, false)
 
-    // const keyCloudMap = this.modelPlanet.params.texturesKey.cloudMap
-    // const texture = this.modelPlanet.loader.getTexture(keyCloudMap)
-    // console.log(texture)
-    // imageMap.src = this.modelPlanet.loader.getTexture(keyCloudMap)
-    const radius = this.modelPlanet.params.radius
-    console.log(radius)
-    const cloudsRadius = radius + 2//(radius / 100 * this.cloudsSize)
+    const size = this.modelPlanet.params.radius
+    const radius = size + (size / 100 * this.cloudsSize)
     const segments = this.modelPlanet.params.segments
-    this.clouds.geometry = new SphereGeometry(cloudsRadius, segments, segments)
-    this.modelPlanet.planet.add(this.clouds)
+    this.clouds.geometry = new SphereGeometry(radius, segments, segments)
+    this.modelPlanet.group.add(this.clouds)
+    this.enabled = true
   }
 
+  /**
+   *
+   * @param {number} delta
+   * @returns {void}
+   */
   update(delta) {
-    this.clouds.rotation.x += 0.01// * delta;
-    this.clouds.rotation.y += 0.01// * delta;
-    this.clouds.rotation.z += 0.01// * delta;
+    this.clouds.rotation.x -= 0.005 * delta
+    this.clouds.rotation.y += 0.005 * delta
+    this.clouds.rotation.z -= 0.005 * delta
   }
 }
 
