@@ -30,6 +30,22 @@ class Sector {
      * @type {Vector3}
      */
     this.position = new Vector3()
+
+    /**
+     *
+     * @type {number}
+     */
+    this.starKey = 1
+  }
+
+  /**
+   *
+   * @param {number} key
+   * @returns {Sector}
+   */
+  setStarKey(key) {
+    this.starKey = key
+    return this
   }
 
   /**

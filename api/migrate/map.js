@@ -7,7 +7,10 @@ import Factory from './../../entity/station/Factory'
 import Equipment from './../../entity/station/Equipment'
 import Mineral from './../../entity/station/Mineral'
 import Status from './../../entity/sector/Status'
+import { mapStar } from './mapStar'
 import * as CONST from './../../app/constants'
+
+const starKeySectorAlpha = 1
 
 export const map = [
   [
@@ -52,6 +55,7 @@ export const map = [
 
   [
     new Sector()
+      .setStarKey(starKeySectorAlpha)
       .setName('Alpha')
       .setSize(1000, 1000, 1000)
       .setPosition(0, 0, 0)
@@ -152,5 +156,7 @@ export const map = [
       .setName('Война')
       .setValue(Status.WAR)
       .setId('3669cd3e-4cc7-42fc-a018-9eed7a5f41f0'),
-  ]
+  ],
+
+  mapStar(10000, starKeySectorAlpha)
 ]

@@ -1,6 +1,7 @@
 import PlanetControls from './PlanetControls'
 import Sector from '@entity/sector/Sector'
 import SkyBoxControls from './SkyBoxControls'
+import StarControls from './StarControls'
 import { Vector3 } from 'three'
 
 class SectorControls extends Sector {
@@ -35,6 +36,12 @@ class SectorControls extends Sector {
     this.planetsControls = new PlanetControls(this.scene, this.loader)
 
     /**
+     *
+     * @type {StarControls}
+     */
+    this.starControls = new StarControls(this.scene)
+
+    /**
      * TODO: temp
      * @type {Vector3}
      */
@@ -45,6 +52,7 @@ class SectorControls extends Sector {
    * @returns {void}
    */
   async beforeStart() {
+    await this.starControls.beforeStart()
     await this.skyBoxControls.beforeStart()
     await this.planetsControls.beforeStart()
   }
@@ -56,6 +64,7 @@ class SectorControls extends Sector {
    */
   copy(data) {
     this.planetsControls.copy(data)
+    this.starControls.copy(data.star)
     super.copy(data.sector)
     return this
   }

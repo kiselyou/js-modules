@@ -19,9 +19,20 @@ export async function userData(req, res) {
     data.sector = await getSectorInfoById(data.player.sectorId)
     data.planet = await getPlanetsInfoBySectorId(data.player.sectorId)
     data.station = await getStationsInfoBySectorId(data.player.sectorId)
+    data.star = await getStarByKey(data.sector.starKey)
   }
 
   core.responseJSON(res, data)
+}
+
+/**
+ *
+ * @param {number} key
+ * @returns {Promise.<Object>}
+ */
+async function getStarByKey(key) {
+  const collection = await core.mgDB('Star')
+  return collection.find({key: key}).project({position: 1, _id: 0}).toArray()
 }
 
 /**
