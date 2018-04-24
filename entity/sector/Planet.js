@@ -50,6 +50,27 @@ class Planet {
 
     /**
      *
+     * @type {{inside: {enabled: boolean, color: number, coefficient: number, power: number, length: number}, outside: {enabled: boolean, color: number, coefficient: number, power: number, length: number}}}
+     */
+    this.glow = {
+      inside: {
+        enabled: false,
+        color: 0xFFFFFF,
+        coefficient: 0.5,
+        power: 1.7,
+        length: 1.5
+      },
+      outside: {
+        enabled: false,
+        color: 0xFF0000,
+        coefficient: 0.46,
+        power: 5,
+        length: 1
+      }
+    }
+
+    /**
+     *
      * @type {string|?}
      */
     this.raceId = null
@@ -89,6 +110,36 @@ class Planet {
      * @type {string|?}
      */
     this.parentId = null
+  }
+
+  /**
+   *
+   * @param {{[color]: number, [coefficient]: number, [power]: number, [length]: number}} options
+   * @returns {Planet}
+   */
+  setGlowInside(options) {
+    this.glow.inside.enabled = true
+    for (const property in options) {
+      if (options.hasOwnProperty(property)) {
+        this.glow.inside[property] = options[property]
+      }
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {{[color]: number, [coefficient]: number, [power]: number, [length]: number}} options
+   * @returns {Planet}
+   */
+  setGlowOutside(options) {
+    this.glow.outside.enabled = true
+    for (const property in options) {
+      if (options.hasOwnProperty(property)) {
+        this.glow.outside[property] = options[property]
+      }
+    }
+    return this
   }
 
   /**

@@ -19,7 +19,7 @@ export function glowShaderMaterial() {
   ].join('\n')
   const fragmentShader	= [
     'uniform vec3	glowColor;',
-    'uniform float	coeficient;',
+    'uniform float	coefficient;',
     'uniform float	power;',
 
     'varying vec3	vVertexNormal;',
@@ -31,14 +31,14 @@ export function glowShaderMaterial() {
     '	vec3 worldCameraToVertex= vVertexWorldPosition - cameraPosition;',
     '	vec3 viewCameraToVertex	= (viewMatrix * vec4(worldCameraToVertex, 0.0)).xyz;',
     '	viewCameraToVertex	= normalize(viewCameraToVertex);',
-    '	float intensity		= pow(coeficient + dot(vVertexNormal, viewCameraToVertex), power);',
+    '	float intensity		= pow(coefficient + dot(vVertexNormal, viewCameraToVertex), power);',
     '	gl_FragColor		= vec4(glowColor, intensity);',
     '}',
   ].join('\n')
 
   return new ShaderMaterial({
     uniforms: {
-      coeficient	: {
+      coefficient	: {
         type	: "f",
         value	: 1.0
       },
@@ -85,30 +85,41 @@ export function dilateGeometry(geometry, length) {
   })
 }
 
-export function GeometricGlowMesh(mesh) {
-
-  this.object3d = new Object3D
-
+/**
+ *
+ * @param {Mesh} mesh
+ * @param {{color: number, coefficient: number, power: number, length: number}} options
+ * @returns {Mesh}
+ * @constructor
+ */
+export function getGlowInsideMesh(mesh, options) {
   const material = glowShaderMaterial()
-  material.uniforms.glowColor.value	= new Color('cyan')
-  material.uniforms.coeficient.value = 0.5
-  material.uniforms.power.value	= 1.7
+  material.uniforms.glowColor.value	= new Color(options.color)
+  material.uniforms.coefficient.value = options.coefficient
+  material.uniforms.power.value	= options.power
 
   const geometry = mesh.geometry.clone()
-  dilateGeometry(geometry, 1.5)
+  dilateGeometry(geometry, options.length)
 
-  this.insideMesh = new Mesh(geometry, material)
-  this.object3d.add(this.insideMesh)
+  return new Mesh(geometry, material)
+}
 
-  const material2 = glowShaderMaterial()
-  material2.uniforms.glowColor.value = new Color('cyan')
-  material2.uniforms.coeficient.value	= 0.46
-  material2.uniforms.power.value = 5
-  material2.side = BackSide
+/**
+ *
+ * @param {Mesh} mesh
+ * @param {{color: number, coefficient: number, power: number, length: number}} options
+ * @returns {Mesh}
+ * @constructor
+ */
+export function getGlowOutsideMesh(mesh, options) {
+  const material = glowShaderMaterial()
+  material.uniforms.glowColor.value = new Color(options.color)
+  material.uniforms.coefficient.value = options.coefficient
+  material.uniforms.power.value = options.power
+  material.side = BackSide
 
-  const geometry2	= mesh.geometry.clone()
-  dilateGeometry(geometry2, 1)
+  const geometry	= mesh.geometry.clone()
+  dilateGeometry(geometry, options.length)
 
-  this.outsideMesh = new Mesh(geometry2, material2)
-  this.object3d.add(this.outsideMesh)
+  return new Mesh(geometry, material)
 }

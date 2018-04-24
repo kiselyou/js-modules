@@ -1,7 +1,7 @@
 import Planet from '@entity/sector/Planet'
 import ModelPlanetClouds from './ModelPlanetClouds'
 import { Mesh, Group, MeshPhongMaterial, SphereGeometry, Color } from 'three'
-import { dilateGeometry, glowShaderMaterial, GeometricGlowMesh } from './../../../shader/glow'
+import { getGlowInsideMesh, getGlowOutsideMesh } from './../../../shader/glow'
 
 class ModelPlanet extends Planet {
   /**
@@ -62,18 +62,15 @@ class ModelPlanet extends Planet {
     this.group.position.copy(this.position)
     this.group.add(this.planet)
 
-    const glowMesh = new GeometricGlowMesh(this.planet)
-    this.group.add(glowMesh.object3d)
+    if (this.glow.inside.enabled) {
+      const meshGlow = getGlowInsideMesh(this.planet, this.glow.inside)
+      this.group.add(meshGlow)
+    }
 
-    // const geometry	= this.planet.geometry.clone()
-    // dilateGeometry(geometry, 0.15)
-    // const material = glowShaderMaterial()
-    // const meshHalo = new Mesh(geometry, material)
-    // this.group.add(meshHalo)
-    //
-    // material.uniforms.glowColor.value	= new Color('cyan')
-    // material.uniforms.coeficient.value = 0.5
-    // material.uniforms.power.value	= 4
+    if (this.glow.outside.enabled) {
+      const meshGlow = getGlowOutsideMesh(this.planet, this.glow.outside)
+      this.group.add(meshGlow)
+    }
 
     if (this.isClouds()) {
       this.group.add(

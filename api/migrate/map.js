@@ -63,33 +63,37 @@ export const map = [
       .setName('Земля')
       .setPosition(10, 0, 10)
       .setPopulation(7444443881)
-      .setParams({ radius: 6.371 })
+      .setParams({ radius: 6.371, segments: 40 })
       .setTextures({
-        specular: 0xDDFFFD,
+        specular: 0x4D5A62,
         map: CONST.KEY_PLANET_EARTH_MAP,
         bump: {
           key: CONST.KEY_PLANET_EARTH_BUMP,
-          scale: 0.1
+          scale: 0.2
         },
         spec: CONST.KEY_PLANET_EARTH_SPEC,
         cloudMap: CONST.KEY_PLANET_EARTH_CLOUD_MAP,
         cloudMapTrans: CONST.KEY_PLANET_EARTH_CLOUD_MAP_TRANS,
       })
+      .setGlowInside({color: 0xA0D1E6, coefficient: 1, power: 3.5, length: 0.06})
+      .setGlowOutside({color: 0xA0D1E6, coefficient: 0.1, power: 2.5, length: 0.6})
       .setId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
     new Planet()
       .setName('Луна')
       .setPosition(18, 0, -4)
-      .setParams({ radius: 1.737 })
+      .setParams({ radius: 1.737, segments: 40 })
       .setTextures({
-        specular: 0x191C22,
+        specular: 0x000000,
         map: CONST.KEY_PLANET_MOON_MAP,
         bump: {
           key: CONST.KEY_PLANET_MOON_BUMP,
-          scale: 0.01
+          scale: 0.05
         },
       })
+      .setGlowInside({color: 0xCCCCCC, coefficient: 1, power: 2.0, length: 0.01})
+      .setGlowOutside({color: 0xFFFFFF, coefficient: 0.2, power: 2.5, length: 0.1})
       .setId('ccc3fe37-1b8c-489c-bbbb-0b3e04783a71')
       .setParentId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
@@ -97,16 +101,18 @@ export const map = [
     new Planet()
       .setName('Марс')
       .setPosition(-18, 0, -8)
-      .setParams({ radius: 3.39 })
+      .setParams({ radius: 3.39, segments: 40 })
       .setPopulation(5000)
       .setTextures({
-        specular: 0x191C22,
+        specular: 0x000000,
         map: CONST.KEY_PLANET_MARS_MAP,
         bump: {
           key: CONST.KEY_PLANET_MARS_BUMP,
-          scale: 0.01
+          scale: 0.03
         },
       })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('ccc3fe37-1b8c-489c-bbbb-0b3e04784d72')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
