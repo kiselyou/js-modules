@@ -2,8 +2,15 @@ import uuidV4 from 'uuid/v4'
 import { randFloat } from './../../module/helper/Helper'
 import { Vector3 } from 'three'
 
-let min = 200
-let max = 800
+
+const min = 2000
+const range = 6000
+
+/**
+ *
+ * @type {Vector3}
+ */
+const center = new Vector3()
 
 class Star {
   constructor() {
@@ -39,7 +46,7 @@ class Star {
    * @returns {Star}
    */
   updatePosition() {
-    this.position = new Vector3(this._p, this._p, this._p)
+    this._prepare()
     return this
   }
 
@@ -48,15 +55,14 @@ class Star {
    * @returns {number}
    * @private
    */
-  get _p() {
-    // return randFloat(- max, max)
-    let p = randFloat(- max, max)
-    if (p >= min) {
-      return p
-    } else if (p <= -min) {
-      return p
-    } else {
-      return this._p
+  _prepare() {
+    const len = range / 2
+    this.position.setX(randFloat(- len, len))
+    this.position.setY(randFloat(- len, len))
+    this.position.setZ(randFloat(- len, len))
+    const distance = center.distanceTo(this.position)
+    if (distance < min) {
+      this._prepare()
     }
   }
 }

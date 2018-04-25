@@ -158,5 +158,5 @@ export const map = [
       .setId('3669cd3e-4cc7-42fc-a018-9eed7a5f41f0'),
   ],
 
-  mapStar(10000, starKeySectorAlpha)
+  mapStar(20000, starKeySectorAlpha)
 ]

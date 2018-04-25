@@ -1,6 +1,8 @@
 import { mgDB } from '../db/mongo'
 import { map } from './map'
 
+const statistic = {}
+
 /**
  *
  * @returns {void}
@@ -8,20 +10,26 @@ import { map } from './map'
 async function install(entities) {
   for (let entity of entities) {
     const collectionName = entity.constructor.name
+
+    if (!statistic.hasOwnProperty(collectionName)) {
+      statistic[collectionName] = 0
+    }
+
     const collection = await mgDB(collectionName)
-    collection.updateOne(
+    await collection.updateOne(
       { id: entity.id },
       { $set: entity },
       { upsert: true },
       async (err, res) => {
         if (err === null) {
-          console.log(`Created record in collection "${collectionName}"`)
+          statistic[collectionName]++
         } else {
           console.log(`Can not create collection "${collectionName}"`, entity, err)
         }
       }
     )
   }
+  console.log(statistic)
 }
 
 /**

@@ -77,9 +77,10 @@ class StarControls {
     //
     // }
 
-    var starsMaterial = new PointsMaterial( { color: 0x888888 } );
+    var starsMaterial = new PointsMaterial( { color: 0x888888, size: 5 } );
 
     var starField = new Points( starsGeometry, starsMaterial );
+
 
     this.scene.add( starField );
   }
