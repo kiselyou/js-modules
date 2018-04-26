@@ -39,7 +39,7 @@ class SectorControls extends Sector {
      *
      * @type {StarControls}
      */
-    this.starControls = new StarControls(this.scene)
+    this.starControls = new StarControls(this.skyBoxControls.sky)
 
     /**
      * TODO: temp
@@ -77,6 +77,7 @@ class SectorControls extends Sector {
   update(delta) {
     this.planetsControls.update(delta)
     this.skyBoxControls.update(delta, this.playerPosition)
+    this.starControls.update(delta)
   }
 }
 
