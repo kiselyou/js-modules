@@ -77,11 +77,11 @@ class Playground {
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
     this.cameraControls.update()
 
-    const gridHelper = new GridHelper(50, 50 )
-    this.scene.add(gridHelper)
-
-    const axisHelper = new AxesHelper(10)
-    this.scene.add(axisHelper)
+    // const gridHelper = new GridHelper(50, 50 )
+    // this.scene.add(gridHelper)
+    //
+    // const axisHelper = new AxesHelper(10)
+    // this.scene.add(axisHelper)
   }
 
   /**

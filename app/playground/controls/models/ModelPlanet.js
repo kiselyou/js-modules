@@ -47,8 +47,9 @@ class ModelPlanet extends Planet {
    * @returns {void}
    */
   buildMesh() {
+    const radius = this.params.radius
     const segments = this.params.segments
-    this.planet.geometry = new SphereGeometry(this.params.radius, segments, segments)
+    this.planet.geometry = new SphereGeometry(radius, segments, segments)
     this.planet.material = new MeshPhongMaterial({
       map: this.getTextureMap(),
       bumpScale: this.getBumpScale(),
@@ -75,7 +76,7 @@ class ModelPlanet extends Planet {
     if (this.isClouds()) {
       this.group.add(
         this.modelClouds.getMeshClouds(
-          this.params.radius,
+          radius,
           this.params.segments,
           this.getImageCloudMap(),
           this.getImageCloudMapTrans()

@@ -25,7 +25,7 @@ class LightControls {
      *
      * @type {Vector3}
      */
-    this.position = new Vector3(1000, 0, 1000)
+    this.position = new Vector3(1000, 100, 1000)
 
     /**
      *
@@ -33,6 +33,7 @@ class LightControls {
      */
     this.directionalLight = new DirectionalLight(0xffffff, 0.9)
     this.directionalLight.position.copy(this.position).normalize()
+    this.directionalLight.castShadow = true
     this.scene.add(this.directionalLight)
 
     /**
