@@ -40,6 +40,7 @@ class PlanetControls {
    */
   copy(data) {
     for (const planet of data.planet) {
+      console.log(planet)
       this.planets.push(new ModelPlanet(this.scene, this.loader).copy(planet))
     }
     return this

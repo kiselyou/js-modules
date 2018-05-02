@@ -86,7 +86,7 @@ export const map = [
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
     new Planet()
       .setName('Луна')
-      .setPosition(-20, 0, -20)
+      .setPosition(-20, 0, -28)
       .setParams({ radius: 1.737, segments: 40 })
       .setTextures({
         specular: 0x000000,

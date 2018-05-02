@@ -1,4 +1,3 @@
-let second = 0, minute = 0, hour = 0, day = 0, year = 0
 
 class SpaceTimer {
   constructor() {
@@ -7,42 +6,7 @@ class SpaceTimer {
      *
      * @type {number}
      */
-    this.ms = 500
-
-    /**
-     * Одна космическая секунда это 500 милисекунд
-     *
-     * @type {number}
-     */
-    this.oneSecond = 1
-
-    /**
-     * Длительность космической минуты в секундах
-     *
-     * @type {number}
-     */
-    this.oneMinute = 12
-
-    /**
-     * Длительность космического часа в секундах
-     *
-     * @type {number}
-     */
-    this.oneHour = 12 * 12
-
-    /**
-     * Длительность космического дня в секундах
-     *
-     * @type {number}
-     */
-    this.oneDay = 24 * 12 * 12
-
-    /**
-     * Длительность космического года в секундах
-     *
-     * @type {number}
-     */
-    this.oneYear = 365 * 24 * 12 * 12
+    this.ms = 10
 
     /**
      * Количество секунд с момента появления галактики
@@ -60,14 +24,14 @@ class SpaceTimer {
 
     /**
      *
-     * @type {{second: Array.<timerEvent>, minute: Array.<timerEvent>, day: Array.<timerEvent>, year: Array.<timerEvent>}}
+     * @type {{second: Array.<timerEvent>, minute: Array.<timerEvent>, hour: Array.<timerEvent>, day: Array.<timerEvent>, year: Array.<timerEvent>}}
      * @private
      */
-    this._events = {second: [], minute: [], day: [], year: []}
+    this._events = {second: [], minute: [], hour: [], day: [], year: []}
   }
 
   /**
-   * @param {string} eventName  Possible values (second|minute|day)
+   * @param {{eventName: string, timestamp: number}} eventData
    * @callback timerEvent
    */
 
@@ -88,6 +52,16 @@ class SpaceTimer {
    */
   eachMinute(event) {
     this._events.minute.push(event)
+    return this
+  }
+
+  /**
+   *
+   * @param {timerEvent} event
+   * @returns {SpaceTimer}
+   */
+  eachHour(event) {
+    this._events.hour.push(event)
     return this
   }
 
@@ -117,10 +91,9 @@ class SpaceTimer {
    * @private
    */
   _callEvents(eventName) {
-    console.log(eventName, this.timestamp)
-    // for (const event of this._events[eventName]) {
-    //   event(eventName)
-    // }
+    for (const event of this._events[eventName]) {
+      event({eventName, timestamp: this.timestamp})
+    }
   }
 
   /**
@@ -130,33 +103,23 @@ class SpaceTimer {
   startTimer() {
     this.stopTimer()
     this._timerId = setInterval(() => {
-      this.timestamp += this.oneSecond
-      this._callEvents('seconds')
-
-      minute += this.oneSecond
-      if (minute === this.oneMinute) {
-        minute = 0
+      this.timestamp++
+      this._callEvents('second')
+      if ((this.timestamp % 60) === 0) {
         this._callEvents('minute')
       }
 
-      hour += this.oneSecond
-      if (hour === this.oneHour) {
-        hour = 0
+      if ((this.timestamp % (60 * 60)) === 0) {
         this._callEvents('hour')
       }
 
-      day += this.oneSecond
-      if (day === this.oneDay) {
-        day = 0
+      if ((this.timestamp % (60 * 60 * 24)) === 0) {
         this._callEvents('day')
       }
 
-      year += this.oneSecond
-      if (year === this.oneYear) {
-        year = 0
+      if ((this.timestamp % (60 * 60 * 24 * 365)) === 0) {
         this._callEvents('year')
       }
-
     }, this.ms)
     return this
   }
