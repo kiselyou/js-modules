@@ -27,10 +27,15 @@ ReactDOM.render(<App />, document.getElementById('root'));
     new Error('Cannot get users info')
   }
 
-  const socket = io.connect('http://127.0.0.1:3333/play-process');
-  socket.on('timestamp', (data) => {
-    console.log(data)
-  })
+  try {
+    const socket = io.connect('http://127.0.0.1:3333/play-process');
+    socket.on('timestamp', (data) => {
+      console.log(data)
+    })
+  } catch (e) {
+    console.warn(e)
+  }
+
 
 })()
 

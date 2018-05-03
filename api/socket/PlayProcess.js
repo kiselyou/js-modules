@@ -35,13 +35,14 @@ class PlayProcess extends Server {
 
     this.connect('play-process', (socket) => {
 
-      this.spaceTimer.eachMinute((eventData) => {
+      const eachMinuteEmit = (eventData) => {
         socket.emit('timestamp', eventData.timestamp);
-      })
+      }
 
+      this.spaceTimer.eachMinute(eachMinuteEmit)
 
       socket.on('disconnect', () => {
-        console.log('---')
+        this.spaceTimer.removeCallbackMinute(eachMinuteEmit)
       });
     });
   }

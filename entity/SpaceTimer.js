@@ -57,11 +57,31 @@ class SpaceTimer {
 
   /**
    *
-   * @param {timerEvent} event
+   * @param {timerEvent} callback
    * @returns {SpaceTimer}
    */
-  eachMinute(event) {
-    this._events.minute.push(event)
+  removeCallbackSecond(callback) {
+    this.removeCallback('second', callback)
+    return this
+  }
+
+  /**
+   *
+   * @param {timerEvent} callback
+   * @returns {SpaceTimer}
+   */
+  eachMinute(callback) {
+    this._events.minute.push(callback)
+    return this
+  }
+
+  /**
+   *
+   * @param {timerEvent} callback
+   * @returns {SpaceTimer}
+   */
+  removeCallbackMinute(callback) {
+    this.removeCallback('minute', callback)
     return this
   }
 
@@ -77,11 +97,31 @@ class SpaceTimer {
 
   /**
    *
+   * @param {timerEvent} callback
+   * @returns {SpaceTimer}
+   */
+  removeCallbackHour(callback) {
+    this.removeCallback('hour', callback)
+    return this
+  }
+
+  /**
+   *
    * @param {timerEvent} event
    * @returns {SpaceTimer}
    */
   eachDay(event) {
     this._events.day.push(event)
+    return this
+  }
+
+  /**
+   *
+   * @param {timerEvent} callback
+   * @returns {SpaceTimer}
+   */
+  removeCallbackDay(callback) {
+    this.removeCallback('day', callback)
     return this
   }
 
@@ -97,6 +137,16 @@ class SpaceTimer {
 
   /**
    *
+   * @param {timerEvent} callback
+   * @returns {SpaceTimer}
+   */
+  removeCallbackYear(callback) {
+    this.removeCallback('year', callback)
+    return this
+  }
+
+  /**
+   *
    * @param {string} eventName
    * @private
    */
@@ -104,6 +154,23 @@ class SpaceTimer {
     for (const event of this._events[eventName]) {
       event({eventName, timestamp: this.timestamp})
     }
+  }
+
+  /**
+   *
+   * @param {string} eventName
+   * @param {timerEvent} callback
+   * @returns {SpaceTimer}
+   */
+  removeCallback(eventName, callback) {
+    const callbacks = this._events[eventName]
+    for (let i = 0; i < callbacks.length; i++) {
+      if (callbacks[i] === callback) {
+        callbacks.splice(i, 1)
+        break
+      }
+    }
+    return this
   }
 
   /**
