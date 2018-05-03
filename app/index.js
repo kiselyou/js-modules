@@ -5,6 +5,7 @@ import App from './components/App.jsx'
 import Playground from '@app/playground/Playground'
 import Loader from '@app/playground/Loader'
 import Ajax from '@module/ajax/Ajax'
+import io from 'socket.io-client'
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
@@ -26,7 +27,10 @@ ReactDOM.render(<App />, document.getElementById('root'));
     new Error('Cannot get users info')
   }
 
-
+  const socket = io.connect('http://127.0.0.1:3333/play-process');
+  socket.on('timestamp', (data) => {
+    console.log(data)
+  })
 
 })()
 

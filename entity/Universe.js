@@ -1,23 +1,46 @@
 
 class Universe {
-  constructor() {
+  /**
+   *
+   * @param {number} id
+   */
+  constructor(id) {
     /**
-     *
-     * @type {number}
+     * @type {string}
      */
-    this.seconds = 0
+    this.entity = this.constructor.name
 
     /**
      *
      * @type {number}
      */
-    this.minutes = 0
+    this.id = id
 
     /**
      *
      * @type {number}
      */
-    this.days = 0
+    this.timestamp = 0
+  }
+
+  /**
+   *
+   * @param {object} data
+   * @returns {Universe}
+   */
+  copy(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'entity':
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
+    return this
   }
 }
 

@@ -3,8 +3,7 @@ import express from 'express'
 import routes from './routes'
 import { config } from './config/develop'
 import * as core from './core'
-
-import SpaceTimer from './../entity/SpaceTimer'
+import PlayProcess from './socket/PlayProcess'
 
 const app = express()
 
@@ -45,11 +44,5 @@ app.listen(config.server.port, config.server.host, () => {
   console.log(`Example app listening host ${config.server.host} on port ${config.server.port}`)
 })
 
-// const timer = new SpaceTimer()
-// timer
-//   // .eachSecond((eventName) => console.log(eventName))
-//   .eachMinute((eventName) => console.log(eventName))
-//   .eachHour((eventName) => console.log(eventName))
-//   .eachDay((eventName) => console.log(eventName))
-//   .eachYear((eventName) => console.log(eventName))
-//   .startTimer()
+const playProcess = new PlayProcess(app)
+playProcess.listen()

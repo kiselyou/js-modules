@@ -6,7 +6,7 @@ class SpaceTimer {
      *
      * @type {number}
      */
-    this.ms = 10
+    this.ms = 100
 
     /**
      * Количество секунд с момента появления галактики
@@ -28,6 +28,16 @@ class SpaceTimer {
      * @private
      */
     this._events = {second: [], minute: [], hour: [], day: [], year: []}
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {SpaceTimer}
+   */
+  setTimestamp(value) {
+    this.timestamp = value
+    return this
   }
 
   /**
