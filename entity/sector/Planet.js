@@ -18,7 +18,7 @@ class Planet {
 
     /**
      *
-     * @type {string}
+     * @type {string|?}
      */
     this.name = null
 
@@ -89,6 +89,30 @@ class Planet {
 
     /**
      *
+     * @type {Vector3}
+     */
+    this.rotation = new Vector3()
+
+    /**
+     *
+     * @type {number}
+     */
+    this.angleToCenter = 0
+
+    /**
+     *
+     * @type {number}
+     */
+    this.distanceToCenter = 0
+
+    /**
+     *
+     * @type {number}
+     */
+    this.speedMove = 0.0001
+
+    /**
+     *
      * @type {Monitor}
      */
     this.monitor = new Monitor()
@@ -110,6 +134,43 @@ class Planet {
      * @type {string|?}
      */
     this.parentId = null
+
+    /**
+     *
+     * @type {Planet|?}
+     */
+    this.parent = null
+  }
+
+  /**
+   * Distance to center of Sector or parent Planet
+   *
+   * @param {number} value
+   * @returns {Planet}
+   */
+  setDistanceToCenter(value) {
+    this.distanceToCenter = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} degree
+   * @returns {Planet}
+   */
+  setAngleToCenter(degree) {
+    this.angleToCenter = degree
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Planet}
+   */
+  setSpeedMove(value) {
+    this.speedMove = value
+    return this
   }
 
   /**
@@ -214,6 +275,18 @@ class Planet {
 
   /**
    *
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @returns {Planet}
+   */
+  setRotation(x, y, z) {
+    this.rotation.set(x, y, z)
+    return this
+  }
+
+  /**
+   *
    * @param {string} id
    * @returns {Planet}
    */
@@ -285,6 +358,32 @@ class Planet {
         }
       }
     }
+    return this
+  }
+
+  /**
+   *
+   * @param {Planet} planet
+   * @returns {Planet}
+   */
+  setParentPlanet(planet) {
+    this.parent = planet
+    return this
+  }
+
+  /**
+   *
+   * @returns {Planet}
+   */
+  calculatePosition() {
+    let x = 0, z = 0;
+    if (this.parent) {
+      x = this.parent.position.x
+      z = this.parent.position.z
+    }
+    this.angleToCenter += this.speedMove
+    this.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
+    this.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
     return this
   }
 }

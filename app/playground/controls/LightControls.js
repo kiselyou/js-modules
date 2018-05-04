@@ -25,13 +25,13 @@ class LightControls {
      *
      * @type {Vector3}
      */
-    this.position = new Vector3(1000, 100, 1000)
+    this.position = new Vector3(0, 1, 0)
 
     /**
      *
      * @type {DirectionalLight}
      */
-    this.directionalLight = new DirectionalLight(0xffffff, 0.9)
+    this.directionalLight = new DirectionalLight(0xffffff, 0.05)
     this.directionalLight.position.copy(this.position).normalize()
     this.directionalLight.castShadow = true
     this.scene.add(this.directionalLight)
@@ -40,9 +40,9 @@ class LightControls {
      *
      * @type {PointLight}
      */
-    this.pointLight = new PointLight(0XFFFFFF, 1.5, 4000)
+    this.pointLight = new PointLight(0XFFFFFF, 1, 4000)
     this.pointLight.position.copy(this.position)
-    this.pointLight.castShadow = true
+    // this.pointLight.castShadow = false
 
     const textureFlare1 = this.loader.getTexture(CONST.KEY_LIGHT_CONTROLS_1)
     const textureFlare2 = this.loader.getTexture(CONST.KEY_LIGHT_CONTROLS_2)

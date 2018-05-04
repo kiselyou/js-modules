@@ -30,7 +30,29 @@ class PlanetControls {
    * @returns {void}
    */
   async beforeStart() {
+    this.calculatePositions(this.planets)
+    for (const modelPlanet of this.planets) {
+      modelPlanet.beforeStart()
+    }
+  }
 
+  /**
+   *
+   * @param {Array.<ModelPlanet>} modelPlanets
+   */
+  calculatePositions(modelPlanets) {
+    const prepare = {}
+    for (const modelPlanet of modelPlanets) {
+      prepare[modelPlanet.id] = modelPlanet
+    }
+
+    for (const modelPlanet of modelPlanets) {
+      const parentId = modelPlanet.parentId
+      if (prepare.hasOwnProperty(parentId)) {
+        modelPlanet.setParentPlanet(prepare[parentId])
+      }
+      modelPlanet.calculatePosition()
+    }
   }
 
   /**
@@ -40,8 +62,10 @@ class PlanetControls {
    */
   copy(data) {
     for (const planet of data.planet) {
-      console.log(planet)
-      this.planets.push(new ModelPlanet(this.scene, this.loader).copy(planet))
+      this.planets.push(
+        new ModelPlanet(this.scene, this.loader)
+          .copy(planet)
+      )
     }
     return this
   }

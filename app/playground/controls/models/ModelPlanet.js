@@ -148,13 +148,19 @@ class ModelPlanet extends Planet {
   }
 
   /**
+   * @returns {void}
+   */
+  async beforeStart() {
+    this.buildMesh()
+  }
+
+  /**
    *
    * @param {object} data
    * @returns {ModelPlanet}
    */
   copy(data) {
     super.copy(data)
-    this.buildMesh()
     return this
   }
 
@@ -165,6 +171,8 @@ class ModelPlanet extends Planet {
    */
   update(delta) {
     if (this.planet) {
+      this.calculatePosition()
+      this.group.position.copy(this.position)
       this.planet.rotation.x += 0.003 * delta
       this.planet.rotation.y += 0.003 * delta
       this.planet.rotation.y += 0.003 * delta

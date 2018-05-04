@@ -65,7 +65,8 @@ export const map = [
   [
     new Planet()
       .setName('Земля')
-      .setPosition(0, 0, 0)
+      .setSpeedMove(0.00001)
+      .setDistanceToCenter(400)
       .setPopulation(7444443881)
       .setParams({ radius: 6.371, segments: 40 })
       .setTextures({
@@ -86,7 +87,8 @@ export const map = [
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
     new Planet()
       .setName('Луна')
-      .setPosition(-20, 0, -28)
+      .setSpeedMove(0.001)
+      .setDistanceToCenter(50)
       .setParams({ radius: 1.737, segments: 40 })
       .setTextures({
         specular: 0x000000,
@@ -104,7 +106,8 @@ export const map = [
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
     new Planet()
       .setName('Марс')
-      .setPosition(-100, 0, -100)
+      .setSpeedMove(0.0005)
+      .setDistanceToCenter(1000)
       .setParams({ radius: 3.39, segments: 40 })
       .setPopulation(5000)
       .setTextures({

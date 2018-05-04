@@ -72,6 +72,7 @@ class Playground {
      */
     this.lightControls = new LightControls(this.scene, this.loader)
 
+    this.camera.position.x = 450
     this.camera.position.z = -15
     this.camera.position.y = 15
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
