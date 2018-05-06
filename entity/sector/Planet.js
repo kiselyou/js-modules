@@ -109,7 +109,7 @@ class Planet {
      *
      * @type {number}
      */
-    this.speedMove = 0.0001
+    this.speedMove = 0.00001
 
     /**
      *

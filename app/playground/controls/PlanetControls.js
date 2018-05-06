@@ -27,12 +27,14 @@ class PlanetControls {
   }
 
   /**
+   *
+   * @param {Loader} loader
    * @returns {void}
    */
-  async beforeStart() {
+  async beforeStart(loader) {
     this.calculatePositions(this.planets)
     for (const modelPlanet of this.planets) {
-      modelPlanet.beforeStart()
+      modelPlanet.beforeStart(loader)
     }
   }
 

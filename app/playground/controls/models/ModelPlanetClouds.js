@@ -1,4 +1,5 @@
 import { Mesh, MeshStandardMaterial, Texture, SphereGeometry, Vector3, DoubleSide } from 'three'
+import { randFloat } from '@module/helper/Helper'
 
 class ModelPlanetClouds {
   constructor() {
@@ -36,7 +37,15 @@ class ModelPlanetClouds {
      *
      * @type {Vector3}
      */
-    this.speed = new Vector3( - 0.009, 0.009, - 0.009 )
+    this.speed = new Vector3(0.009, 0.009, 0.009)
+  }
+
+  updateSpeedClouds() {
+    this.speed.set(
+      randFloat(0.01, 0.05),
+      randFloat(0.01, 0.05),
+      randFloat(0.01, 0.05)
+    )
   }
 
   /**
@@ -108,6 +117,7 @@ class ModelPlanetClouds {
       this.clouds.rotation.x += this.speed.x * delta
       this.clouds.rotation.y += this.speed.y * delta
       this.clouds.rotation.z += this.speed.z * delta
+      this.updateSpeedClouds()
     }
   }
 }

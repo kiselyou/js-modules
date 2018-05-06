@@ -2,6 +2,7 @@ import PlanetControls from './PlanetControls'
 import Sector from '@entity/sector/Sector'
 import SkyBoxControls from './SkyBoxControls'
 import StarControls from './StarControls'
+import StarLightControls from './StarLightControls'
 import { Vector3 } from 'three'
 
 class SectorControls extends Sector {
@@ -42,6 +43,12 @@ class SectorControls extends Sector {
     this.starControls = new StarControls(this.skyBoxControls.sky)
 
     /**
+     *
+     * @type {StarLightControls}
+     */
+    this.starLightControls = new StarLightControls(this.skyBoxControls.sky)
+
+    /**
      * TODO: temp
      * @type {Vector3}
      */
@@ -52,9 +59,10 @@ class SectorControls extends Sector {
    * @returns {void}
    */
   async beforeStart() {
-    await this.starControls.beforeStart()
-    await this.skyBoxControls.beforeStart()
-    await this.planetsControls.beforeStart()
+    await this.starControls.beforeStart(this.loader)
+    await this.skyBoxControls.beforeStart(this.loader)
+    await this.planetsControls.beforeStart(this.loader)
+    await this.starLightControls.beforeStart(this.loader)
   }
 
   /**
@@ -63,9 +71,10 @@ class SectorControls extends Sector {
    * @returns {SectorControls}
    */
   copy(data) {
+    super.copy(data['sector'])
     this.planetsControls.copy(data)
-    this.starControls.copy(data.star)
-    super.copy(data.sector)
+    this.starControls.copy(data['star'])
+    this.starLightControls.copy(data['starLight'])
     return this
   }
 
@@ -78,6 +87,7 @@ class SectorControls extends Sector {
     this.planetsControls.update(delta)
     this.skyBoxControls.update(delta, this.playerPosition)
     this.starControls.update(delta)
+    this.starLightControls.update(delta)
   }
 }
 

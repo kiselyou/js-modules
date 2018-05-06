@@ -2,8 +2,8 @@ import uuidV4 from 'uuid/v4'
 import { randFloat } from './../../module/helper/Helper'
 import { Vector3 } from 'three'
 
-const min = 1000
-const max = 2000
+const min = 2000
+const max = 3000
 
 /**
  *
@@ -69,7 +69,6 @@ class Star {
 
     if (distance > max) {
       this._prepare(rangeX - rangeX / 10, rangeY - rangeY / 10, rangeZ - rangeZ / 10)
-      return
     }
   }
 }

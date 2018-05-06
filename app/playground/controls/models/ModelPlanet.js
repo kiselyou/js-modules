@@ -148,9 +148,11 @@ class ModelPlanet extends Planet {
   }
 
   /**
+   *
+   * @param {Loader} loader
    * @returns {void}
    */
-  async beforeStart() {
+  async beforeStart(loader) {
     this.buildMesh()
   }
 
@@ -173,9 +175,7 @@ class ModelPlanet extends Planet {
     if (this.planet) {
       this.calculatePosition()
       this.group.position.copy(this.position)
-      this.planet.rotation.x += 0.003 * delta
-      this.planet.rotation.y += 0.003 * delta
-      this.planet.rotation.y += 0.003 * delta
+      this.planet.rotation.y -= 0.05 * delta
 
       if (this.modelClouds.enabled) {
         this.modelClouds.update(delta)

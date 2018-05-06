@@ -5,7 +5,7 @@ import * as core from './../core'
  * @param {object} req
  * @param {object} res
  */
-export async function userData(req, res) {
+export async function playGroundData(req, res) {
   const data = {}
   const player = await getPlayerInfoById('09839694-28d3-4504-9dc9-1cd3b6a539d7')
 
@@ -20,6 +20,7 @@ export async function userData(req, res) {
     data.planet = await getPlanetsInfoBySectorId(data.player.sectorId)
     data.station = await getStationsInfoBySectorId(data.player.sectorId)
     data.star = await getStarByKey(data.sector.starKey)
+    data.starLight = await getStarLightByKey(data.sector.starKey)
   }
 
   core.responseJSON(res, data)
@@ -33,6 +34,16 @@ export async function userData(req, res) {
 async function getStarByKey(key) {
   const collection = await core.mgDB('Star')
   return collection.find({key: key}).project({position: 1, _id: 0}).toArray()
+}
+
+/**
+ *
+ * @param {number} key
+ * @returns {Promise.<Object>}
+ */
+async function getStarLightByKey(key) {
+  const collection = await core.mgDB('StarLight')
+  return collection.find({key: key}).toArray()
 }
 
 /**

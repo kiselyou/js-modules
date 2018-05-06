@@ -7,7 +7,7 @@ import Factory from './../../entity/station/Factory'
 import Equipment from './../../entity/station/Equipment'
 import Mineral from './../../entity/station/Mineral'
 import Status from './../../entity/sector/Status'
-import { mapStar } from './mapStar'
+import { mapStar, mapStarLights } from './mapStar'
 import * as CONST from './../../app/constants'
 
 const starKeySectorAlpha = 1
@@ -74,7 +74,7 @@ export const map = [
         map: CONST.KEY_PLANET_EARTH_MAP,
         bump: {
           key: CONST.KEY_PLANET_EARTH_BUMP,
-          scale: 0.2
+          scale: 0.4
         },
         spec: CONST.KEY_PLANET_EARTH_SPEC,
         cloudMap: CONST.KEY_PLANET_EARTH_CLOUD_MAP,
@@ -87,7 +87,7 @@ export const map = [
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
     new Planet()
       .setName('Луна')
-      .setSpeedMove(0.001)
+      .setSpeedMove(0.000002)
       .setDistanceToCenter(50)
       .setParams({ radius: 1.737, segments: 40 })
       .setTextures({
@@ -106,7 +106,7 @@ export const map = [
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
     new Planet()
       .setName('Марс')
-      .setSpeedMove(0.0005)
+      .setSpeedMove(0.00001)
       .setDistanceToCenter(1000)
       .setParams({ radius: 3.39, segments: 40 })
       .setPopulation(5000)
@@ -128,7 +128,7 @@ export const map = [
   [
     new Player()
       .setName('Валера')
-      .setPosition(1200, 1200)
+      .setPosition(100, 100)
       .setId('09839694-28d3-4504-9dc9-1cd3b6a539d7')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba')
@@ -161,5 +161,6 @@ export const map = [
       .setId('3669cd3e-4cc7-42fc-a018-9eed7a5f41f0'),
   ],
 
+  mapStarLights(starKeySectorAlpha),
   // mapStar(starKeySectorAlpha)
 ]

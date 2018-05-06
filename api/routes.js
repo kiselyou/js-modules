@@ -1,10 +1,10 @@
-import { userData } from './actions/userData'
+import { playGroundData } from './actions/playGroundData'
 
 const routes = [
   {
     method: 'post',
     path: '/user/data/:id',
-    action: userData
+    action: playGroundData
   }
 ]
 

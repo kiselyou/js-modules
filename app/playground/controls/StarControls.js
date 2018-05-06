@@ -21,7 +21,7 @@ class StarControls {
      *
      * @type {PointsMaterial}
      */
-    this.material = new PointsMaterial({color: 0x888888, size: 2})
+    this.material = new PointsMaterial({color: 0x888888, size: 3})
 
     /**
      *
@@ -32,9 +32,10 @@ class StarControls {
 
   /**
    *
+   * @param {Loader} loader
    * @returns {void}
    */
-  async beforeStart() {
+  async beforeStart(loader) {
     this.points.geometry = this.geometry
     this.points.material = this.material
     this.object.add(this.points)

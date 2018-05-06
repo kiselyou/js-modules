@@ -47,9 +47,11 @@ class SkyBoxControls {
   }
 
   /**
+   *
+   * @param {Loader} loader
    * @returns {void}
    */
-  async beforeStart() {
+  async beforeStart(loader) {
     this.sky.material = new MeshStandardMaterial({
       map: this.loader.getTexture(CONST.KEY_SECTOR_ALPHA),
       side: BackSide,
