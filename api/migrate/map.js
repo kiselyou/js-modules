@@ -7,7 +7,8 @@ import Factory from './../../entity/station/Factory'
 import Equipment from './../../entity/station/Equipment'
 import Mineral from './../../entity/station/Mineral'
 import Status from './../../entity/sector/Status'
-import { mapStar, mapStarLights } from './mapStar'
+import { mapStar } from './mapStar'
+import { mapStarLights } from './mapStarLights'
 import * as CONST from './../../app/constants'
 
 const starKeySectorAlpha = 1

@@ -1,8 +1,19 @@
 
-export const KEY_LIGHT_CONTROLS_1 = 'LIGHT_CONTROLS_1'
-export const KEY_LIGHT_CONTROLS_2 = 'LIGHT_CONTROLS_2'
-export const KEY_LIGHT_CONTROLS_3 = 'LIGHT_CONTROLS_3'
-export const KEY_LIGHT_CONTROLS_8 = 'LIGHT_CONTROLS_8'
+export const KEY_LIGHT_CONTROLS_1 = 'LC1'
+export const KEY_LIGHT_CONTROLS_2 = 'LC2'
+export const KEY_LIGHT_CONTROLS_3 = 'LC3'
+export const KEY_LIGHT_CONTROLS_4 = 'LC4'
+export const KEY_LIGHT_CONTROLS_5 = 'LC5'
+export const KEY_LIGHT_CONTROLS_6 = 'LC6'
+export const KEY_LIGHT_CONTROLS_7 = 'LC7'
+export const KEY_LIGHT_CONTROLS_8 = 'LC8'
+export const KEY_LIGHT_CONTROLS_9 = 'LC9'
+export const KEY_LIGHT_CONTROLS_10 = 'LC10'
+export const KEY_LIGHT_CONTROLS_11 = 'LC11'
+export const KEY_LIGHT_CONTROLS_12 = 'LC12'
+export const KEY_LIGHT_CONTROLS_13 = 'LC13'
+export const KEY_LIGHT_CONTROLS_14 = 'LC14'
+export const KEY_LIGHT_CONTROLS_15 = 'LC15'
 
 
 export const KEY_PLANET_EARTH_MAP = 'PLANET_EARTH_MAP'

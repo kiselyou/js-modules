@@ -28,6 +28,12 @@ class StarLight {
 
     /**
      *
+     * @type {Vector3}
+     */
+    this.rotation = new Vector3()
+
+    /**
+     *
      * @type {{enabled: boolean, textureKey: string, size: number}}
      */
     this.flare = {enabled: true, textureKey: CONST.KEY_LIGHT_CONTROLS_1, size: 20}
@@ -36,7 +42,13 @@ class StarLight {
      *
      * @type {{enabled: boolean, textureKey: string, size: number}}
      */
-    this.flareGlow = {enabled: true, textureKey: CONST.KEY_LIGHT_CONTROLS_2, size: 80}
+    this.flareGlow = {enabled: false, textureKey: CONST.KEY_LIGHT_CONTROLS_2, size: 80}
+
+    /**
+     *
+     * @type {Object3D|null}
+     */
+    this.flareElement = null
   }
 
   /**
@@ -73,6 +85,18 @@ class StarLight {
 
   /**
    *
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @returns {StarLight}
+   */
+  setRotation(x, y, z) {
+    this.rotation.set(x, y, z)
+    return this
+  }
+
+  /**
+   *
    * @param {{[enabled]: boolean, [textureKey]: string, [size]: number}} options
    * @returns {StarLight}
    */
@@ -91,6 +115,7 @@ class StarLight {
    * @returns {StarLight}
    */
   setFlareGlowOptions(options) {
+    this.flareGlow.enabled = true
     for (const property in options) {
       if (options.hasOwnProperty(property)) {
         this.flareGlow[property] = options[property]
@@ -105,21 +130,22 @@ class StarLight {
    * @returns {Object3D}
    */
   getFlare(loader) {
-    let light = new Object3D()
-    light.position.copy(this.position);
+    if (!this.flareElement) {
+      this.flareElement = new LensFlare()
+      console.log(this.flareElement)
 
-    const lensFlare = new LensFlare()
-    if (this.flare.enabled) {
-      const texture = loader.getTexture(this.flare.textureKey)
-      lensFlare.addElement(new LensFlareElement(texture, this.flare.size, 0))
-    }
-    if (this.flareGlow.enabled) {
-      const texture = loader.getTexture(this.flareGlow.textureKey)
-      lensFlare.addElement(new LensFlareElement(texture, this.flareGlow.size, 0))
-    }
+      this.flareElement.position.copy(this.position)
 
-    light.add(lensFlare)
-    return light
+      if (this.flare.enabled) {
+        const texture = loader.getTexture(this.flare.textureKey)
+        this.flareElement.addElement(new LensFlareElement(texture, this.flare.size, 0))
+      }
+      if (this.flareGlow.enabled) {
+        const texture = loader.getTexture(this.flareGlow.textureKey)
+        this.flareElement.addElement(new LensFlareElement(texture, this.flareGlow.size, 0))
+      }
+    }
+    return this.flareElement
   }
 
   /**
@@ -143,6 +169,15 @@ class StarLight {
       }
     }
     return this
+  }
+
+  update(delta) {
+    if (this.flareElement) {
+      this.flareElement.rotation.x += 0.1
+      this.flareElement.rotation.y += 0.1
+      this.flareElement.rotation.z += 0.1
+      // this.flareElement.updateLensFlares()
+    }
   }
 }
 

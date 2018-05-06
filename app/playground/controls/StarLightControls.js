@@ -51,7 +51,9 @@ class StarLightControls {
    * @returns {void}
    */
   update(delta) {
-
+    for (const light of this.lights) {
+      light.update(delta)
+    }
   }
 }
 

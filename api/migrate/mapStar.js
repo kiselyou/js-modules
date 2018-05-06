@@ -52,32 +52,3 @@ export function mapStar(starKey) {
   const stars = mapAroundStar(starKey)
   return ringStars.concat(stars)
 }
-
-/**
- *
- * @param {number} starKey
- * @returns {Array}
- */
-export function mapStarLights(starKey) {
-  const stars = []
-  for (let i = 1; i <= 8; i++) {
-    const starLight = new StarLight()
-    const star = new Star().updatePosition(distance, distance, distance)
-    stars.push(
-      starLight
-        .setKey(starKey)
-        .setFlareOptions({
-          size: randInt(20, 100),
-          textureKey: randInt(0, 1) ? CONST.KEY_LIGHT_CONTROLS_3 : CONST.KEY_LIGHT_CONTROLS_8
-        })
-        .setFlareGlowOptions(
-          {
-            enabled: false,//Boolean(randInt(0, 1)),
-            size: randInt(20, 80)
-          }
-        )
-        .setPosition(star.position.x, star.position.y, star.position.z)
-    )
-  }
-  return stars
-}
