@@ -1,7 +1,7 @@
 import { mgDB } from '../db/mongo'
 import Universe from './../../entity/Universe'
 
-class UniverseCollection {
+class PlayGroundUniverse {
   constructor() {
     /**
      *
@@ -20,6 +20,11 @@ class UniverseCollection {
     return new Universe(this.id).copy(universeData)
   }
 
+  /**
+   *
+   * @param {number} value
+   * @returns {Promise}
+   */
   async updateTimestamp(value) {
     const collection = await mgDB('Universe')
     return collection.updateOne(
@@ -35,4 +40,4 @@ class UniverseCollection {
   }
 }
 
-export default UniverseCollection
+export default PlayGroundUniverse

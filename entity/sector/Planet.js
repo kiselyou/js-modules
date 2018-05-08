@@ -373,15 +373,17 @@ class Planet {
 
   /**
    *
+   * @param {number} delta
    * @returns {Planet}
    */
-  calculatePosition() {
+  calculatePosition(delta = 1) {
     let x = 0, z = 0;
     if (this.parent) {
       x = this.parent.position.x
       z = this.parent.position.z
     }
-    this.angleToCenter += this.speedMove
+
+    this.angleToCenter += this.speedMove * delta
     this.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
     this.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
     return this

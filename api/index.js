@@ -1,9 +1,11 @@
 import path from 'path'
+import multer from 'multer';
 import express from 'express'
+import bodyParser from 'body-parser'
 import routes from './routes'
 import { config } from './config/develop'
 import * as core from './core'
-import PlayProcess from './socket/PlayProcess'
+import PlayGroundProcess from './socket/PlayGroundProcess'
 
 const app = express()
 
@@ -27,6 +29,9 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
 app.use(express.static('public'))
 app.use('/public', express.static(path.join(__dirname + '/../public')))
 
@@ -35,14 +40,21 @@ app.get('/', function(req, res) {
 })
 
 for (const route of routes) {
-  app[route.method](route.path, (req, res) => {
-    route.action(req, res, core)
-  })
+  const method = route.method.toLowerCase()
+  if (method === 'post') {
+    app[method](route.path, multer().array(), (req, res) => {
+      route.action(req, res, core)
+    })
+  } else {
+    app[method](route.path, (req, res) => {
+      route.action(req, res, core)
+    })
+  }
 }
 
 app.listen(config.server.port, config.server.host, () => {
   console.log(`Example app listening host ${config.server.host} on port ${config.server.port}`)
 })
 
-const playProcess = new PlayProcess(app)
+const playProcess = new PlayGroundProcess(app)
 playProcess.listen()

@@ -132,7 +132,6 @@ class StarLight {
   getFlare(loader) {
     if (!this.flareElement) {
       this.flareElement = new LensFlare()
-      console.log(this.flareElement)
 
       this.flareElement.position.copy(this.position)
 
@@ -173,10 +172,7 @@ class StarLight {
 
   update(delta) {
     if (this.flareElement) {
-      this.flareElement.rotation.x += 0.1
-      this.flareElement.rotation.y += 0.1
-      this.flareElement.rotation.z += 0.1
-      // this.flareElement.updateLensFlares()
+
     }
   }
 }

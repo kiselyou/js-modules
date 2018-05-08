@@ -47,12 +47,6 @@ class SectorControls extends Sector {
      * @type {StarLightControls}
      */
     this.starLightControls = new StarLightControls(this.skyBoxControls.sky)
-
-    /**
-     * TODO: temp
-     * @type {Vector3}
-     */
-    this.playerPosition = new Vector3()
   }
 
   /**
@@ -81,11 +75,12 @@ class SectorControls extends Sector {
   /**
    *
    * @param {number} delta
+   * @param {Vector3} playerPosition
    * @returns {void}
    */
-  update(delta) {
+  update(delta, playerPosition) {
     this.planetsControls.update(delta)
-    this.skyBoxControls.update(delta, this.playerPosition)
+    this.skyBoxControls.update(delta, playerPosition)
     this.starControls.update(delta)
     this.starLightControls.update(delta)
   }

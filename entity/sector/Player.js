@@ -1,5 +1,5 @@
 import uuidV4 from 'uuid/v4'
-import { Vector2 }  from 'three'
+import { Vector3 }  from 'three'
 import Monitor from './dependence/Monitor'
 import BankAccount from './dependence/BankAccount'
 import PlayerHasStation from './dependence/PlayerHasStation'
@@ -48,9 +48,9 @@ class Player {
 
     /**
      *
-     * @type {Vector2}
+     * @type {Vector3}
      */
-    this.position = new Vector2()
+    this.position = new Vector3()
 
     /**
      *
@@ -103,10 +103,11 @@ class Player {
    *
    * @param {number} x
    * @param {number} y
+   * @param {number} z
    * @returns {Player}
    */
-  setPosition(x, y) {
-    this.position.set(x, y)
+  setPosition(x, y, z) {
+    this.position.set(x, y, z)
     return this
   }
 

@@ -66,7 +66,7 @@ export const map = [
   [
     new Planet()
       .setName('Земля')
-      .setSpeedMove(0.00001)
+      .setSpeedMove(0.0002)
       .setDistanceToCenter(400)
       .setPopulation(7444443881)
       .setParams({ radius: 6.371, segments: 40 })
@@ -88,7 +88,7 @@ export const map = [
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
     new Planet()
       .setName('Луна')
-      .setSpeedMove(0.000002)
+      .setSpeedMove(0.002)
       .setDistanceToCenter(50)
       .setParams({ radius: 1.737, segments: 40 })
       .setTextures({
@@ -107,7 +107,7 @@ export const map = [
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba'),
     new Planet()
       .setName('Марс')
-      .setSpeedMove(0.00001)
+      .setSpeedMove(0.0004)
       .setDistanceToCenter(1000)
       .setParams({ radius: 3.39, segments: 40 })
       .setPopulation(5000)
@@ -129,7 +129,7 @@ export const map = [
   [
     new Player()
       .setName('Валера')
-      .setPosition(100, 100)
+      .setPosition(100, 100, 100)
       .setId('09839694-28d3-4504-9dc9-1cd3b6a539d7')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId('f8a54ce6-d80d-4a36-b285-f12351b0a8ba')

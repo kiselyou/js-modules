@@ -59,7 +59,7 @@ class PlayerControls extends Player {
    * @returns {void}
    */
   update(delta) {
-    this.sectorControls.update(delta)
+    this.sectorControls.update(delta, this.position)
   }
 }
 

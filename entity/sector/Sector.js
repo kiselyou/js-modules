@@ -15,7 +15,7 @@ class Sector {
 
     /**
      *
-     * @type {string}
+     * @type {string|?}
      */
     this.name = null
 
@@ -36,6 +36,22 @@ class Sector {
      * @type {number}
      */
     this.starKey = 1
+
+    /**
+     *
+     * @type {Array.<Planet>}
+     */
+    this.children = []
+  }
+
+  /**
+   *
+   * @param {Planet|Array.<Planet>} element
+   * @returns {Sector}
+   */
+  addChildren(element) {
+    this.children = this.children.concat(element)
+    return this
   }
 
   /**
@@ -84,7 +100,7 @@ class Sector {
    *
    * @param {number} x
    * @param {number} y
-   * @param {number} y
+   * @param {number} z
    * @returns {Sector}
    */
   setPosition(x, y, z) {

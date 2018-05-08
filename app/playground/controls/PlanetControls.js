@@ -32,7 +32,7 @@ class PlanetControls {
    * @returns {void}
    */
   async beforeStart(loader) {
-    this.calculatePositions(this.planets)
+    this.preparePlanets(this.planets)
     for (const modelPlanet of this.planets) {
       modelPlanet.beforeStart(loader)
     }
@@ -42,7 +42,7 @@ class PlanetControls {
    *
    * @param {Array.<ModelPlanet>} modelPlanets
    */
-  calculatePositions(modelPlanets) {
+  preparePlanets(modelPlanets) {
     const prepare = {}
     for (const modelPlanet of modelPlanets) {
       prepare[modelPlanet.id] = modelPlanet
@@ -53,7 +53,7 @@ class PlanetControls {
       if (prepare.hasOwnProperty(parentId)) {
         modelPlanet.setParentPlanet(prepare[parentId])
       }
-      modelPlanet.calculatePosition()
+      modelPlanet.calculatePosition(0)
     }
   }
 

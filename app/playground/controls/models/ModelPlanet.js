@@ -173,7 +173,7 @@ class ModelPlanet extends Planet {
    */
   update(delta) {
     if (this.planet) {
-      this.calculatePosition()
+      this.calculatePosition(delta)
       this.group.position.copy(this.position)
       this.planet.rotation.y -= 0.05 * delta
 

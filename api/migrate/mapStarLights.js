@@ -36,9 +36,7 @@ export function mapStarLights(starKey) {
     new StarLight()
       .setKey(starKey)
       .setId('5d633ccc-a8e6-4937-8c9e-6035c425cb56')
-      .setFlareOptions({size: 280, textureKey: CONST.KEY_LIGHT_CONTROLS_12})
-      .setFlareGlowOptions({size: 120, textureKey: CONST.KEY_LIGHT_CONTROLS_7})
+      .setFlareOptions({size: 80, textureKey: CONST.KEY_LIGHT_CONTROLS_14})
       .setPosition(1000, -2000, 0)
-      .setRotation(0.1, 0, 0)
   ]
 }

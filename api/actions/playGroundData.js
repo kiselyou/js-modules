@@ -7,7 +7,8 @@ import * as core from './../core'
  */
 export async function playGroundData(req, res) {
   const data = {}
-  const player = await getPlayerInfoById('09839694-28d3-4504-9dc9-1cd3b6a539d7')
+  const playerId = req.body['id']
+  const player = await getPlayerInfoById(playerId)
 
   if (player) {
     data.player = player

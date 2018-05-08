@@ -14,14 +14,14 @@ import LightControls from './controls/LightControls'
 class Playground {
   /**
    *
-   * @param {{userInfo: object, loader: Loader}} data
+   * @param {{playGroundInfo: object, loader: Loader}} data
    */
   constructor(data) {
     /**
      *
      * @type {Object}
      */
-    this.userInfo = data.userInfo
+    this.playGroundInfo = data.playGroundInfo
 
     /**
      *
@@ -64,7 +64,7 @@ class Playground {
      * @type {PlayerControls}
      */
     this.playerControls = new PlayerControls(this.scene, this.loader)
-    this.playerControls.copy(this.userInfo)
+    this.playerControls.copy(this.playGroundInfo)
 
     /**
      *
