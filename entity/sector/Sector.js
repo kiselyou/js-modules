@@ -41,7 +41,7 @@ class Sector {
      *
      * @type {Array.<Planet>}
      */
-    this.children = []
+    this.planets = []
   }
 
   /**
@@ -49,8 +49,8 @@ class Sector {
    * @param {Planet|Array.<Planet>} element
    * @returns {Sector}
    */
-  addChildren(element) {
-    this.children = this.children.concat(element)
+  addPlanets(element) {
+    this.planets = this.planets.concat(element)
     return this
   }
 
@@ -130,6 +130,38 @@ class Sector {
       }
     }
     return this
+  }
+
+  /**
+   *
+   * @returns {Object}
+   */
+  getSwapInfo() {
+    const data = {}
+    const properties = ['id', 'position', 'size', 'planets']
+    for (const property of properties) {
+      switch (property) {
+        case 'planets':
+          data[property] = this.getSwapInfoPlanets()
+          break
+        default:
+          data[property] = this[property]
+      }
+
+    }
+    return data
+  }
+
+  /**
+   *
+   * @returns {Array.<Object>}
+   */
+  getSwapInfoPlanets() {
+    const data = []
+    for (const planet of this.planets) {
+      data.push(planet.getSwapInfo())
+    }
+    return data
   }
 }
 

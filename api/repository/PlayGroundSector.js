@@ -13,7 +13,7 @@ class PlayGroundSector {
 
   /**
    *
-   * @returns {Array.<Sector>}
+   * @returns {Promise.<Array.<Sector>>}
    */
   async getSectorsInfo() {
     const res = []
@@ -24,7 +24,7 @@ class PlayGroundSector {
       res.push(
         new Sector()
           .copy(sector)
-          .addChildren(planets)
+          .addPlanets(planets)
       )
     }
     return res
@@ -33,11 +33,12 @@ class PlayGroundSector {
   /**
    *
    * @param {Array.<Sector>} sectors
+   * @returns {void}
    */
   updateSectorsInfo(sectors) {
     const collection = mgDB('Sector')
     for (const sector of sectors) {
-      this.playGroundPlanet.updatePlanetsInfo(sector.children)
+      this.playGroundPlanet.updatePlanetsInfo(sector.planets)
       collection.then((db) => {
         db.updateOne(
           {id: sector.id},
@@ -60,7 +61,7 @@ class PlayGroundSector {
    */
   update(delta, sectors) {
     for (let sector of sectors) {
-      this.playGroundPlanet.update(delta, sector.children)
+      this.playGroundPlanet.update(delta, sector.planets)
     }
   }
 }

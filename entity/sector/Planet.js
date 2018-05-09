@@ -388,6 +388,23 @@ class Planet {
     this.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
     return this
   }
+
+  /**
+   *
+   * @returns {Object}
+   */
+  getSwapInfo() {
+    const data = {}
+    const properties = ['id', 'angleToCenter']
+    for (const property of properties) {
+      switch (property) {
+        default:
+          data[property] = this[property]
+      }
+
+    }
+    return data
+  }
 }
 
 export default Planet

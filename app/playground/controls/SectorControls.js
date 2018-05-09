@@ -84,6 +84,15 @@ class SectorControls extends Sector {
     this.starControls.update(delta)
     this.starLightControls.update(delta)
   }
+
+  /**
+   *
+   * @param {SwapInfo} data
+   */
+  setSwapInfo(data) {
+    this.planetsControls.setSwapInfo(data)
+
+  }
 }
 
 export default SectorControls

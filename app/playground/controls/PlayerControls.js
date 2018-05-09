@@ -2,14 +2,13 @@ import SectorControls from './SectorControls'
 import RaceControls from './RaceControls'
 import Player from '@entity/sector/Player'
 
-class PlayerControls extends Player {
+class PlayerControls {
   /**
    *
    * @param {Scene} scene
    * @param {Loader} loader
    */
   constructor(scene, loader) {
-    super()
     /**
      * @type {Scene}
      */
@@ -20,6 +19,12 @@ class PlayerControls extends Player {
      * @type {Loader}
      */
     this.loader = loader
+
+    /**
+     *
+     * @type {Player}
+     */
+    this.player = new Player()
 
     /**
      *
@@ -49,7 +54,7 @@ class PlayerControls extends Player {
    */
   copy(data) {
     this.sectorControls.copy(data)
-    super.copy(data.player)
+    this.player.copy(data.player)
     return this
   }
 
@@ -59,7 +64,7 @@ class PlayerControls extends Player {
    * @returns {void}
    */
   update(delta) {
-    this.sectorControls.update(delta, this.position)
+    this.sectorControls.update(delta, this.player.position)
   }
 }
 

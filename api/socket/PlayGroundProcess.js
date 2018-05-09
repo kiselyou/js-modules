@@ -1,7 +1,11 @@
 import Server from './Server'
-import SpaceTimer from './../../entity/SpaceTimer'
+import SpaceTimer from '../../entity/helper/SpaceTimer'
 import PlayGroundUniverse from './../repository/PlayGroundUniverse'
 import PlayGroundSector from './../repository/PlayGroundSector'
+import HelperSector from './../../entity/sector/helper/HelperSector'
+import Player from './../../entity/sector/Player'
+import SwapInfo from './../../entity/helper/SwapInfo'
+
 import { Clock } from 'three'
 
 
@@ -36,12 +40,25 @@ class PlayGroundProcess extends Server {
      * @type {PlayGroundSector}
      */
     this.sector = new PlayGroundSector()
+
+    /**
+     *
+     * @type {HelperSector}
+     */
+    this.helperSector = new HelperSector()
   }
 
   async listen() {
+    /**
+     *
+     * @type {Array<Sector>}
+     */
     const sectors = await this.sector.getSectorsInfo()
-    const universe = await this.universe.getUniverse()
 
+    /**
+     * @type Universe
+     */
+    const universe = await this.universe.getUniverse()
 
     // Расчет движения планет в секторах
     setInterval(() => {
@@ -49,7 +66,7 @@ class PlayGroundProcess extends Server {
       this.sector.update(delta, sectors)
     }, 1000 / 60)
 
-
+    // Расчет игрового времени, добавление событий
     this.spaceTimer
       .setTimestamp(universe.timestamp)
       .eachMinute((eventData) => {
@@ -58,14 +75,29 @@ class PlayGroundProcess extends Server {
       })
       .startTimer()
 
+    // Сокет соеденение с игроком
     this.connect('play-process', (socket) => {
-      const eachMinuteEmit = (eventData) => {
-        socket.emit('timestamp', {
-          timestamp: eventData.timestamp,
-          sector: sectors[0].children
-        });
+
+      const playerInfo = new Player()
+
+      // Получение основной информации о текущем игроке
+      socket.on('swap-player', (player) => {
+        playerInfo.copy(player)
+        playerInfo.setSocketId(socket.id)
+        socket.emit('swap-player', playerInfo.getSwapInfo())
+      })
+
+      // Подготовка параметров для обмена данными об игровом процессе
+      const eachMinuteEmit = () => {
+        if (playerInfo.sectorId) {
+          const swapInfo = new SwapInfo()
+            .setUniverse(universe.getSwapInfo())
+            .setSector(this.helperSector.getSwapInfoById(sectors, playerInfo.sectorId))
+          socket.emit('each-minute', swapInfo)
+        }
       }
 
+      // Отправлять каждую минуту актуальную информацию об игровом процессе
       this.spaceTimer.eachMinute(eachMinuteEmit)
 
       socket.on('disconnect', () => {

@@ -8,35 +8,44 @@ class PlayGroundUniverse {
      * @type {number}
      */
     this.id = 1
+
+    /**
+     *
+     * @type {Universe}
+     */
+    this.universe = new Universe(this.id)
   }
 
   /**
    *
-   * @returns {Universe}
+   * @returns {Promise.<Universe>}
    */
   async getUniverse() {
     const collection = await mgDB('Universe')
     const universeData = await collection.findOne({id: this.id})
-    return new Universe(this.id).copy(universeData)
+    return this.universe.copy(universeData)
   }
 
   /**
    *
    * @param {number} value
-   * @returns {Promise}
+   * @returns {void}
    */
-  async updateTimestamp(value) {
-    const collection = await mgDB('Universe')
-    return collection.updateOne(
-      { id: this.id },
-      { $set: { timestamp: value } },
-      { upsert: true },
-      (err) => {
-        if (err) {
-          throw new Error('Cannot upsert timestamp')
+  updateTimestamp(value) {
+    this.universe.setTimestamp(value)
+    const collection = mgDB('Universe')
+    collection.then((db) => {
+      return db.updateOne(
+        { id: this.id },
+        { $set: { timestamp: value } },
+        { upsert: true },
+        (err) => {
+          if (err) {
+            throw new Error('Cannot upsert timestamp')
+          }
         }
-      }
-    )
+      )
+    })
   }
 }
 

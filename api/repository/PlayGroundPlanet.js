@@ -18,16 +18,15 @@ class PlayGroundPlanet {
     for (const planet of planets) {
       res.push(new Planet().copy(planet))
     }
-    return this._preparePlanets(res)
+    return this.preparePlanets(res)
   }
 
   /**
    *
    * @param {Array.<Planet>} planets
    * @returns {Array.<Planet>}
-   * @private
    */
-  _preparePlanets(planets) {
+  preparePlanets(planets) {
     const prepare = {}
     for (const planet of planets) {
       prepare[planet.id] = planet

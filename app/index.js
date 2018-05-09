@@ -5,6 +5,7 @@ import App from './components/App.jsx'
 import Playground from '@app/playground/Playground'
 import Loader from '@app/playground/Loader'
 import Ajax from '@module/ajax/Ajax'
+import SwapInfo from '@entity/helper/SwapInfo'
 import io from 'socket.io-client'
 
 import Player from '@entity/sector/Player'
@@ -27,20 +28,26 @@ ReactDOM.render(<App />, document.getElementById('root'));
       playGroundInfo: playGroundInfo,
       loader: loader,
     })
-    playground.init('root', 'root-canvas')
+
+    await playground.init('root', 'root-canvas')
+
+    const socket = io.connect('http://127.0.0.1:3333/play-process');
+
+    socket.emit('swap-player', playground.player.getSwapInfo())
+    socket.on('swap-player', (swapPlayer) => {
+      playground.player.copy(swapPlayer)
+    })
+
+    socket.on('each-minute', (swapInfo) => {
+      playground.setSwapInfo(
+        new SwapInfo()
+          .copy(swapInfo)
+      )
+    })
+
   } else {
     new Error('Cannot get users info')
   }
-
-  try {
-    const socket = io.connect('http://127.0.0.1:3333/play-process');
-    socket.on('timestamp', (data) => {
-      console.log(data)
-    })
-  } catch (e) {
-    console.warn(e)
-  }
-
 
 })()
 

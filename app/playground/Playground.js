@@ -137,6 +137,24 @@ class Playground {
     }
     return this
   }
+
+  /**
+   *
+   * @returns {Player}
+   */
+  get player() {
+    return this.playerControls.player
+  }
+
+  /**
+   *
+   * @param {SwapInfo} data
+   * @returns {Playground}
+   */
+  setSwapInfo(data) {
+    this.playerControls.sectorControls.setSwapInfo(data)
+    return this
+  }
 }
 
 export default Playground

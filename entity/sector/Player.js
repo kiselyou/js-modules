@@ -18,21 +18,27 @@ class Player {
 
     /**
      *
-     * @type {string}
+     * @type {string|?}
      */
     this.name = null
 
     /**
      *
-     * @type {string}
+     * @type {string|?}
      */
     this.raceId = null
 
     /**
      *
-     * @type {string}
+     * @type {string|?}
      */
     this.sectorId = null
+
+    /**
+     *
+     * @type {string|?}
+     */
+    this.socketId = null
 
     /**
      *
@@ -86,6 +92,16 @@ class Player {
    */
   setSectorId(id) {
     this.sectorId = id
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Player}
+   */
+  setSocketId(id) {
+    this.socketId = id
     return this
   }
 
@@ -155,6 +171,22 @@ class Player {
       }
     }
     return this
+  }
+
+  /**
+   *
+   * @returns {Object}
+   */
+  getSwapInfo() {
+    const data = {}
+    const properties = ['id', 'position', 'sectorId', 'raceId', 'socketId']
+    for (const property of properties) {
+      switch (property) {
+        default:
+          data[property] = this[property]
+      }
+    }
+    return data
   }
 }
 

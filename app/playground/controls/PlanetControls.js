@@ -82,6 +82,31 @@ class PlanetControls {
       model.update(delta)
     }
   }
+
+  /**
+   * сенхронизация планет с server -> client
+   *
+   * @param {SwapInfo} data
+   */
+  setSwapInfo(data) {
+    const swapPlanets = data.sector.planets
+    for (const swapPlanet of swapPlanets) {
+      const planet = this.findPlanetById(swapPlanet.id)
+      if (planet) {
+        planet.copy(swapPlanet)
+      }
+    }
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {ModelPlanet|?}
+   */
+  findPlanetById(id) {
+    const planet = this.planets.find((planet) => planet.id === id)
+    return planet ? planet : null
+  }
 }
 
 export default PlanetControls

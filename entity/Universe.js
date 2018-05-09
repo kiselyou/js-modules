@@ -25,6 +25,15 @@ class Universe {
 
   /**
    *
+   * @param {number} value
+   */
+  setTimestamp(value) {
+    this.timestamp = value
+    return this
+  }
+
+  /**
+   *
    * @param {object} data
    * @returns {Universe}
    */
@@ -41,6 +50,23 @@ class Universe {
       }
     }
     return this
+  }
+
+  /**
+   *
+   * @returns {Array.<Object>}
+   */
+  getSwapInfo() {
+    const data = {}
+    const properties = ['timestamp']
+    for (const property of properties) {
+      switch (property) {
+        default:
+          data[property] = this[property]
+      }
+
+    }
+    return data
   }
 }
 
