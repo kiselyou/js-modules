@@ -1,9 +1,6 @@
-import uuidV4 from 'uuid/v4'
+import uuidV4 from "uuid/v4";
 
-/**
- * Привязка завода к станции
- */
-class StationHasFactory {
+class AsteroidHasMineral {
   constructor() {
     /**
      * @type {string}
@@ -17,25 +14,41 @@ class StationHasFactory {
 
     /**
      *
+     * @type {number}
+     */
+    this.units = 0
+
+    /**
+     *
      * @type {string|?}
      */
-    this.factoryId = null
+    this.mineralId = null
   }
 
   /**
    *
-   * @param {string} factoryId
-   * @returns {StationHasFactory}
+   * @param {number} value
+   * @returns {AsteroidHasMineral}
    */
-  setFactoryId(factoryId) {
-    this.factoryId = factoryId
+  setUnits(value) {
+    this.units = value
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {AsteroidHasMineral}
+   */
+  setMineralId(id) {
+    this.mineralId = id
     return this
   }
 
   /**
    *
    * @param {object} data
-   * @returns {StationHasFactory}
+   * @returns {AsteroidHasMineral}
    */
   copy(data) {
     for (const property in data) {
@@ -53,4 +66,4 @@ class StationHasFactory {
   }
 }
 
-export default StationHasFactory
+export default AsteroidHasMineral

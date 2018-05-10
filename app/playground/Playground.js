@@ -117,7 +117,7 @@ class Playground {
    * @returns {Playground}
    */
   animateStart() {
-    let delta = this.clock.getDelta();
+    let delta = this.clock.getDelta()
     this.playerControls.update(delta)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {

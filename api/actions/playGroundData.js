@@ -20,6 +20,7 @@ export async function playGroundData(req, res) {
     data.sector = await getSectorInfoById(data.player.sectorId)
     data.planet = await getPlanetsInfoBySectorId(data.player.sectorId)
     data.station = await getStationsInfoBySectorId(data.player.sectorId)
+    data.asteroid = await getAsteroidsInfoBySectorId(data.player.sectorId)
     data.star = await getStarByKey(data.sector.starKey)
     data.starLight = await getStarLightByKey(data.sector.starKey)
   }
@@ -84,6 +85,16 @@ async function getPlanetsInfoBySectorId(id) {
  */
 async function getStationsInfoBySectorId(id) {
   const collection = await core.mgDB('Station')
+  return collection.find({sectorId: id}).toArray()
+}
+
+/**
+ *
+ * @param {string} id
+ * @returns {Promise.<Object>}
+ */
+async function getAsteroidsInfoBySectorId(id) {
+  const collection = await core.mgDB('Asteroid')
   return collection.find({sectorId: id}).toArray()
 }
 

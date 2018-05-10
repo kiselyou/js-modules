@@ -1,7 +1,7 @@
 import Planet from '@entity/sector/Planet'
 import ModelPlanetClouds from './ModelPlanetClouds'
 import { Mesh, Group, MeshPhongMaterial, SphereGeometry, Color } from 'three'
-import { getGlowInsideMesh, getGlowOutsideMesh } from './../../../shader/glow'
+import { getGlowInsideMesh, getGlowOutsideMesh } from '../../../../shader/glow'
 
 class ModelPlanet extends Planet {
   /**

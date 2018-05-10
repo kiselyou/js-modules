@@ -1,4 +1,6 @@
 import PlanetControls from './PlanetControls'
+import StationControls from './StationControls'
+import AsteroidControls from './AsteroidControls'
 import Sector from '@entity/sector/Sector'
 import SkyBoxControls from './SkyBoxControls'
 import StarControls from './StarControls'
@@ -38,6 +40,18 @@ class SectorControls extends Sector {
 
     /**
      *
+     * @type {StationControls}
+     */
+    this.stationControls = new StationControls(this.scene, this.loader)
+
+    /**
+     *
+     * @type {AsteroidControls}
+     */
+    this.asteroidControls = new AsteroidControls(this.scene, this.loader)
+
+    /**
+     *
      * @type {StarControls}
      */
     this.starControls = new StarControls(this.skyBoxControls.sky)
@@ -56,6 +70,8 @@ class SectorControls extends Sector {
     await this.starControls.beforeStart(this.loader)
     await this.skyBoxControls.beforeStart(this.loader)
     await this.planetsControls.beforeStart(this.loader)
+    await this.stationControls.beforeStart(this.loader)
+    await this.asteroidControls.beforeStart(this.loader)
     await this.starLightControls.beforeStart(this.loader)
   }
 
@@ -67,6 +83,8 @@ class SectorControls extends Sector {
   copy(data) {
     super.copy(data['sector'])
     this.planetsControls.copy(data)
+    this.stationControls.copy(data)
+    this.asteroidControls.copy(data)
     this.starControls.copy(data['star'])
     this.starLightControls.copy(data['starLight'])
     return this
@@ -80,6 +98,8 @@ class SectorControls extends Sector {
    */
   update(delta, playerPosition) {
     this.planetsControls.update(delta)
+    this.stationControls.update(delta)
+    this.asteroidControls.update(delta)
     this.skyBoxControls.update(delta, playerPosition)
     this.starControls.update(delta)
     this.starLightControls.update(delta)
@@ -91,7 +111,8 @@ class SectorControls extends Sector {
    */
   setSwapInfo(data) {
     this.planetsControls.setSwapInfo(data)
-
+    this.stationControls.setSwapInfo(data)
+    this.asteroidControls.setSwapInfo(data)
   }
 }
 

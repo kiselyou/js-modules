@@ -1,4 +1,4 @@
-import ModelPlanet from './models/ModelPlanet'
+import ModelPlanet from './models/planet/ModelPlanet'
 
 class PlanetControls {
   /**

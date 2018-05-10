@@ -1,8 +1,8 @@
+import AsteroidHasMineral from './dependence/AsteroidHasMineral'
+import {Vector3} from 'three'
 import uuidV4 from 'uuid/v4'
-import { Vector3 } from 'three'
-import StationHasFactory from './dependence/StationHasFactory'
 
-class Station {
+class Asteroid {
   constructor() {
     /**
      * @type {string}
@@ -58,15 +58,21 @@ class Station {
 
     /**
      *
-     * @type {Array.<StationHasFactory>}
+     * @type {number}
      */
-    this.stationHasFactory = []
+    this.size = 10
+
+    /**
+     *
+     * @type {Array.<AsteroidHasMineral>}
+     */
+    this.asteroidHasMineral = []
   }
 
   /**
    *
    * @param {string} id
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   setId(id) {
     this.id = id
@@ -74,10 +80,20 @@ class Station {
   }
 
   /**
+   *
+   * @param {number} value
+   * @returns {Asteroid}
+   */
+  setSize(value) {
+    this.size = value
+    return this
+  }
+
+  /**
    * Distance to center of Sector
    *
    * @param {number} value
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   setDistanceToCenter(value) {
     this.distanceToCenter = value
@@ -87,7 +103,7 @@ class Station {
   /**
    *
    * @param {number} degree
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   setAngleToCenter(degree) {
     this.angleToCenter = degree
@@ -97,7 +113,7 @@ class Station {
   /**
    *
    * @param {number} value
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   setSpeedMove(value) {
     this.speedMove = value
@@ -109,7 +125,7 @@ class Station {
    * @param {number} x
    * @param {number} y
    * @param {number} z
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   setRotation(x, y, z) {
     this.rotation.set(x, y, z)
@@ -119,7 +135,7 @@ class Station {
   /**
    *
    * @param {string} name
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   setName(name) {
     this.name = name
@@ -130,17 +146,18 @@ class Station {
    *
    * @param {number} x
    * @param {number} y
-   * @returns {Station}
+   * @param {number} z
+   * @returns {Asteroid}
    */
-  setPosition(x, y) {
-    this.position.set(x, y)
+  setPosition(x, y, z) {
+    this.position.set(x, y, z)
     return this
   }
 
   /**
    *
    * @param {string} id
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   setSectorId(id) {
     this.sectorId = id
@@ -150,11 +167,14 @@ class Station {
   /**
    *
    * @param {string} id
-   * @returns {Station}
+   * @param {number} units
+   * @returns {Asteroid}
    */
-  addFactory(id) {
-    this.stationHasFactory.push(
-      new StationHasFactory().setFactoryId(id)
+  addMineral(id, units) {
+    this.asteroidHasMineral.push(
+      new AsteroidHasMineral()
+        .setMineralId(id)
+        .setUnits(units)
     )
     return this
   }
@@ -162,7 +182,7 @@ class Station {
   /**
    *
    * @param {object} data
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   copy(data) {
     for (const property in data) {
@@ -174,10 +194,10 @@ class Station {
           case 'rotation':
             this[property].copy(data[property])
             break
-          case 'stationHasFactory':
+          case 'asteroidHasMineral':
             for (const item of data[property]) {
-              this.stationHasFactory.push(
-                new StationHasFactory()
+              this.asteroidHasMineral.push(
+                new AsteroidHasMineral()
                   .copy(item)
               )
             }
@@ -194,7 +214,7 @@ class Station {
   /**
    *
    * @param {number} delta
-   * @returns {Station}
+   * @returns {Asteroid}
    */
   calculatePosition(delta = 1) {
     let x = 0, z = 0;
@@ -205,4 +225,4 @@ class Station {
   }
 }
 
-export default Station
+export default Asteroid
