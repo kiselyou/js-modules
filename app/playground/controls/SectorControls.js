@@ -114,6 +114,18 @@ class SectorControls extends Sector {
     this.stationControls.setSwapInfo(data)
     this.asteroidControls.setSwapInfo(data)
   }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  updateTooltip(intersect, mouseEvent) {
+    this.planetsControls.updateTooltip(intersect, mouseEvent)
+    this.stationControls.updateTooltip(intersect, mouseEvent)
+    this.asteroidControls.updateTooltip(intersect, mouseEvent)
+  }
 }
 
 export default SectorControls

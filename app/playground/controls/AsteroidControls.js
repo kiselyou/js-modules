@@ -40,7 +40,7 @@ class AsteroidControls {
   /**
    *
    * @param {object} data
-   * @returns {StationControls}
+   * @returns {AsteroidControls}
    */
   copy(data) {
     for (const asteroid of data.asteroid) {
@@ -70,6 +70,18 @@ class AsteroidControls {
    */
   setSwapInfo(data) {
 
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  updateTooltip(intersect, mouseEvent) {
+    for (const model of this.asteroids) {
+      model.updateTooltip(intersect, mouseEvent)
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import Asteroid from '@entity/sector/Asteroid'
 import {BoxGeometry, Mesh, MeshPhongMaterial} from 'three'
+import MouseTooltip from '@entity/helper/MouseTooltip'
 
 class ModelAsteroid extends Asteroid {
   /**
@@ -26,6 +27,19 @@ class ModelAsteroid extends Asteroid {
      * @type {Loader}
      */
     this.loader = loader
+
+    /**
+     *
+     * @type {MouseTooltip}
+     */
+    this.tooltip = new MouseTooltip()
+
+    /**
+     *
+     * @type {boolean}
+     * @private
+     */
+    this._tooltipExists = false
   }
 
   /**
@@ -53,7 +67,7 @@ class ModelAsteroid extends Asteroid {
   /**
    *
    * @param {object} data
-   * @returns {ModelStation}
+   * @returns {ModelAsteroid}
    */
   copy(data) {
     super.copy(data)
@@ -68,6 +82,30 @@ class ModelAsteroid extends Asteroid {
   update(delta) {
     this.calculatePosition(delta)
     this.element.position.copy(this.position)
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  updateTooltip(intersect, mouseEvent) {
+    const isIntersect = intersect.is(this.element)
+    if (isIntersect) {
+      this.scene.add(
+        this.tooltip
+          .setPosition(this.position.x, this.position.y + 10, this.position.z)
+          .write(this.name)
+          .getSprite()
+      )
+      this._tooltipExists = true
+    } else {
+      if (this._tooltipExists) {
+        this.scene.remove(this.tooltip.getSprite())
+        this._tooltipExists = false
+      }
+    }
   }
 }
 

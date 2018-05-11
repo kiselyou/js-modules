@@ -66,6 +66,16 @@ class PlayerControls {
   update(delta) {
     this.sectorControls.update(delta, this.player.position)
   }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  updateTooltip(intersect, mouseEvent) {
+    this.sectorControls.updateTooltip(intersect, mouseEvent)
+  }
 }
 
 export default PlayerControls

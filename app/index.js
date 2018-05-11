@@ -29,7 +29,9 @@ ReactDOM.render(<App />, document.getElementById('root'));
       loader: loader,
     })
 
-    await playground.init('root', 'root-canvas')
+    await playground
+      .registrationEvents()
+      .init('root', 'root-canvas')
 
     const socket = io.connect('http://127.0.0.1:3333/play-process');
 

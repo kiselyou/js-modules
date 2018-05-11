@@ -71,6 +71,18 @@ class StationControls {
   setSwapInfo(data) {
 
   }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  updateTooltip(intersect, mouseEvent) {
+    for (const model of this.stations) {
+      model.updateTooltip(intersect, mouseEvent)
+    }
+  }
 }
 
 export default StationControls

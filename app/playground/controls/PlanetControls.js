@@ -24,6 +24,12 @@ class PlanetControls {
      * @type {Array.<ModelPlanet>}
      */
     this.planets = []
+
+    /**
+     *
+     * @type {Array.<Mesh>}
+     */
+    this.elements = []
   }
 
   /**
@@ -35,6 +41,7 @@ class PlanetControls {
     this.preparePlanets(this.planets)
     for (const modelPlanet of this.planets) {
       modelPlanet.beforeStart(loader)
+      this.elements.push(modelPlanet.planet)
     }
   }
 
@@ -106,6 +113,18 @@ class PlanetControls {
   findPlanetById(id) {
     const planet = this.planets.find((planet) => planet.id === id)
     return planet ? planet : null
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  updateTooltip(intersect, mouseEvent) {
+    for (const modelPlanet of this.planets) {
+      modelPlanet.updateTooltip(intersect, mouseEvent)
+    }
   }
 }
 

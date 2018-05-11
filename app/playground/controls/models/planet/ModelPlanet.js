@@ -2,6 +2,7 @@ import Planet from '@entity/sector/Planet'
 import ModelPlanetClouds from './ModelPlanetClouds'
 import { Mesh, Group, MeshPhongMaterial, SphereGeometry, Color } from 'three'
 import { getGlowInsideMesh, getGlowOutsideMesh } from '../../../../shader/glow'
+import MouseTooltip from '@entity/helper/MouseTooltip'
 
 class ModelPlanet extends Planet {
   /**
@@ -40,6 +41,19 @@ class ModelPlanet extends Planet {
      * @type {ModelPlanetClouds}
      */
     this.modelClouds = new ModelPlanetClouds()
+
+    /**
+     *
+     * @type {MouseTooltip}
+     */
+    this.tooltip = new MouseTooltip()
+
+    /**
+     *
+     * @type {boolean}
+     * @private
+     */
+    this._tooltipExists = false
   }
 
   /**
@@ -179,6 +193,30 @@ class ModelPlanet extends Planet {
 
       if (this.modelClouds.enabled) {
         this.modelClouds.update(delta)
+      }
+    }
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  updateTooltip(intersect, mouseEvent) {
+    const isIntersect = intersect.is(this.planet)
+    if (isIntersect) {
+      this.scene.add(
+        this.tooltip
+          .setPosition(this.position.x, this.position.y + 10, this.position.z)
+          .write(this.name)
+          .getSprite()
+      )
+      this._tooltipExists = true
+    } else {
+      if (this._tooltipExists) {
+        this.scene.remove(this.tooltip.getSprite())
+        this._tooltipExists = false
       }
     }
   }

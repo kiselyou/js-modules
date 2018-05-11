@@ -10,6 +10,7 @@ import {
 import OrbitControls from 'three-orbitcontrols'
 import PlayerControls from './controls/PlayerControls'
 import LightControls from './controls/LightControls'
+import Intersect from '@entity/helper/Intersect'
 
 class Playground {
   /**
@@ -77,6 +78,12 @@ class Playground {
     this.camera.position.y = 15
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
     this.cameraControls.update()
+
+    /**
+     *
+     * @type {Intersect}
+     */
+    this.intersect = new Intersect(this.camera)
 
     // const gridHelper = new GridHelper(50, 50 )
     // this.scene.add(gridHelper)
@@ -153,6 +160,16 @@ class Playground {
    */
   setSwapInfo(data) {
     this.playerControls.sectorControls.setSwapInfo(data)
+    return this
+  }
+
+  onDocumentMouseMove(mouseEvent) {
+    this.intersect.updateMouse(mouseEvent)
+    this.playerControls.updateTooltip(this.intersect, mouseEvent)
+  }
+
+  registrationEvents() {
+    this.renderer.domElement.addEventListener('mousemove', (mouseEvent) => this.onDocumentMouseMove(mouseEvent), false);
     return this
   }
 }

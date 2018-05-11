@@ -59,26 +59,26 @@ export const map = [
   [
     new Station()
       .setName('Солнечная станция')
-      .setDistanceToCenter(80)
-      .setAngleToCenter(Math.PI / 2)
+      .setDistanceToCenter(180)
+      .setAngleToCenter(Math.PI)
       .setId('7b857a0d-b128-42cf-9471-d1053a100a2c')
       .setSectorId(ID_SECTOR_SUN),
     new Station()
       .setName('Солнечная станция')
-      .setDistanceToCenter(80)
+      .setDistanceToCenter(180)
       .setAngleToCenter(Math.PI / 5)
       .setId('0a1c3e2f-89ec-45c9-8fa7-f073713e68be')
       .setSectorId(ID_SECTOR_SUN),
     new Station()
       .setName('Солнечная станция')
-      .setDistanceToCenter(80)
-      .setAngleToCenter(Math.PI / 7)
+      .setDistanceToCenter(180)
+      .setAngleToCenter(Math.PI / 9)
       .setId('91141e8e-9d9d-4867-b01b-a00d279186f1')
       .setSectorId(ID_SECTOR_SUN),
     new Station()
       .setName('Научная станция')
       .setDistanceToCenter(500)
-      .setAngleToCenter(Math.PI / 2.1)
+      .setAngleToCenter(Math.PI / 5)
       .setId('47295f7e-2645-450a-8036-1445ee500a6b')
       .setSectorId(ID_SECTOR_SUN),
     new Station()
@@ -184,7 +184,7 @@ export const map = [
       .addMineral(ID_MINERAL_ORE, 10000)
       .addMineral(ID_MINERAL_WATER, 2000)
       .setDistanceToCenter(800)
-      .setAngleToCenter(Math.PI / 5)
+      .setAngleToCenter(Math.PI / -5)
       .setSectorId(ID_SECTOR_SUN)
       .setId('bbec590e-90cc-4195-8540-a7ab6a2d3ba4'),
     new Asteroid()
