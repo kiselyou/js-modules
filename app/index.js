@@ -24,13 +24,11 @@ ReactDOM.render(<App />, document.getElementById('root'));
   await loader.startLoad()
 
   if (playGroundInfo) {
-    let playground = new Playground({
-      playGroundInfo: playGroundInfo,
-      loader: loader,
-    })
+    let playground = new Playground(loader)
 
     await playground
       .registrationEvents()
+      .copy(playGroundInfo)
       .init('root', 'root-canvas')
 
     const socket = io.connect('http://127.0.0.1:3333/play-process');

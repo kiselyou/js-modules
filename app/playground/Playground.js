@@ -11,24 +11,19 @@ import OrbitControls from 'three-orbitcontrols'
 import PlayerControls from './controls/PlayerControls'
 import LightControls from './controls/LightControls'
 import Intersect from '@helper/Intersect'
+import SectorControls from '@app/playground/controls/SectorControls'
 
 class Playground {
   /**
    *
-   * @param {{playGroundInfo: object, loader: Loader}} data
+   * @param {Loader} loader
    */
-  constructor(data) {
-    /**
-     *
-     * @type {Object}
-     */
-    this.playGroundInfo = data.playGroundInfo
-
+  constructor(loader) {
     /**
      *
      * @type {Loader}
      */
-    this.loader = data.loader
+    this.loader = loader
 
     /**
      *
@@ -62,10 +57,15 @@ class Playground {
 
     /**
      *
+     * @type {SectorControls}
+     */
+    this.sectorControls = new SectorControls(this.scene, this.loader)
+
+    /**
+     *
      * @type {PlayerControls}
      */
     this.playerControls = new PlayerControls(this.scene, this.loader)
-    this.playerControls.copy(this.playGroundInfo)
 
     /**
      *
@@ -114,8 +114,22 @@ class Playground {
       this.renderer.setSize(window.innerWidth, window.innerHeight)
       this.camera.updateProjectionMatrix()
     })
+
+    await this.sectorControls.beforeStart()
     await this.playerControls.beforeStart()
+
     this.animateStart()
+    return this
+  }
+
+  /**
+   *
+   * @param {Object} data
+   * @return {Playground}
+   */
+  copy(data) {
+    this.sectorControls.copy(data)
+    this.playerControls.copy(data)
     return this
   }
 
@@ -126,6 +140,7 @@ class Playground {
   animateStart() {
     let delta = this.clock.getDelta()
     this.playerControls.update(delta)
+    this.sectorControls.update(delta, this.camera.position)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
@@ -159,15 +174,24 @@ class Playground {
    * @returns {Playground}
    */
   setSwapInfo(data) {
-    this.playerControls.sectorControls.setSwapInfo(data)
+    this.sectorControls.setSwapInfo(data)
     return this
   }
 
+  /**
+   *
+   * @param {MouseEvent} mouseEvent
+   */
   onDocumentMouseMove(mouseEvent) {
     this.intersect.updateMouse(mouseEvent)
     this.playerControls.updateTooltip(this.intersect, mouseEvent)
+    this.sectorControls.updateTooltip(this.intersect, mouseEvent)
   }
 
+  /**
+   *
+   * @return {Playground}
+   */
   registrationEvents() {
     this.renderer.domElement.addEventListener('mousemove', (mouseEvent) => this.onDocumentMouseMove(mouseEvent), false);
     return this
