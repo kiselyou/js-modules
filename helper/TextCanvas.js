@@ -19,7 +19,7 @@ class TextCanvas {
      *
      * @type {string}
      */
-    this.color = '#577FB5'
+    this.color = '#BBEB71'
 
     /**
      *

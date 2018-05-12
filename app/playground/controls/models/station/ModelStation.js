@@ -1,6 +1,8 @@
 import Station from '@entity/station/Station'
-import MouseTooltip from '@entity/helper/MouseTooltip'
+import MouseTooltip from '@helper/MouseTooltip'
+import EventControls from './../../EventControls'
 import { Mesh, MeshPhongMaterial, BoxGeometry } from 'three'
+import DetectObject3D from "@helper/DetectObject3D";
 
 class ModelStation extends Station {
   /**
@@ -36,10 +38,9 @@ class ModelStation extends Station {
 
     /**
      *
-     * @type {boolean}
-     * @private
+     * @type {EventControls}
      */
-    this._tooltipExists = false
+    this.eventControls = new EventControls()
   }
 
   /**
@@ -93,18 +94,19 @@ class ModelStation extends Station {
   updateTooltip(intersect, mouseEvent) {
     const isIntersect = intersect.is(this.element)
     if (isIntersect) {
-      this.scene.add(
-        this.tooltip
-          .setPosition(this.position.x, this.position.y + 10, this.position.z)
-          .write(this.name)
-          .getSprite()
-      )
-      this._tooltipExists = true
+      this.eventControls.ifNotActive('updateTooltip', () => {
+        const y = DetectObject3D.maxSize(this.element) + 2
+        this.scene.add(
+          this.tooltip
+            .setPosition(this.position.x, y, this.position.z)
+            .write(this.name)
+            .getSprite()
+        )
+      })
     } else {
-      if (this._tooltipExists) {
+      this.eventControls.ifActive('updateTooltip', () => {
         this.scene.remove(this.tooltip.getSprite())
-        this._tooltipExists = false
-      }
+      })
     }
   }
 }

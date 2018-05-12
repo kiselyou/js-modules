@@ -1,5 +1,5 @@
 import { Mesh, MeshStandardMaterial, Texture, SphereGeometry, Vector3, DoubleSide } from 'three'
-import { randFloat } from '@module/helper/Helper'
+import { randFloat } from '@helper/integer/Integer'
 
 class ModelPlanetClouds {
   constructor() {

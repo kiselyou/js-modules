@@ -2,7 +2,9 @@ import Planet from '@entity/sector/Planet'
 import ModelPlanetClouds from './ModelPlanetClouds'
 import { Mesh, Group, MeshPhongMaterial, SphereGeometry, Color } from 'three'
 import { getGlowInsideMesh, getGlowOutsideMesh } from '../../../../shader/glow'
-import MouseTooltip from '@entity/helper/MouseTooltip'
+import MouseTooltip from '@helper/MouseTooltip'
+import DetectObject3D from '@helper/DetectObject3D'
+import EventControls from './../../EventControls'
 
 class ModelPlanet extends Planet {
   /**
@@ -50,10 +52,9 @@ class ModelPlanet extends Planet {
 
     /**
      *
-     * @type {boolean}
-     * @private
+     * @type {EventControls}
      */
-    this._tooltipExists = false
+    this.eventControls = new EventControls()
   }
 
   /**
@@ -206,18 +207,19 @@ class ModelPlanet extends Planet {
   updateTooltip(intersect, mouseEvent) {
     const isIntersect = intersect.is(this.planet)
     if (isIntersect) {
-      this.scene.add(
-        this.tooltip
-          .setPosition(this.position.x, this.position.y + 10, this.position.z)
-          .write(this.name)
-          .getSprite()
-      )
-      this._tooltipExists = true
+      this.eventControls.ifNotActive('updateTooltip', () => {
+        const y = DetectObject3D.maxSize(this.planet) + 2
+        this.scene.add(
+          this.tooltip
+            .setPosition(this.position.x, y, this.position.z)
+            .write(this.name)
+            .getSprite()
+        )
+      })
     } else {
-      if (this._tooltipExists) {
+      this.eventControls.ifActive('updateTooltip', () => {
         this.scene.remove(this.tooltip.getSprite())
-        this._tooltipExists = false
-      }
+      })
     }
   }
 }

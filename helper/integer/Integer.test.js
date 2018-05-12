@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai'
 import { describe, it } from 'mocha'
-import { randInt, randFloat } from './Helper'
+import { randInt, randFloat } from './Integer'
 
 describe('helper', () => {
 

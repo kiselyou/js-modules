@@ -1,10 +1,10 @@
 import Server from './Server'
-import SpaceTimer from '../../entity/helper/SpaceTimer'
+import SpaceTimer from '../../helper/SpaceTimer'
+import SwapInfo from '../../helper/SwapInfo'
 import PlayGroundUniverse from './../repository/PlayGroundUniverse'
 import PlayGroundSector from './../repository/PlayGroundSector'
 import HelperSector from './../../entity/sector/helper/HelperSector'
 import Player from './../../entity/sector/Player'
-import SwapInfo from './../../entity/helper/SwapInfo'
 
 import { Clock } from 'three'
 

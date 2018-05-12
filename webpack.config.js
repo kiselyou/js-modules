@@ -92,7 +92,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.json', '.pcss', '.css'],
     alias: {
       '@app': path.resolve(__dirname, './app'),
-      '@module': path.resolve(__dirname, './module'),
+      '@helper': path.resolve(__dirname, './helper'),
       '@entity': path.resolve(__dirname, './entity'),
     },
   },

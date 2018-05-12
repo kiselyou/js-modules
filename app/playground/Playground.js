@@ -10,7 +10,7 @@ import {
 import OrbitControls from 'three-orbitcontrols'
 import PlayerControls from './controls/PlayerControls'
 import LightControls from './controls/LightControls'
-import Intersect from '@entity/helper/Intersect'
+import Intersect from '@helper/Intersect'
 
 class Playground {
   /**
