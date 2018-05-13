@@ -12,6 +12,15 @@ import PlayerControls from './controls/PlayerControls'
 import LightControls from './controls/LightControls'
 import Intersect from '@helper/Intersect'
 import SectorControls from '@app/playground/controls/SectorControls'
+import Stats from 'stats-js'
+
+const stats = new Stats()
+stats.setMode(0)
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.left = '0px';
+stats.domElement.style.top = '0px';
+document.body.appendChild( stats.domElement );
+console.log(stats)
 
 class Playground {
   /**
@@ -138,6 +147,7 @@ class Playground {
    * @returns {Playground}
    */
   animateStart() {
+    stats.begin()
     let delta = this.clock.getDelta()
     this.playerControls.update(delta)
     this.sectorControls.update(delta, this.camera.position)
@@ -145,6 +155,7 @@ class Playground {
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
     })
+    stats.end()
     return this
   }
 
