@@ -1,5 +1,5 @@
 import uuidV4 from 'uuid/v4'
-import { randFloat } from './../../module/helper/Helper'
+import { randFloat } from './../../helper/integer/Integer'
 import { Vector3 } from 'three'
 
 const min = 2000

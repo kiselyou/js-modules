@@ -96,8 +96,6 @@ const RenderableSprite = function () {
 
 };
 
-//
-
 export default function Projector() {
 
 	var _object, _objectCount, _objectPool = [], _objectPoolLength = 0,

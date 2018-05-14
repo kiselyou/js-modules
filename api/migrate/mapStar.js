@@ -1,6 +1,6 @@
 import Star from './../../entity/sector/Star'
 import StarLight from './../../entity/sector/StarLight'
-import { randInt } from './../../module/helper/Helper'
+import { randInt } from './../../helper/integer/Integer'
 import * as CONST from './../../app/constants'
 
 const distance = 5000

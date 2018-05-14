@@ -2,6 +2,7 @@ import RaceControls from './RaceControls'
 import Player from '@entity/sector/Player'
 import MoveCalculator from '@helper/move/MoveCalculator'
 import { Mesh, BoxGeometry, MeshPhongMaterial, Vector3 } from 'three'
+import * as CONST from '@app/constants'
 
 class PlayerControls {
   /**
@@ -51,10 +52,13 @@ class PlayerControls {
    * @returns {void}
    */
   buildMesh() {
-    this.element.geometry = new BoxGeometry(12, 12, 12)
-    this.element.material = new MeshPhongMaterial({ color: 0x00FFFF })
-    this.element.castShadow = true
-    this.element.receiveShadow = true
+
+    this.element = this.loader.getModel(CONST.KEY_SPACESHIP_3)
+
+    // this.element.geometry = new BoxGeometry(12, 12, 12)
+    // this.element.material = new MeshPhongMaterial({ color: 0x00FFFF })
+    // this.element.castShadow = true
+    // this.element.receiveShadow = true
     this.element.position.copy(this.player.position)
 
 

@@ -15,7 +15,7 @@ import SectorControls from '@app/playground/controls/SectorControls'
 import Stats from 'stats-js'
 
 const stats = new Stats()
-stats.setMode(0)
+// stats.setMode(1)
 stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
@@ -82,9 +82,10 @@ class Playground {
      */
     this.lightControls = new LightControls(this.scene, this.loader)
 
-    this.camera.position.x = 450
+    this.camera.position.x = 45
     this.camera.position.z = -15
     this.camera.position.y = 15
+
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
     this.cameraControls.update()
 

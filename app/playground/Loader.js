@@ -1,4 +1,5 @@
 import { TextureLoader, ImageLoader } from 'three'
+import TDSLoader from '@app/three-dependense/TDSLoader'
 import * as CONST from '@app/constants'
 
 class Loader {
@@ -20,17 +21,30 @@ class Loader {
 
     /**
      *
-     * @type {{}}
+     * @type {TDSLoader}
+     * @private
+     */
+    this._modelLoader = new TDSLoader()
+
+    /**
+     *
+     * @type {Object}
      * @private
      */
     this._textures = {}
 
     /**
      *
-     * @type {{}}
+     * @type {Object}
      * @private
      */
     this._images = {}
+
+    /**
+     *
+     * @type {Object}
+     */
+    this._models = {}
   }
 
   /**
@@ -67,6 +81,41 @@ class Loader {
     this._textures[CONST.KEY_PLANET_MARS_BUMP] = await this._textureLoader.load('./app/web/images/planets/mars/1k_mars_bump.jpg')
 
     this._textures[CONST.KEY_SECTOR_ALPHA] = await this._textureLoader.load('./app/web/images/skybox/sector_alpha.jpg')
+
+    this._models[CONST.KEY_SPACESHIP_1] = await this.loadModel('./app/web/models/spaceship/1/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_2] = await this.loadModel('./app/web/models/spaceship/2/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_3] = await this.loadModel('./app/web/models/spaceship/3/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_4] = await this.loadModel('./app/web/models/spaceship/4/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_5] = await this.loadModel('./app/web/models/spaceship/5/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_6] = await this.loadModel('./app/web/models/spaceship/6/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_7] = await this.loadModel('./app/web/models/spaceship/7/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_8] = await this.loadModel('./app/web/models/spaceship/8/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_9] = await this.loadModel('./app/web/models/spaceship/9/spaceship.3ds')
+    // this._models[CONST.KEY_SPACESHIP_10] = await this.loadModel('./app/web/models/spaceship/10/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_11] = await this.loadModel('./app/web/models/spaceship/11/spaceship.3ds')
+    this._models[CONST.KEY_SPACESHIP_12] = await this.loadModel('./app/web/models/spaceship/12/spaceship.3ds')
+  }
+
+  /**
+   *
+   * @param {string} url
+   * @returns {Promise<any>}
+   */
+  async loadModel(url) {
+    return new Promise((resolve, reject) => {
+      this._modelLoader.load(url, (model) => {
+        resolve(model)
+      }, undefined, reject)
+    })
+  }
+
+  /**
+   *
+   * @param {string|number} key
+   * @returns {Group|null}
+   */
+  getModel(key) {
+    return this._models.hasOwnProperty(key) ? this._models[key] : null
   }
 
   /**

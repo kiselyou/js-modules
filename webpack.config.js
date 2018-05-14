@@ -4,7 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const WebpackAutoInject = require('webpack-auto-inject-version');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const version = process.env.npm_package_version;
+const version = prepareNewVersion();
 
 const isProd = process.env.NODE_ENV !== 'development'
 
@@ -35,6 +35,7 @@ const UglifyJsPluginConfig =  new UglifyJsPlugin({
 
 const CopyWebpackPluginConfig = new CopyWebpackPlugin([
   { from: 'app/web/images', to: version +'/images' },
+  { from: 'app/web/models', to: version +'/models' },
   'app/icon.ico'
 ])
 
@@ -97,10 +98,20 @@ module.exports = {
     },
   },
   plugins: [
+    WebpackAutoInjectConfig,
     HtmlWebpackPluginConfig,
     ExtractTextPluginConfig,
-    WebpackAutoInjectConfig,
     UglifyJsPluginConfig,
     CopyWebpackPluginConfig
   ]
 };
+
+/**
+ * TODO: This is temporary solution
+ *
+ * @returns {string}
+ */
+function prepareNewVersion() {
+  const data = process.env.npm_package_version.split('.')
+  return data[0] + '.' + data[1] + '.' + (parseInt(data[2]) + 1)
+}
