@@ -32,8 +32,6 @@ app.use((req, res, next) => {
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-console.log(process.env.npm_package_version)
-
 app.use(express.static('public'))
 app.use('/app/web', express.static('public/' + process.env.npm_package_version))
 

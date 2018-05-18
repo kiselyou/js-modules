@@ -60,7 +60,7 @@ class PlayerControls {
     // this.element.castShadow = true
     // this.element.receiveShadow = true
     this.element.position.copy(this.player.position)
-
+    this.element.up.set(0, 0, 1)
 
     this.moveCalculator
       .setPosition(this.player.position)
