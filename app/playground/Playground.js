@@ -3,17 +3,20 @@ import {
   Scene,
   WebGLRenderer,
   Clock,
-  GridHelper,
-  AxesHelper,
-  PCFSoftShadowMap
+  MOUSE,
+  PCFSoftShadowMap, Math as tMath,
+  AxesHelper
 } from 'three'
-import Gyroscope from './../three-dependense/Gyroscope'
-import OrbitControls from 'three-orbitcontrols'
-import PlayerControls from './controls/PlayerControls'
-import LightControls from './controls/LightControls'
-import Intersect from '@helper/Intersect'
-import SectorControls from '@app/playground/controls/SectorControls'
+
 import Stats from 'stats-js'
+import Intersect from '@helper/Intersect'
+
+import PlayerControls from '@app/playground/controls/PlayerControls'
+import LightControls from '@app/playground/controls/LightControls'
+import SectorControls from '@app/playground/controls/SectorControls'
+
+import Gyroscope from '@app/three-dependense/Gyroscope'
+import OrbitControls from '@app/three-dependense/OrbitControls'
 
 const stats = new Stats()
 // stats.setMode(1)
@@ -21,7 +24,6 @@ stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
 document.body.appendChild( stats.domElement );
-console.log(stats)
 
 class Playground {
   /**
@@ -58,8 +60,7 @@ class Playground {
      * @type {PerspectiveCamera}
      */
     this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10000)
-    this.camera.position.set(45, -15, 15)
-    this.camera.up.set(0, 0, 1)
+    this.camera.position.set(0, -40, -50)
     this.scene.add(this.camera)
 
     /**
@@ -85,26 +86,34 @@ class Playground {
      * @type {LightControls}
      */
     this.lightControls = new LightControls(this.scene, this.loader)
+    this.scene.add(this.lightControls.pointLight)
+    this.scene.add(this.lightControls.hemisphereLight)
+    this.scene.add(this.lightControls.ambientLight)
 
     /**
      *
      * @type {OrbitControls}
      */
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.cameraControls.target.set(0, 50, 0)
+    this.cameraControls.target.copy(this.playerControls.model.position)
+    this.cameraControls.enableKeys = false
+    this.cameraControls.enablePan = false
+
+    this.cameraControls.mouseButtons = { ORBIT: MOUSE.RIGHT, ZOOM: MOUSE.MIDDLE, PAN: MOUSE.LEFT };
+    this.cameraControls.minDistance = 30
+    this.cameraControls.maxDistance = 250
+    this.cameraControls.maxPolarAngle = tMath.degToRad(80)
     this.cameraControls.update()
 
     /**
      *
      * @type {Gyroscope}
      */
-    // this.gyroscope = new Gyroscope()
-    // this.gyroscope.add(this.camera);
-    // gyro.add( light, light.target );
-    // this.playerControls.element.add(this.gyroscope)
-
-
-    // characters[ Math.floor( nSkins / 2 ) ].root.add( gyro );
+    this.gyroscope = new Gyroscope()
+    this.gyroscope.add(this.camera);
+    this.gyroscope.add(this.lightControls.light, this.lightControls.light.target);
+    this.playerControls.model.add(this.gyroscope)
+    this.scene.add(this.playerControls.model)
 
     /**
      *
@@ -112,11 +121,8 @@ class Playground {
      */
     this.intersect = new Intersect(this.camera)
 
-    // const gridHelper = new GridHelper(50, 50 )
-    // this.scene.add(gridHelper)
-    //
-    // const axisHelper = new AxesHelper(10)
-    // this.scene.add(axisHelper)
+    this.axesHelper = new AxesHelper(150)
+    this.scene.add(this.axesHelper)
   }
 
   /**
@@ -165,7 +171,6 @@ class Playground {
    * @returns {Playground}
    */
   animateStart() {
-    stats.begin()
     let delta = this.clock.getDelta()
     this.playerControls.update(delta)
     this.sectorControls.update(delta, this.camera.position)
@@ -173,7 +178,7 @@ class Playground {
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
     })
-    stats.end()
+    stats.update()
     return this
   }
 

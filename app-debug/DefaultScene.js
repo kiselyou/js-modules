@@ -4,17 +4,13 @@ import {
   WebGLRenderer,
   Clock,
   Mesh,
-  BoxGeometry,
   MeshPhongMaterial,
   PlaneBufferGeometry,
   TextureLoader,
   AmbientLight,
   DirectionalLight,
-  GridHelper,
-  AxesHelper,
   Fog,
   Color,
-  Math as tMath,
   PCFSoftShadowMap,
   RepeatWrapping
 } from 'three'
@@ -86,6 +82,11 @@ class DefaultScene {
     const gt = new TextureLoader().load('./app-debug/web/images/grasslight-big.jpg')
     const gg = new PlaneBufferGeometry(8000, 8000)
     const gm = new MeshPhongMaterial({color: 0xBBEB71, map: gt })
+
+    /**
+     *
+     * @type {Mesh}
+     */
     this.ground = new Mesh( gg, gm )
     this.ground.rotation.x = - Math.PI / 2
     // this.ground.receiveShadow = true

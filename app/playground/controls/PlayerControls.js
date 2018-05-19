@@ -1,7 +1,7 @@
 import RaceControls from './RaceControls'
 import Player from '@entity/sector/Player'
 import MoveCalculator from '@helper/move/MoveCalculator'
-import { Mesh, BoxGeometry, MeshPhongMaterial, Vector3 } from 'three'
+import { Mesh, BoxGeometry, MeshPhongMaterial, Object3D, Vector3 } from 'three'
 import * as CONST from '@app/constants'
 
 class PlayerControls {
@@ -42,9 +42,9 @@ class PlayerControls {
 
     /**
      *
-     * @type {Mesh}
+     * @type {Object3D}
      */
-    this.element = new Mesh()
+    this.model = new Object3D()
   }
 
   /**
@@ -53,26 +53,26 @@ class PlayerControls {
    */
   buildMesh() {
 
-    this.element = this.loader.getModel(CONST.KEY_SPACESHIP_3)
+    const model3D = this.loader.getModel(CONST.KEY_SPACESHIP_3)
+    this.model.add(model3D)
+    this.model.position.copy(this.player.position)
 
-    // this.element.geometry = new BoxGeometry(12, 12, 12)
-    // this.element.material = new MeshPhongMaterial({ color: 0x00FFFF })
-    // this.element.castShadow = true
-    // this.element.receiveShadow = true
-    this.element.position.copy(this.player.position)
-    this.element.up.set(0, 0, 1)
-
-    this.moveCalculator
-      .setPosition(this.player.position)
-      .setTarget(new Vector3(1000, 0, -500))
-      .startCalculate()
 
     setTimeout(() => {
-      this.moveCalculator.startMoving()
+      console.log(this.model.position)
+      console.log(model3D.position)
     }, 2000)
 
+    // this.moveCalculator
+    //   .setPosition(this.player.position)
+    //   .setTarget(new Vector3(1000, 0, -500))
+    //   .startCalculate()
+    //
+    // setTimeout(() => {
+    //   this.moveCalculator.startMoving()
+    // }, 2000)
 
-    this.scene.add(this.element)
+
   }
 
   /**
@@ -99,8 +99,8 @@ class PlayerControls {
    * @returns {void}
    */
   update(delta) {
-    this.moveCalculator.update(delta, this.element)
-    this.player.position.copy(this.element.position)
+    this.moveCalculator.update(delta, this.model)
+    this.player.position.copy(this.model.position)
   }
 
   /**

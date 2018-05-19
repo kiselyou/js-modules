@@ -8,9 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const isDevelopmentTest = process.env.NODE_ENV === 'development'
 let dir = 'app'
 
-dir = 'app-debug'
-
-console.log(dir)
+// dir = 'app-debug'
 
 const version = prepareNewVersion(isDevelopmentTest);
 

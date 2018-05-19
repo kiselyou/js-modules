@@ -213,7 +213,6 @@ export const map = [
   [
     new Player()
       .setName('Валера')
-      .setPosition(100, 100, 100)
       .setId('09839694-28d3-4504-9dc9-1cd3b6a539d7')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId(ID_SECTOR_SUN)
@@ -246,6 +245,6 @@ export const map = [
       .setId('3669cd3e-4cc7-42fc-a018-9eed7a5f41f0'),
   ],
 
-  mapStarLights(starKeySectorAlpha),
+  // mapStarLights(starKeySectorAlpha),
   // mapStar(starKeySectorAlpha)
 ]
