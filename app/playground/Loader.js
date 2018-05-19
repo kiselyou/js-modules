@@ -94,6 +94,9 @@ class Loader {
     // this._models[CONST.KEY_SPACESHIP_10] = await this.loadModel('./app/web/models/spaceship/10/spaceship.3ds')
     this._models[CONST.KEY_SPACESHIP_11] = await this.loadModel('./app/web/models/spaceship/11/spaceship.3ds')
     this._models[CONST.KEY_SPACESHIP_12] = await this.loadModel('./app/web/models/spaceship/12/spaceship.3ds')
+
+    this._models[CONST.KEY_STATION_1] = await this.loadModel('./app/web/models/station/1/station.3ds')
+    this._models[CONST.KEY_STATION_2] = await this.loadModel('./app/web/models/station/2/station.3ds')
   }
 
   /**
@@ -115,7 +118,7 @@ class Loader {
    * @returns {Group|null}
    */
   getModel(key) {
-    return this._models.hasOwnProperty(key) ? this._models[key] : null
+    return this._models.hasOwnProperty(key) ? this._models[key].clone() : null
   }
 
   /**

@@ -1,8 +1,9 @@
 import Station from '@entity/station/Station'
 import MouseTooltip from '@helper/MouseTooltip'
 import EventControls from './../../EventControls'
-import { Mesh, MeshPhongMaterial, BoxGeometry } from 'three'
-import DetectObject3D from "@helper/DetectObject3D";
+import { Object3D } from 'three'
+import DetectObject3D from '@helper/DetectObject3D'
+import * as CONST from '@app/constants'
 
 class ModelStation extends Station {
   /**
@@ -15,9 +16,9 @@ class ModelStation extends Station {
 
     /**
      *
-     * @type {Mesh}
+     * @type {Object3D}
      */
-    this.element = new Mesh()
+    this.model = new Object3D()
 
     /**
      *
@@ -48,12 +49,9 @@ class ModelStation extends Station {
    * @returns {void}
    */
   buildMesh() {
-    this.element.geometry = new BoxGeometry(12, 12, 12)
-    this.element.material = new MeshPhongMaterial({ color: 0x00FF00 })
-    this.element.castShadow = true
-    this.element.receiveShadow = true
-    this.element.position.copy(this.position)
-    this.scene.add(this.element)
+    const model3D = this.loader.getModel(CONST.KEY_STATION_2)
+    this.model.add(model3D)
+    this.scene.add(this.model)
   }
 
   /**
@@ -82,7 +80,7 @@ class ModelStation extends Station {
    */
   update(delta) {
     this.calculatePosition(delta)
-    this.element.position.copy(this.position)
+    this.model.position.copy(this.position)
   }
 
   /**
@@ -92,22 +90,22 @@ class ModelStation extends Station {
    * @returns {void}
    */
   updateTooltip(intersect, mouseEvent) {
-    const isIntersect = intersect.is(this.element)
-    if (isIntersect) {
-      this.eventControls.ifNotActive('updateTooltip', () => {
-        const y = DetectObject3D.maxSize(this.element) + 2
-        this.scene.add(
-          this.tooltip
-            .setPosition(this.position.x, y, this.position.z)
-            .write(this.name)
-            .getSprite()
-        )
-      })
-    } else {
-      this.eventControls.ifActive('updateTooltip', () => {
-        this.scene.remove(this.tooltip.getSprite())
-      })
-    }
+    // const isIntersect = intersect.is(this.element)
+    // if (isIntersect) {
+    //   this.eventControls.ifNotActive('updateTooltip', () => {
+    //     const y = DetectObject3D.maxSize(this.element) + 2
+    //     this.scene.add(
+    //       this.tooltip
+    //         .setPosition(this.position.x, y, this.position.z)
+    //         .write(this.name)
+    //         .getSprite()
+    //     )
+    //   })
+    // } else {
+    //   this.eventControls.ifActive('updateTooltip', () => {
+    //     this.scene.remove(this.tooltip.getSprite())
+    //   })
+    // }
   }
 }
 
