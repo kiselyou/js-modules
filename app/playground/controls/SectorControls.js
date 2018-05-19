@@ -72,7 +72,7 @@ class SectorControls extends Sector {
     await this.planetsControls.beforeStart(this.loader)
     await this.stationControls.beforeStart(this.loader)
     await this.asteroidControls.beforeStart(this.loader)
-    await this.starLightControls.beforeStart(this.loader)
+    // await this.starLightControls.beforeStart(this.loader)
   }
 
   /**
@@ -86,7 +86,7 @@ class SectorControls extends Sector {
     this.stationControls.copy(data)
     this.asteroidControls.copy(data)
     this.starControls.copy(data['star'])
-    this.starLightControls.copy(data['starLight'])
+    // this.starLightControls.copy(data['starLight'])
     return this
   }
 
@@ -102,7 +102,7 @@ class SectorControls extends Sector {
     this.asteroidControls.update(delta)
     this.skyBoxControls.update(delta, playerPosition)
     this.starControls.update(delta)
-    this.starLightControls.update(delta)
+    // this.starLightControls.update(delta)
   }
 
   /**

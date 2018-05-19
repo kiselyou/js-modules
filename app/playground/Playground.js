@@ -11,7 +11,7 @@ import {
 import Stats from 'stats-js'
 import Intersect from '@helper/Intersect'
 
-import PlayerControls from '@app/playground/controls/PlayerControls'
+import CharacterControls from '@app/playground/controls/CharacterControls'
 import LightControls from '@app/playground/controls/LightControls'
 import SectorControls from '@app/playground/controls/SectorControls'
 
@@ -31,6 +31,19 @@ class Playground {
    * @param {Loader} loader
    */
   constructor(loader) {
+
+    /**
+     *
+     * @type {Clock}
+     */
+    this.clock = new Clock();
+
+    /**
+     *
+     * @type {number}
+     */
+    this.delta = this.clock.getDelta()
+
     /**
      *
      * @type {Loader}
@@ -42,12 +55,6 @@ class Playground {
      * @type {Scene}
      */
     this.scene = new Scene()
-
-    /**
-     *
-     * @type {Clock}
-     */
-    this.clock = new Clock();
 
     /**
      *
@@ -77,9 +84,9 @@ class Playground {
 
     /**
      *
-     * @type {PlayerControls}
+     * @type {CharacterControls}
      */
-    this.playerControls = new PlayerControls(this.scene, this.loader)
+    this.characterControls = new CharacterControls(this.scene, this.loader)
 
     /**
      *
@@ -95,7 +102,7 @@ class Playground {
      * @type {OrbitControls}
      */
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.cameraControls.target.copy(this.playerControls.model.position)
+    this.cameraControls.target.copy(this.characterControls.model.position)
     this.cameraControls.enableKeys = false
     this.cameraControls.enablePan = false
 
@@ -111,9 +118,8 @@ class Playground {
      */
     this.gyroscope = new Gyroscope()
     this.gyroscope.add(this.camera);
-    this.gyroscope.add(this.lightControls.light, this.lightControls.light.target);
-    this.playerControls.model.add(this.gyroscope)
-    this.scene.add(this.playerControls.model)
+    this.characterControls.model.add(this.gyroscope)
+    this.scene.add(this.characterControls.model)
 
     /**
      *
@@ -142,14 +148,9 @@ class Playground {
     this.renderer.gammaOutput = true;
 
     document.getElementById(parentId).appendChild(this.renderer.domElement)
-    window.addEventListener('resize', () => {
-      this.camera.aspect = window.innerWidth / window.innerHeight
-      this.renderer.setSize(window.innerWidth, window.innerHeight)
-      this.camera.updateProjectionMatrix()
-    })
 
     await this.sectorControls.beforeStart()
-    await this.playerControls.beforeStart()
+    await this.characterControls.beforeStart()
 
     this.animateStart()
     return this
@@ -162,7 +163,7 @@ class Playground {
    */
   copy(data) {
     this.sectorControls.copy(data)
-    this.playerControls.copy(data)
+    this.characterControls.copy(data)
     return this
   }
 
@@ -171,14 +172,14 @@ class Playground {
    * @returns {Playground}
    */
   animateStart() {
-    let delta = this.clock.getDelta()
-    this.playerControls.update(delta)
-    this.sectorControls.update(delta, this.camera.position)
+    stats.update()
+    this.delta = this.clock.getDelta()
+    this.characterControls.update(this.delta)
+    this.sectorControls.update(this.delta, this.camera.position)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
     })
-    stats.update()
     return this
   }
 
@@ -199,7 +200,7 @@ class Playground {
    * @returns {Player}
    */
   get player() {
-    return this.playerControls.player
+    return this.characterControls.player
   }
 
   /**
@@ -214,12 +215,61 @@ class Playground {
 
   /**
    *
-   * @param {MouseEvent} mouseEvent
+   * @param {MouseEvent} e
+   * @returns {void}
    */
-  onDocumentMouseMove(mouseEvent) {
-    this.intersect.updateMouse(mouseEvent)
-    this.playerControls.updateTooltip(this.intersect, mouseEvent)
-    this.sectorControls.updateTooltip(this.intersect, mouseEvent)
+  onMouseMove(e) {
+    this.intersect.updateMouse(e)
+    this.characterControls.updateTooltip(this.intersect, e)
+    this.sectorControls.updateTooltip(this.intersect, e)
+  }
+
+  /**
+   *
+   * @param {MouseEvent} e
+   * @returns {void}
+   */
+  onMouseClick(e) {
+    console.log('===')
+  }
+
+  /**
+   * @returns {void}
+   */
+  onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight
+    this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.camera.updateProjectionMatrix()
+  }
+
+  /**
+   *
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
+  onKeyDown(e) {
+    switch (e.keyCode) {
+      case 79:
+        console.log(e, 'd')
+        break
+      default:
+        console.log(e, 'def')
+    }
+  }
+
+  /**
+   *
+   * @param {KeyboardEvent} e
+   * @returns {void}
+   */
+  onKeyUp(e) {
+    switch (e.keyCode) {
+      case 79:
+        console.log(e, 'd up')
+        break
+      default:
+        console.log(e, 'def up')
+    }
   }
 
   /**
@@ -227,7 +277,12 @@ class Playground {
    * @return {Playground}
    */
   registrationEvents() {
-    this.renderer.domElement.addEventListener('mousemove', (mouseEvent) => this.onDocumentMouseMove(mouseEvent), false);
+    this.renderer.domElement.addEventListener('mousemove', (mouseEvent) => this.onMouseMove(mouseEvent), false);
+    this.renderer.domElement.addEventListener('click', (mouseEvent) => this.onMouseClick(mouseEvent), false);
+    window.addEventListener('keydown', (keyboardEvent) => this.onKeyDown(keyboardEvent), false);
+    window.addEventListener('keyup', (keyboardEvent) => this.onKeyUp(keyboardEvent), false);
+    window.addEventListener('resize', () => this.onWindowResize(), false)
+
     return this
   }
 }

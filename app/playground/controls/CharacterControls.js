@@ -1,16 +1,17 @@
 import RaceControls from './RaceControls'
+import MoveControls from './MoveControls'
 import Player from '@entity/sector/Player'
-import MoveCalculator from '@helper/move/MoveCalculator'
-import { Mesh, BoxGeometry, MeshPhongMaterial, Object3D, Vector3 } from 'three'
 import * as CONST from '@app/constants'
 
-class PlayerControls {
+class CharacterControls extends MoveControls {
   /**
    *
    * @param {Scene} scene
    * @param {Loader} loader
    */
   constructor(scene, loader) {
+    super()
+
     /**
      * @type {Scene}
      */
@@ -36,15 +37,9 @@ class PlayerControls {
 
     /**
      *
-     * @type {MoveCalculator}
+     * @type {boolean}
      */
-    this.moveCalculator = new MoveCalculator()
-
-    /**
-     *
-     * @type {Object3D}
-     */
-    this.model = new Object3D()
+    this.enabled = false
   }
 
   /**
@@ -52,41 +47,24 @@ class PlayerControls {
    * @returns {void}
    */
   buildMesh() {
-
     const model3D = this.loader.getModel(CONST.KEY_SPACESHIP_3)
     this.model.add(model3D)
     this.model.position.copy(this.player.position)
-
-
-    setTimeout(() => {
-      console.log(this.model.position)
-      console.log(model3D.position)
-    }, 2000)
-
-    // this.moveCalculator
-    //   .setPosition(this.player.position)
-    //   .setTarget(new Vector3(1000, 0, -500))
-    //   .startCalculate()
-    //
-    // setTimeout(() => {
-    //   this.moveCalculator.startMoving()
-    // }, 2000)
-
-
   }
 
   /**
    * @returns {void}
    */
   async beforeStart() {
-    await this.buildMesh()
     await this.raceControls.beforeStart()
+    await this.buildMesh()
+    this.enabled = true
   }
 
   /**
    *
    * @param {Object} data
-   * @returns {PlayerControls}
+   * @returns {CharacterControls}
    */
   copy(data) {
     this.player.copy(data.player)
@@ -99,8 +77,10 @@ class PlayerControls {
    * @returns {void}
    */
   update(delta) {
-    this.moveCalculator.update(delta, this.model)
-    this.player.position.copy(this.model.position)
+    if (this.enabled) {
+      super.update(delta)
+      this.player.position.copy(this.model.position)
+    }
   }
 
   /**
@@ -114,4 +94,4 @@ class PlayerControls {
   }
 }
 
-export default PlayerControls
+export default CharacterControls

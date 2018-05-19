@@ -55,22 +55,6 @@ class LightControls {
      * @type {AmbientLight}
      */
     this.ambientLight = new AmbientLight(0x111111)
-
-    /**
-     *
-     * @type {DirectionalLight}
-     */
-    this.light = new DirectionalLight(0xffffff, 2.25)
-    this.light.position.set(200, 450, 500)
-    this.light.castShadow = true
-    this.light.shadow.mapSize.width = 1024
-    this.light.shadow.mapSize.height = 512
-    this.light.shadow.camera.near = 100
-    this.light.shadow.camera.far = 1200
-    this.light.shadow.camera.left = -1000
-    this.light.shadow.camera.right = 1000
-    this.light.shadow.camera.top = 350
-    this.light.shadow.camera.bottom = -350
   }
 }
 
