@@ -49,12 +49,26 @@ class LightControls {
      * @type {HemisphereLight}
      */
     this.hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, 0.2)
+    this.hemisphereLight.position.copy(this.position)
 
     /**
      *
      * @type {AmbientLight}
      */
     this.ambientLight = new AmbientLight(0x111111)
+    this.ambientLight.position.copy(this.position)
+  }
+
+  /**
+   *
+   * @param {number} delta
+   * @param {Vector3} v
+   * @returns {void}
+   */
+  update(delta, v) {
+    this.pointLight.position.copy(v)
+    this.ambientLight.position.copy(v)
+    this.hemisphereLight.position.copy(v)
   }
 }
 

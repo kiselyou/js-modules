@@ -1,5 +1,8 @@
 import { Mesh, Vector3, MeshStandardMaterial, SphereGeometry, BackSide } from 'three'
 import * as CONST from './../../constants'
+import StarControls from './StarControls'
+import LightControls from './LightControls'
+
 class SkyBoxControls {
   /**
    *
@@ -44,6 +47,18 @@ class SkyBoxControls {
      * @type {boolean}
      */
     this.enabled = false
+
+    /**
+     *
+     * @type {StarControls}
+     */
+    this.starControls = new StarControls(this.sky)
+
+    /**
+     *
+     * @type {LightControls}
+     */
+    this.lightControls = new LightControls(this.scene, this.loader)
   }
 
   /**
@@ -63,7 +78,18 @@ class SkyBoxControls {
     this.sky.geometry = new SphereGeometry(this._size, this.segments, this.segments)
     this.sky.renderOrder = -100000
     this.scene.add(this.sky)
+    await this.starControls.beforeStart(this.loader)
     this.enabled = true
+  }
+
+  /**
+   *
+   * @param {Object} data
+   * @returns {SkyBoxControls}
+   */
+  copy( data) {
+    this.starControls.copy(data['star'])
+    return this
   }
 
   /**
@@ -74,7 +100,9 @@ class SkyBoxControls {
    */
   update(delta, v) {
     if (this.enabled) {
-      this.sky.position.set(v.x, v.y, v.z)
+      this.sky.position.copy(v)
+      this.starControls.update(delta)
+      this.lightControls.update(delta, v)
     }
   }
 }

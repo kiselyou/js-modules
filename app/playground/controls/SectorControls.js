@@ -3,7 +3,6 @@ import StationControls from './StationControls'
 import AsteroidControls from './AsteroidControls'
 import Sector from '@entity/sector/Sector'
 import SkyBoxControls from './SkyBoxControls'
-import StarControls from './StarControls'
 import StarLightControls from './StarLightControls'
 import { Vector3 } from 'three'
 
@@ -52,12 +51,6 @@ class SectorControls extends Sector {
 
     /**
      *
-     * @type {StarControls}
-     */
-    this.starControls = new StarControls(this.skyBoxControls.sky)
-
-    /**
-     *
      * @type {StarLightControls}
      */
     this.starLightControls = new StarLightControls(this.skyBoxControls.sky)
@@ -67,7 +60,6 @@ class SectorControls extends Sector {
    * @returns {void}
    */
   async beforeStart() {
-    await this.starControls.beforeStart(this.loader)
     await this.skyBoxControls.beforeStart(this.loader)
     await this.planetsControls.beforeStart(this.loader)
     await this.stationControls.beforeStart(this.loader)
@@ -85,7 +77,7 @@ class SectorControls extends Sector {
     this.planetsControls.copy(data)
     this.stationControls.copy(data)
     this.asteroidControls.copy(data)
-    this.starControls.copy(data['star'])
+    this.skyBoxControls.copy(data)
     // this.starLightControls.copy(data['starLight'])
     return this
   }
@@ -101,7 +93,6 @@ class SectorControls extends Sector {
     this.stationControls.update(delta)
     this.asteroidControls.update(delta)
     this.skyBoxControls.update(delta, playerPosition)
-    this.starControls.update(delta)
     // this.starLightControls.update(delta)
   }
 
@@ -125,6 +116,14 @@ class SectorControls extends Sector {
     this.planetsControls.updateTooltip(intersect, mouseEvent)
     this.stationControls.updateTooltip(intersect, mouseEvent)
     this.asteroidControls.updateTooltip(intersect, mouseEvent)
+  }
+
+  /**
+   *
+   * @returns {LightControls}
+   */
+  get lightControls() {
+    return this.skyBoxControls.lightControls
   }
 }
 

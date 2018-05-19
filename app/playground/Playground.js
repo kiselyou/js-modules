@@ -12,7 +12,6 @@ import Stats from 'stats-js'
 import Intersect from '@helper/Intersect'
 
 import CharacterControls from '@app/playground/controls/CharacterControls'
-import LightControls from '@app/playground/controls/LightControls'
 import SectorControls from '@app/playground/controls/SectorControls'
 
 import Gyroscope from '@app/three-dependense/Gyroscope'
@@ -92,10 +91,9 @@ class Playground {
      *
      * @type {LightControls}
      */
-    this.lightControls = new LightControls(this.scene, this.loader)
-    this.scene.add(this.lightControls.pointLight)
-    this.scene.add(this.lightControls.hemisphereLight)
-    this.scene.add(this.lightControls.ambientLight)
+    this.scene.add(this.sectorControls.lightControls.pointLight)
+    this.scene.add(this.sectorControls.lightControls.hemisphereLight)
+    this.scene.add(this.sectorControls.lightControls.ambientLight)
 
     /**
      *
@@ -105,7 +103,6 @@ class Playground {
     this.cameraControls.target.copy(this.characterControls.model.position)
     this.cameraControls.enableKeys = false
     this.cameraControls.enablePan = false
-
     this.cameraControls.mouseButtons = { ORBIT: MOUSE.RIGHT, ZOOM: MOUSE.MIDDLE, PAN: MOUSE.LEFT };
     this.cameraControls.minDistance = 30
     this.cameraControls.maxDistance = 250
@@ -175,7 +172,7 @@ class Playground {
     stats.update()
     this.delta = this.clock.getDelta()
     this.characterControls.update(this.delta)
-    this.sectorControls.update(this.delta, this.camera.position)
+    this.sectorControls.update(this.delta, this.characterControls.model.position)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
