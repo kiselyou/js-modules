@@ -1,11 +1,13 @@
-import PlaygroundTest1 from './tests/PlaygroundTest1'
+import TestScene from './tests/TestScene'
 
 (async () => {
 
-  let playground = new PlaygroundTest1()
+  let scene = new TestScene()
 
-  await playground
+  await scene
     .registrationEvents()
-    .init('root', 'root-canvas')
+    .init('root', 'root-canvas');
+
+  scene.update()
 
 })()

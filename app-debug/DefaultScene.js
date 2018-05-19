@@ -19,8 +19,6 @@ import {
   RepeatWrapping
 } from 'three'
 
-import Gyroscope from './../app/three-dependense/Gyroscope'
-import OrbitControls from './../app/three-dependense/OrbitControls'
 import Stats from 'stats-js'
 
 const stats = new Stats()
@@ -30,13 +28,29 @@ stats.domElement.style.top = '0px';
 document.body.appendChild( stats.domElement );
 
 
-class Playground {
+class DefaultScene {
   /**
    *
    */
   constructor() {
 
+    /**
+     *
+     * @type {string|?}
+     */
     this.requestId = null
+
+    /**
+     *
+     * @type {number}
+     */
+    this.delta = 0
+
+    /**
+     *
+     * @type {Clock}
+     */
+    this.clock = new Clock();
 
     /**
      *
@@ -48,18 +62,12 @@ class Playground {
 
     /**
      *
-     * @type {Clock}
-     */
-    this.clock = new Clock();
-
-    /**
-     *
      * @type {PerspectiveCamera}
      */
     this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10000)
     this.camera.position.set(45, -15, 15)
-
     this.scene.add(this.camera)
+
     this.scene.add(new AmbientLight(0x222222))
 
     this.light = new DirectionalLight(0xffffff, 2.25)
@@ -73,7 +81,6 @@ class Playground {
     this.light.shadow.camera.right = 1000
     this.light.shadow.camera.top = 350
     this.light.shadow.camera.bottom = -350
-
     this.scene.add(this.light)
 
     const gt = new TextureLoader().load('./app-debug/web/images/grasslight-big.jpg')
@@ -93,60 +100,19 @@ class Playground {
      */
     this.renderer = new WebGLRenderer({ antialias: true })
     this.renderer.setSize(window.innerWidth, window.innerHeight)
-    // this.renderer.shadowMap.enabled = true;
-    // this.renderer.shadowMap.type = PCFSoftShadowMap;
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = PCFSoftShadowMap;
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.gammaInput = true;
     this.renderer.gammaOutput = true;
 
-    /**
-     *
-     * @type {OrbitControls}
-     */
-    this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.cameraControls.target.set(0, 0, 0)
-
-    this.cameraControls.enableKeys = false
-    this.cameraControls.minDistance = 250
-    this.cameraControls.maxDistance = 600
-    this.cameraControls.maxPolarAngle = tMath.degToRad(60)
-    this.cameraControls.update()
-
-
-    this.player = new Mesh()
-    this.player.geometry = new BoxGeometry(12, 12, 12)
-    this.player.material = new MeshPhongMaterial({ color: 0xFF0000 })
-    this.player.castShadow = true
-    this.player.receiveShadow = true
-    this.scene.add(this.player)
-
-
-    /**
-     *
-     * @type {Gyroscope}
-     */
-    this.gyroscope = new Gyroscope()
-    this.gyroscope.add(this.camera)
-    this.gyroscope.add(this.light, this.light.target)
-    this.player.add(this.gyroscope)
-
-
-    const gridHelper = new GridHelper(50, 50)
-    this.scene.add(gridHelper)
-
-    const axisHelper = new AxesHelper(10)
-    this.scene.add(axisHelper)
-
-    this.speed = 50;
-    this.angularSpeed = 0.5;
-    this.bodyOrientation = 0;
   }
 
   /**
    *
    * @param {string} parentId
    * @param {string} canvasId
-   * @returns {Playground}
+   * @returns {DefaultScene}
    */
   async init(parentId, canvasId) {
     this.renderer.domElement.id = canvasId
@@ -157,15 +123,13 @@ class Playground {
       this.camera.aspect = window.innerWidth / window.innerHeight
       this.camera.updateProjectionMatrix()
     })
-
-    this.animateStart()
     return this
   }
 
   /**
    *
    * @param {Object} data
-   * @return {Playground}
+   * @return {DefaultScene}
    */
   copy(data) {
     return this
@@ -173,27 +137,13 @@ class Playground {
 
   /**
    *
-   * @returns {Playground}
+   * @returns {DefaultScene}
    */
-  animateStart() {
-    let delta = this.clock.getDelta()
-
-
-    this.bodyOrientation += delta * this.angularSpeed;
-    let forwardDelta = this.speed * delta;
-
-    this.player.position.x += Math.sin( this.bodyOrientation ) * forwardDelta;
-    this.player.position.z += Math.cos( this.bodyOrientation ) * forwardDelta;
-
-    // steering
-
-
-    this.player.rotation.y = this.bodyOrientation;
-
-
+  update() {
+    this.delta = this.clock.getDelta()
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
-      this.animateStart()
+      this.update()
     })
     stats.update();
     return this
@@ -201,7 +151,7 @@ class Playground {
 
   /**
    *
-   * @returns {Playground}
+   * @returns {DefaultScene}
    */
   animateStop() {
     if (this.requestId) {
@@ -221,7 +171,7 @@ class Playground {
 
   /**
    *
-   * @return {Playground}
+   * @return {DefaultScene}
    */
   registrationEvents() {
     this.renderer.domElement.addEventListener('mousemove', (mouseEvent) => this.onDocumentMouseMove(mouseEvent), false);
@@ -229,4 +179,4 @@ class Playground {
   }
 }
 
-export default Playground
+export default DefaultScene
