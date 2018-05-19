@@ -12,12 +12,15 @@ import {
   DirectionalLight,
   GridHelper,
   AxesHelper,
+  Fog,
+  Color,
+  Math as tMath,
   PCFSoftShadowMap,
   RepeatWrapping
 } from 'three'
 
 import Gyroscope from './../app/three-dependense/Gyroscope'
-import OrbitControls from 'three-orbitcontrols'
+import OrbitControls from './../app/three-dependense/OrbitControls'
 import Stats from 'stats-js'
 
 const stats = new Stats()
@@ -25,6 +28,7 @@ stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
 document.body.appendChild( stats.domElement );
+
 
 class Playground {
   /**
@@ -39,6 +43,8 @@ class Playground {
      * @type {Scene}
      */
     this.scene = new Scene()
+    this.scene.background = new Color( 0xffffff )
+    this.scene.fog = new Fog(0xffffff, 500, 3000)
 
     /**
      *
@@ -52,7 +58,6 @@ class Playground {
      */
     this.camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10000)
     this.camera.position.set(45, -15, 15)
-    // this.camera.up.set(0, 0, 1)
 
     this.scene.add(this.camera)
     this.scene.add(new AmbientLight(0x222222))
@@ -72,12 +77,12 @@ class Playground {
     this.scene.add(this.light)
 
     const gt = new TextureLoader().load('./app-debug/web/images/grasslight-big.jpg')
-    const gg = new PlaneBufferGeometry(16000, 16000)
+    const gg = new PlaneBufferGeometry(8000, 8000)
     const gm = new MeshPhongMaterial({color: 0xBBEB71, map: gt })
     this.ground = new Mesh( gg, gm )
     this.ground.rotation.x = - Math.PI / 2
-    this.ground.receiveShadow = true
-    this.ground.material.map.repeat.set( 64, 64 );
+    // this.ground.receiveShadow = true
+    this.ground.material.map.repeat.set( 14, 14 );
     this.ground.material.map.wrapS = RepeatWrapping;
     this.ground.material.map.wrapT = RepeatWrapping;
     this.scene.add(this.ground)
@@ -87,13 +92,24 @@ class Playground {
      * @type {WebGLRenderer}
      */
     this.renderer = new WebGLRenderer({ antialias: true })
+    this.renderer.setSize(window.innerWidth, window.innerHeight)
+    // this.renderer.shadowMap.enabled = true;
+    // this.renderer.shadowMap.type = PCFSoftShadowMap;
+    this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.renderer.gammaInput = true;
+    this.renderer.gammaOutput = true;
 
     /**
      *
      * @type {OrbitControls}
      */
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.cameraControls.target.set(0, 50, 0)
+    this.cameraControls.target.set(0, 0, 0)
+
+    this.cameraControls.enableKeys = false
+    this.cameraControls.minDistance = 250
+    this.cameraControls.maxDistance = 600
+    this.cameraControls.maxPolarAngle = tMath.degToRad(60)
     this.cameraControls.update()
 
 
@@ -109,20 +125,20 @@ class Playground {
      *
      * @type {Gyroscope}
      */
-    // this.gyroscope = new Gyroscope()
-    // this.gyroscope.add(this.camera);
-    // this.player.add(this.gyroscope)
+    this.gyroscope = new Gyroscope()
+    this.gyroscope.add(this.camera)
+    this.gyroscope.add(this.light, this.light.target)
+    this.player.add(this.gyroscope)
 
 
     const gridHelper = new GridHelper(50, 50)
-    gridHelper.up.set(0, 1, 0)
     this.scene.add(gridHelper)
 
     const axisHelper = new AxesHelper(10)
     this.scene.add(axisHelper)
 
-    this.speed = 100;
-    this.angularSpeed = 2.5;
+    this.speed = 50;
+    this.angularSpeed = 0.5;
     this.bodyOrientation = 0;
   }
 
@@ -134,18 +150,11 @@ class Playground {
    */
   async init(parentId, canvasId) {
     this.renderer.domElement.id = canvasId
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = PCFSoftShadowMap;
-    this.renderer.setPixelRatio(window.devicePixelRatio)
-    // this.renderer.setClearColor(0x1C1C1C)
-    this.renderer.gammaInput = true;
-    this.renderer.gammaOutput = true;
-
     document.getElementById(parentId).appendChild(this.renderer.domElement)
     window.addEventListener('resize', () => {
-      this.camera.aspect = window.innerWidth / window.innerHeight
       this.renderer.setSize(window.innerWidth, window.innerHeight)
+
+      this.camera.aspect = window.innerWidth / window.innerHeight
       this.camera.updateProjectionMatrix()
     })
 
@@ -167,9 +176,7 @@ class Playground {
    * @returns {Playground}
    */
   animateStart() {
-    stats.begin()
     let delta = this.clock.getDelta()
-
 
 
     this.bodyOrientation += delta * this.angularSpeed;
@@ -180,6 +187,7 @@ class Playground {
 
     // steering
 
+
     this.player.rotation.y = this.bodyOrientation;
 
 
@@ -187,7 +195,7 @@ class Playground {
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
     })
-    stats.end()
+    stats.update();
     return this
   }
 
