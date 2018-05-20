@@ -2,6 +2,7 @@ import RaceControls from './RaceControls'
 import MoveControls from './MoveControls'
 import Player from '@entity/sector/Player'
 import * as CONST from '@app/constants'
+import DebugPanel from '@app/debug/DebugPanel'
 
 class CharacterControls extends MoveControls {
   /**
@@ -40,6 +41,21 @@ class CharacterControls extends MoveControls {
      * @type {boolean}
      */
     this.enabled = false
+
+    new DebugPanel()
+      .addFolder('Ship Controls')
+      .add(this, 'enabled', 'Controls enabled')
+      .addFolder('Ship Info')
+      .add(this, 'speed', 'Ship Speed')
+      .add(this.model.position, 'x', 'Ship X')
+      .add(this.model.position, 'y', 'Ship Y')
+      .add(this.model.position, 'z', 'Ship Z')
+      .addFolder('Ship speed')
+      .add(this, 'maxSpeed', 'Max', 10, 400)
+      .add(this, 'maxReverseSpeed', 'Max Reverse', -200, 0)
+      .add(this, 'angularSpeed', 'Angular Speed', 0.01, 5)
+      .add(this, 'acceleration', 'Acceleration', 10, 500)
+      .add(this, 'deceleration', 'Deceleration', 10, 500)
   }
 
   /**

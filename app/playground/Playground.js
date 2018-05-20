@@ -16,13 +16,14 @@ import SectorControls from '@app/playground/controls/SectorControls'
 
 import Gyroscope from '@app/three-dependense/Gyroscope'
 import OrbitControls from '@app/three-dependense/OrbitControls'
+import DebugPanel from '@app/debug/DebugPanel'
 
 const stats = new Stats()
 // stats.setMode(1)
 stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
-document.body.appendChild( stats.domElement );
+document.body.appendChild(stats.domElement);
 
 class Playground {
   /**
@@ -126,6 +127,16 @@ class Playground {
 
     this.axesHelper = new AxesHelper(150)
     this.scene.add(this.axesHelper)
+
+    new DebugPanel()
+      .addFolder('Renderer controls')
+      .add(this.renderer.shadowMap, 'enabled', 'Shadow map')
+      .add(this.renderer, 'gammaInput', 'Gamma input')
+      .add(this.renderer, 'gammaOutput', 'Gamma output')
+      .addEventOnChange((value) => {
+console.log(value, '++')
+      })
+      // .open()
   }
 
   /**
@@ -140,7 +151,6 @@ class Playground {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = PCFSoftShadowMap;
     this.renderer.setPixelRatio(window.devicePixelRatio)
-    // this.renderer.setClearColor(0x1C1C1C)
     this.renderer.gammaInput = true;
     this.renderer.gammaOutput = true;
 
