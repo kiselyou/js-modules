@@ -90,22 +90,22 @@ class ModelStation extends Station {
    * @returns {void}
    */
   updateTooltip(intersect, mouseEvent) {
-    // const isIntersect = intersect.is(this.element)
-    // if (isIntersect) {
-    //   this.eventControls.ifNotActive('updateTooltip', () => {
-    //     const y = DetectObject3D.maxSize(this.element) + 2
-    //     this.scene.add(
-    //       this.tooltip
-    //         .setPosition(this.position.x, y, this.position.z)
-    //         .write(this.name)
-    //         .getSprite()
-    //     )
-    //   })
-    // } else {
-    //   this.eventControls.ifActive('updateTooltip', () => {
-    //     this.scene.remove(this.tooltip.getSprite())
-    //   })
-    // }
+    const isIntersect = intersect.is(this.model)
+    if (isIntersect) {
+      this.eventControls.ifNotActive('updateTooltip', () => {
+        const y = DetectObject3D.maxSize(this.element) + 2
+        this.scene.add(
+          this.tooltip
+            .setPosition(this.position.x, y, this.position.z)
+            .write(this.name)
+            .getSprite()
+        )
+      })
+    } else {
+      this.eventControls.ifActive('updateTooltip', () => {
+        this.scene.remove(this.tooltip.getSprite())
+      })
+    }
   }
 }
 

@@ -42,9 +42,10 @@ class CharacterControls extends MoveControls {
      */
     this.enabled = false
 
-    new DebugPanel()
+    const panel = new DebugPanel()
       .addFolder('Ship Controls')
       .add(this, 'enabled', 'Controls enabled')
+      .open()
       .addFolder('Ship Info')
       .add(this, 'speed', 'Ship Speed')
       .add(this.model.position, 'x', 'Ship X')
@@ -56,6 +57,15 @@ class CharacterControls extends MoveControls {
       .add(this, 'angularSpeed', 'Angular Speed', 0.01, 5)
       .add(this, 'acceleration', 'Acceleration', 10, 500)
       .add(this, 'deceleration', 'Deceleration', 10, 500)
+
+    setTimeout(() => {
+      panel
+        .addFolder('Scale')
+        .add(this.model.children[1].scale, 'x', 'Scale X', 0, 5)
+        .add(this.model.children[1].scale, 'y', 'Scale Y', 0, 5)
+        .add(this.model.children[1].scale, 'z', 'Scale Z', 0, 5)
+    }, 5000)
+
   }
 
   /**

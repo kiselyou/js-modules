@@ -123,7 +123,7 @@ class Playground {
      *
      * @type {Intersect}
      */
-    this.intersect = new Intersect(this.camera)
+    this.intersect = new Intersect(this.camera, this.gyroscope)
 
     this.axesHelper = new AxesHelper(150)
     this.scene.add(this.axesHelper)
@@ -133,10 +133,14 @@ class Playground {
       .add(this.renderer.shadowMap, 'enabled', 'Shadow map')
       .add(this.renderer, 'gammaInput', 'Gamma input')
       .add(this.renderer, 'gammaOutput', 'Gamma output')
-      .addEventOnChange((value) => {
-console.log(value, '++')
+      .addEventOnChange((value, name) => {
+        switch (name) {
+          case 'enabled':
+          case 'gammaInput':
+          case 'gammaOutput':
+            this.renderer.dispose()
+        }
       })
-      // .open()
   }
 
   /**
@@ -237,7 +241,8 @@ console.log(value, '++')
    * @returns {void}
    */
   onMouseClick(e) {
-    console.log('===')
+    this.intersect.updateMouse(e)
+    this.sectorControls.onClick(this.intersect, e)
   }
 
   /**

@@ -25,7 +25,7 @@ class ModelPlanet extends Planet {
      *
      * @type {Group}
      */
-    this.group = new Group()
+    this.model = new Group()
 
     /**
      *
@@ -75,21 +75,21 @@ class ModelPlanet extends Planet {
 
     this.planet.castShadow = true
     this.planet.receiveShadow = true
-    this.group.position.copy(this.position)
-    this.group.add(this.planet)
+    this.model.position.copy(this.position)
+    this.model.add(this.planet)
 
     if (this.glow.inside.enabled) {
       const meshGlow = getGlowInsideMesh(this.planet, this.glow.inside)
-      this.group.add(meshGlow)
+      this.model.add(meshGlow)
     }
 
     if (this.glow.outside.enabled) {
       const meshGlow = getGlowOutsideMesh(this.planet, this.glow.outside)
-      this.group.add(meshGlow)
+      this.model.add(meshGlow)
     }
 
     if (this.isClouds()) {
-      this.group.add(
+      this.model.add(
         this.modelClouds.getMeshClouds(
           radius,
           this.params.segments,
@@ -99,7 +99,7 @@ class ModelPlanet extends Planet {
       )
     }
 
-    this.scene.add(this.group)
+    this.scene.add(this.model)
   }
 
   isClouds() {
@@ -189,7 +189,7 @@ class ModelPlanet extends Planet {
   update(delta) {
     if (this.planet) {
       this.calculatePosition(delta)
-      this.group.position.copy(this.position)
+      this.model.position.copy(this.position)
       this.planet.rotation.y -= 0.05 * delta
 
       if (this.modelClouds.enabled) {
@@ -221,6 +221,16 @@ class ModelPlanet extends Planet {
         this.scene.remove(this.tooltip.getSprite())
       })
     }
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  onClick(intersect, mouseEvent) {
+
   }
 }
 

@@ -1,4 +1,7 @@
 import ModelPlanet from './models/planet/ModelPlanet'
+import DebugPanel from '@app/debug/DebugPanel'
+import EventControls from './EventControls'
+import DetectObject3D from "@helper/DetectObject3D";
 
 class PlanetControls {
   /**
@@ -30,6 +33,27 @@ class PlanetControls {
      * @type {Array.<Mesh>}
      */
     this.elements = []
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.enabled = true
+
+    /**
+     *
+     * @type {DebugPanel}
+     */
+    this.debugPanel = new DebugPanel()
+      .addFolder('Planet controls')
+      .add(this.planets, 'length', 'Count planets')
+      .add(this, 'enabled', 'Controls enabled')
+
+    /**
+     *
+     * @type {EventControls}
+     */
+    this.eventControls = new EventControls()
   }
 
   /**
@@ -85,6 +109,9 @@ class PlanetControls {
    * @returns {void}
    */
   update(delta) {
+    if (!this.enabled) {
+      return
+    }
     for (let model of this.planets) {
       model.update(delta)
     }
@@ -124,6 +151,38 @@ class PlanetControls {
   updateTooltip(intersect, mouseEvent) {
     for (const modelPlanet of this.planets) {
       modelPlanet.updateTooltip(intersect, mouseEvent)
+    }
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  onClick(intersect, mouseEvent) {
+    for (const modelPlanet of this.planets) {
+
+      // DEBUG PANEL
+      const isIntersect = intersect.is(modelPlanet.planet)
+      if (isIntersect) {
+        const folderName = `Planet Model Control ${modelPlanet.name}`
+        this.eventControls.ifNotActive(folderName, () => {
+          this.debugPanel
+            .addFolder(folderName)
+            .add(modelPlanet.model.scale, 'x', 'Scale X', 0, 100)
+            .add(modelPlanet.model.scale, 'y', 'Scale Y', 0, 100)
+            .add(modelPlanet.model.scale, 'z', 'Scale Z', 0, 100)
+            .add(modelPlanet.model.position, 'x', 'Position X', -6000, 6000)
+            .add(modelPlanet.model.position, 'y', 'Position Y', -6000, 6000)
+            .add(modelPlanet.model.position, 'z', 'Position Z', -6000, 6000)
+            .add(modelPlanet.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
+            .add(modelPlanet.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
+            .add(modelPlanet.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
+        })
+      }
+
+      modelPlanet.onClick(intersect, mouseEvent)
     }
   }
 }

@@ -1,17 +1,23 @@
 import { PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three'
-import Projector from '@app/three-dependense/Projector'
 
 class Intersect {
   /**
    *
    * @param {PerspectiveCamera} camera
+   * @param {Gyroscope} gyroscope
    */
-  constructor(camera) {
+  constructor(camera, gyroscope) {
     /**
      *
      * @type {PerspectiveCamera}
      */
     this.camera = camera
+
+    /**
+     *
+     * @type {Gyroscope}
+     */
+    this.gyroscope = gyroscope
 
     /**
      *
@@ -27,15 +33,15 @@ class Intersect {
 
     /**
      *
-     * @type {Raycaster}
+     * @type {Vector3}
      */
-    this.raycaster = new Raycaster()
+    this.rayStartFrom = new Vector3()
 
     /**
      *
-     * @type {Projector}
+     * @type {Raycaster}
      */
-    this.projector = new Projector()
+    this.raycaster = new Raycaster()
   }
 
   /**
@@ -51,7 +57,7 @@ class Intersect {
 
   /**
    *
-   * @param {Array.<Mesh>|Mesh} elements
+   * @param {Array.<Mesh|Object3D>|Mesh|Object3D} elements
    * @param {boolean} recursive
    * @returns {boolean}
    */
@@ -59,15 +65,19 @@ class Intersect {
     this.dirrection.setX(this.mouse.x)
     this.dirrection.setY(this.mouse.y)
     this.dirrection.unproject(this.camera)
-    this.raycaster.ray.origin = this.camera.position
-    this.raycaster.ray.direction = this.dirrection.sub(this.camera.position).normalize()
-    let intersects
+
+    this.rayStartFrom.copy(this.camera.position)
+    this.rayStartFrom.add(this.gyroscope.parent.position)
+    this.raycaster.ray.origin = this.rayStartFrom
+
+    this.raycaster.ray.direction = this.dirrection.sub(this.rayStartFrom).normalize()
+
+    let intersects = []
     if (Array.isArray(elements)) {
       intersects = this.raycaster.intersectObjects(elements, recursive)
     } else {
       intersects = this.raycaster.intersectObject(elements, recursive)
     }
-
     return intersects.length > 0
   }
 }

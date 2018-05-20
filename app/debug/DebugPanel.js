@@ -29,6 +29,7 @@ class DebugPanel {
 
   /**
    * @param {*} value
+   * @param {string} name
    * @callback onChangeLister
    */
 
@@ -86,7 +87,7 @@ class DebugPanel {
 
     controller.onChange((value) => {
       for (const event of this.events) {
-        event(value)
+        event(value, key)
       }
     })
 
@@ -95,15 +96,31 @@ class DebugPanel {
 
   /**
    *
-   * @returns {void}
+   * @returns {DebugPanel}
    */
   open() {
     if (this.disabled) {
-      return
+      return this
     }
     for (const folder of this.folders) {
       folder.open()
     }
+    return this
+  }
+
+  /**
+   *
+   * @returns {DebugPanel}
+   */
+  remove() {
+    if (this.disabled) {
+      return this
+    }
+    // this.gui.destroy()
+    for (const folder of this.folders) {
+      this.gui.removeFolder(folder)
+    }
+    return this
   }
 }
 

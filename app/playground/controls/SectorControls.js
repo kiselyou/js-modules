@@ -120,6 +120,16 @@ class SectorControls extends Sector {
 
   /**
    *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  onClick(intersect, mouseEvent) {
+    this.planetsControls.onClick(intersect, mouseEvent)
+  }
+
+  /**
+   *
    * @returns {LightControls}
    */
   get lightControls() {
