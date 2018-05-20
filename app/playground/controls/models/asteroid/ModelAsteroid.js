@@ -17,7 +17,7 @@ class ModelAsteroid extends Asteroid {
      *
      * @type {Mesh}
      */
-    this.element = new Mesh()
+    this.model = new Mesh()
 
     /**
      *
@@ -48,12 +48,12 @@ class ModelAsteroid extends Asteroid {
    * @returns {void}
    */
   buildMesh() {
-    this.element.geometry = new BoxGeometry(6, 6, 6)
-    this.element.material = new MeshPhongMaterial({color: 0xFF0000})
-    this.element.castShadow = true
-    this.element.receiveShadow = true
-    this.element.position.copy(this.position)
-    this.scene.add(this.element)
+    this.model.geometry = new BoxGeometry(6, 6, 6)
+    this.model.material = new MeshPhongMaterial({color: 0xFF0000})
+    this.model.castShadow = true
+    this.model.receiveShadow = true
+    this.model.position.copy(this.position)
+    this.scene.add(this.model)
   }
 
   /**
@@ -82,7 +82,7 @@ class ModelAsteroid extends Asteroid {
    */
   update(delta) {
     this.calculatePosition(delta)
-    this.element.position.copy(this.position)
+    this.model.position.copy(this.position)
   }
 
   /**
@@ -92,10 +92,10 @@ class ModelAsteroid extends Asteroid {
    * @returns {void}
    */
   updateTooltip(intersect, mouseEvent) {
-    const isIntersect = intersect.is(this.element)
+    const isIntersect = intersect.is(this.model)
     if (isIntersect) {
       this.eventControls.ifNotActive('updateTooltip', () => {
-        const y = DetectObject3D.maxSize(this.element) + 2
+        const y = DetectObject3D.maxSize(this.model) + 2
         this.scene.add(
           this.tooltip
             .setPosition(this.position.x, y, this.position.z)
@@ -108,6 +108,16 @@ class ModelAsteroid extends Asteroid {
         this.scene.remove(this.tooltip.getSprite())
       })
     }
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  onClick(intersect, mouseEvent) {
+
   }
 }
 

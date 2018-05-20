@@ -166,19 +166,26 @@ class PlanetControls {
       // DEBUG PANEL
       const isIntersect = intersect.is(modelPlanet.planet)
       if (isIntersect) {
-        const folderName = `Planet Model Control ${modelPlanet.name}`
+        const folderName = `Model planet control ${modelPlanet.name}`
         this.eventControls.ifNotActive(folderName, () => {
           this.debugPanel
             .addFolder(folderName)
-            .add(modelPlanet.model.scale, 'x', 'Scale X', 0, 100)
-            .add(modelPlanet.model.scale, 'y', 'Scale Y', 0, 100)
-            .add(modelPlanet.model.scale, 'z', 'Scale Z', 0, 100)
+            .add(modelPlanet.model.scale, 'x', 'Scale X', 0.01, 100)
+            .add(modelPlanet.model.scale, 'y', 'Scale Y', 0.01, 100)
+            .add(modelPlanet.model.scale, 'z', 'Scale Z', 0.01, 100)
             .add(modelPlanet.model.position, 'x', 'Position X', -6000, 6000)
             .add(modelPlanet.model.position, 'y', 'Position Y', -6000, 6000)
             .add(modelPlanet.model.position, 'z', 'Position Z', -6000, 6000)
             .add(modelPlanet.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
             .add(modelPlanet.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
             .add(modelPlanet.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
+
+          if (modelPlanet.isClouds()) {
+            this.debugPanel
+              .add(modelPlanet.modelClouds.model.scale, 'x', 'Scale X', 0.01, 100)
+              .add(modelPlanet.modelClouds.model.scale, 'y', 'Scale Y', 0.01, 100)
+              .add(modelPlanet.modelClouds.model.scale, 'z', 'Scale Z', 0.01, 100)
+          }
         })
       }
 

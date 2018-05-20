@@ -20,7 +20,7 @@ class MoveControls {
      *
      * @type {number}
      */
-    this.maxSpeed = 35
+    this.maxSpeed = 350
 
     /**
      * This is a max speed of shop. This speed depend on "angularSpeed"
@@ -34,7 +34,7 @@ class MoveControls {
      *
      * @type {number}
      */
-    this.angularSpeed = 0.5
+    this.angularSpeed = 3.5
 
     /**
      * This is a current angle of ship
@@ -47,13 +47,13 @@ class MoveControls {
      *
      * @type {number}
      */
-    this.acceleration = 100
+    this.acceleration = 400
 
     /**
      *
      * @type {number}
      */
-    this.deceleration = 100
+    this.deceleration = 400
 
     /**
      *

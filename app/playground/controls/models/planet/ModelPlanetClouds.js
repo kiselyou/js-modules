@@ -19,13 +19,13 @@ class ModelPlanetClouds {
      *
      * @type {number}
      */
-    this.cloudsSize = 0.6
+    this.cloudsSize = 2.9
 
     /**
      *
      * @type {Mesh}
      */
-    this.clouds = new Mesh()
+    this.model = new Mesh()
 
     /**
      *
@@ -58,13 +58,14 @@ class ModelPlanetClouds {
    * @returns {Mesh}
    */
   getMeshClouds(planetRadius, segments, imageMap, imageTrans) {
+    console.log(planetRadius, segments, imageMap, imageTrans)
     let canvasResult = document.createElement('canvas')
     canvasResult.width = this.width
     canvasResult.height = this.height
 
     let contextResult = canvasResult.getContext('2d')
 
-    this.clouds.material = new MeshStandardMaterial({
+    this.model.material = new MeshStandardMaterial({
       map: new Texture(canvasResult),
       side: DoubleSide,
       transparent: true,
@@ -98,13 +99,13 @@ class ModelPlanetClouds {
       }
 
       contextResult.putImageData(dataResult, 0, 0)
-      this.clouds.material.map.needsUpdate = true
+      this.model.material.map.needsUpdate = true
     }, false)
 
     const radius = planetRadius + (planetRadius / 100 * this.cloudsSize)
-    this.clouds.geometry = new SphereGeometry(radius, segments, segments)
+    this.model.geometry = new SphereGeometry(radius, segments, segments)
     this.enabled = true
-    return this.clouds
+    return this.model
   }
 
   /**
@@ -114,9 +115,9 @@ class ModelPlanetClouds {
    */
   update(delta) {
     if (this.enabled) {
-      this.clouds.rotation.x += this.speed.x * delta
-      this.clouds.rotation.y += this.speed.y * delta
-      this.clouds.rotation.z += this.speed.z * delta
+      this.model.rotation.x += this.speed.x * delta
+      this.model.rotation.y += this.speed.y * delta
+      this.model.rotation.z += this.speed.z * delta
       this.updateSpeedClouds()
     }
   }

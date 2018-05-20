@@ -126,6 +126,8 @@ class SectorControls extends Sector {
    */
   onClick(intersect, mouseEvent) {
     this.planetsControls.onClick(intersect, mouseEvent)
+    this.stationControls.onClick(intersect, mouseEvent)
+    this.asteroidControls.onClick(intersect, mouseEvent)
   }
 
   /**

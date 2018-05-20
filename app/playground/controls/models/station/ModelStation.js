@@ -107,6 +107,16 @@ class ModelStation extends Station {
       })
     }
   }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  onClick(intersect, mouseEvent) {
+
+  }
 }
 
 export default ModelStation
