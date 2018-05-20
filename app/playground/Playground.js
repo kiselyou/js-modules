@@ -246,8 +246,20 @@ class Playground {
    */
   onKeyDown(e) {
     switch (e.keyCode) {
-      case 79:
-        console.log(e, 'd')
+      case 65://A
+        this.characterControls.enableLeft(true)
+        break
+      case 68://D
+        this.characterControls.enableRight(true)
+        break
+      case 87://W
+        this.characterControls.enableForward(true)
+        break
+      case 83://S
+        this.characterControls.enableBackward(true)
+        break
+      case 32://Space
+        this.characterControls.enableSlowdown(true)
         break
       default:
         console.log(e, 'def')
@@ -261,11 +273,23 @@ class Playground {
    */
   onKeyUp(e) {
     switch (e.keyCode) {
-      case 79:
-        console.log(e, 'd up')
+      case 65://A
+        this.characterControls.enableLeft(false)
+        break
+      case 68://D
+        this.characterControls.enableRight(false)
+        break
+      case 87://W
+        this.characterControls.enableForward(false)
+        break
+      case 83://S
+        this.characterControls.enableBackward(false)
+        break
+      case 32://Space
+        this.characterControls.enableSlowdown(false)
         break
       default:
-        console.log(e, 'def up')
+        console.log(e, 'def')
     }
   }
 
