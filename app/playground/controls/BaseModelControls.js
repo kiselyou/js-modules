@@ -1,0 +1,183 @@
+import DebugPanel from '@app/debug/DebugPanel'
+import EventControls from './EventControls'
+import MouseTooltip from '@helper/MouseTooltip'
+import ModelStation from "@app/playground/controls/models/station/ModelStation";
+import DetectObject3D from '@helper/DetectObject3D'
+
+class BaseModelControls {
+  /**
+   *
+   * @param {Scene} scene
+   * @param {Loader} loader
+   */
+  constructor(scene, loader) {
+    /**
+     * @type {string}
+     */
+    this.entity = this.constructor.name
+
+    /**
+     *
+     * @type {Scene}
+     */
+    this.scene = scene
+
+    /**
+     * @type {Loader}
+     */
+    this.loader = loader
+
+    /**
+     *
+     * @type {Array.<ModelStation|ModelAsteroid|ModelPlanet>}
+     */
+    this.elements = []
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.enabled = true
+
+    /**
+     *
+     * @type {MouseTooltip}
+     */
+    this.tooltip = new MouseTooltip()
+
+    /**
+     *
+     * @type {EventControls}
+     */
+    this.eventControls = new EventControls()
+
+    /**
+     *
+     * @type {DebugPanel}
+     */
+    this.debugPanel = new DebugPanel()
+      .addFolder(this.entity)
+      .add(this.elements, 'length', 'Count elements')
+      .add(this, 'enabled', 'Controls enabled')
+  }
+
+  /**
+   *
+   * @param {Loader} loader
+   * @returns {void}
+   */
+  async beforeStart(loader) {
+    for (const element of this.elements) {
+      element.beforeStart(loader)
+    }
+  }
+
+  /**
+   *
+   * @param {number} delta
+   * @returns {void}
+   */
+  update(delta) {
+    if (!this.enabled) {
+      return
+    }
+    for (let element of this.elements) {
+      element.update(delta)
+    }
+  }
+
+  /**
+   * сенхронизация элемента с server -> client
+   *
+   * @param {SwapInfo} data
+   */
+  setSwapInfo(data) {
+
+  }
+
+  /**
+   *
+   * @param {Array} dataModels
+   * @param {ModelStation|ModelAsteroid|ModelPlanet} model
+   * @returns {BaseModelControls}
+   */
+  copy(dataModels, model) {
+    for (const dataModel of dataModels) {
+      this.elements.push(
+        new model(this.scene, this.loader).copy(dataModel)
+      )
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  updateTooltip(intersect, mouseEvent) {
+    for (const element of this.elements) {
+      const isIntersect = intersect.is(element.model)
+
+      const eventName = `update.tooltip.${element.id}`
+      if (isIntersect) {
+        this.eventControls.ifNotActive(eventName, () => {
+          const maxSize = DetectObject3D.maxSize(element.model)
+          this.scene.add(
+            this.tooltip
+              .setPosition(
+                element.model.position.x,
+                element.model.position.y + maxSize + 2,
+                element.model.position.z
+              )
+              .write(element.name)
+              .getSprite()
+          )
+        })
+      } else {
+        this.eventControls.ifActive(eventName, () => {
+          this.scene.remove(this.tooltip.getSprite())
+        })
+      }
+
+      element.updateTooltip(intersect, mouseEvent)
+    }
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  onClick(intersect, mouseEvent) {
+    let i = 0
+    for (const element of this.elements) {
+      ++i
+      // DEBUG PANEL
+      const isIntersect = intersect.is(element.model)
+      if (isIntersect) {
+        const folderName = `${this.entity} ${element.name} - ${i}`
+
+        this.eventControls.ifNotActive(folderName, () => {
+          this.debugPanel
+            .addFolder(folderName)
+            .add(element.model.scale, 'x', 'Scale X', 0.01, 100)
+            .add(element.model.scale, 'y', 'Scale Y', 0.01, 100)
+            .add(element.model.scale, 'z', 'Scale Z', 0.01, 100)
+            .add(element.model.position, 'x', 'Position X', -6000, 6000)
+            .add(element.model.position, 'y', 'Position Y', -6000, 6000)
+            .add(element.model.position, 'z', 'Position Z', -6000, 6000)
+            .add(element.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
+            .add(element.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
+            .add(element.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
+        })
+      }
+
+      element.onClick(intersect, mouseEvent)
+    }
+  }
+}
+
+export default BaseModelControls

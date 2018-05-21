@@ -1,9 +1,10 @@
 import uuidV4 from 'uuid/v4'
-import { Vector3 } from 'three'
+import { Mesh } from 'three'
 import StationHasFactory from './dependence/StationHasFactory'
 
 class Station {
   constructor() {
+
     /**
      * @type {string}
      */
@@ -28,18 +29,6 @@ class Station {
 
     /**
      *
-     * @type {Vector3}
-     */
-    this.position = new Vector3()
-
-    /**
-     *
-     * @type {Vector3}
-     */
-    this.rotation = new Vector3()
-
-    /**
-     *
      * @type {number}
      */
     this.angleToCenter = 0
@@ -61,6 +50,12 @@ class Station {
      * @type {Array.<StationHasFactory>}
      */
     this.stationHasFactory = []
+
+    /**
+     *
+     * @type {Mesh}
+     */
+    this.model = new Mesh()
   }
 
   /**
@@ -112,7 +107,7 @@ class Station {
    * @returns {Station}
    */
   setRotation(x, y, z) {
-    this.rotation.set(x, y, z)
+    this.model.rotation.set(x, y, z)
     return this
   }
 
@@ -133,7 +128,7 @@ class Station {
    * @returns {Station}
    */
   setPosition(x, y) {
-    this.position.set(x, y)
+    this.model.position.set(x, y)
     return this
   }
 
@@ -169,10 +164,7 @@ class Station {
       if (data.hasOwnProperty(property)) {
         switch (property) {
           case 'entity':
-            break
-          case 'position':
-          case 'rotation':
-            this[property].copy(data[property])
+          case 'model':
             break
           case 'stationHasFactory':
             for (const item of data[property]) {
@@ -199,8 +191,8 @@ class Station {
   calculatePosition(delta = 1) {
     let x = 0, z = 0;
     this.angleToCenter += this.speedMove * delta
-    this.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
-    this.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
+    this.model.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
+    this.model.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
     return this
   }
 }

@@ -1,5 +1,5 @@
 import uuidV4 from 'uuid/v4'
-import { Vector3 }  from 'three'
+import { Mesh } from 'three'
 import Monitor from './dependence/Monitor'
 import BankAccount from './dependence/BankAccount'
 import PlanetHasStation from './dependence/PlanetHasStation'
@@ -83,18 +83,6 @@ class Planet {
 
     /**
      *
-     * @type {Vector3}
-     */
-    this.position = new Vector3()
-
-    /**
-     *
-     * @type {Vector3}
-     */
-    this.rotation = new Vector3()
-
-    /**
-     *
      * @type {number}
      */
     this.angleToCenter = 0
@@ -140,6 +128,12 @@ class Planet {
      * @type {Planet|?}
      */
     this.parent = null
+
+    /**
+     *
+     * @type {Mesh}
+     */
+    this.model = new Mesh()
   }
 
   /**
@@ -269,7 +263,7 @@ class Planet {
    * @returns {Planet}
    */
   setPosition(x, y, z) {
-    this.position.set(x, y, z)
+    this.model.position.set(x, y, z)
     return this
   }
 
@@ -281,7 +275,7 @@ class Planet {
    * @returns {Planet}
    */
   setRotation(x, y, z) {
-    this.rotation.set(x, y, z)
+    this.model.rotation.set(x, y, z)
     return this
   }
 
@@ -338,10 +332,10 @@ class Planet {
       if (data.hasOwnProperty(property)) {
         switch (property) {
           case 'entity':
+          case 'model':
             break
           case 'monitor':
           case 'bankAccount':
-          case 'position':
             this[property].copy(data[property])
             break
           case 'playerHasStation':
@@ -379,13 +373,13 @@ class Planet {
   calculatePosition(delta = 1) {
     let x = 0, z = 0;
     if (this.parent) {
-      x = this.parent.position.x
-      z = this.parent.position.z
+      x = this.parent.model.position.x
+      z = this.parent.model.position.z
     }
 
     this.angleToCenter += this.speedMove * delta
-    this.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
-    this.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
+    this.model.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
+    this.model.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
     return this
   }
 

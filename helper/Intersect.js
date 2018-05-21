@@ -69,6 +69,7 @@ class Intersect {
     this.rayStartFrom.copy(this.camera.position)
     this.rayStartFrom.add(this.gyroscope.parent.position)
     this.raycaster.ray.origin = this.rayStartFrom
+    this.raycaster.far = 1000
 
     this.raycaster.ray.direction = this.dirrection.sub(this.rayStartFrom).normalize()
 

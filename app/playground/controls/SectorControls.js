@@ -64,7 +64,6 @@ class SectorControls extends Sector {
     await this.planetsControls.beforeStart(this.loader)
     await this.stationControls.beforeStart(this.loader)
     await this.asteroidControls.beforeStart(this.loader)
-    // await this.starLightControls.beforeStart(this.loader)
   }
 
   /**
@@ -74,9 +73,9 @@ class SectorControls extends Sector {
    */
   copy(data) {
     super.copy(data['sector'])
-    this.planetsControls.copy(data)
-    this.stationControls.copy(data)
-    this.asteroidControls.copy(data)
+    this.planetsControls.copy(data.planet)
+    this.stationControls.copy(data.station)
+    this.asteroidControls.copy(data.asteroid)
     this.skyBoxControls.copy(data)
     // this.starLightControls.copy(data['starLight'])
     return this

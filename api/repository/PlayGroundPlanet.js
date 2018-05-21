@@ -51,9 +51,9 @@ class PlayGroundPlanet {
     for (const planet of planets) {
       collection.then((db) => {
         db.updateOne(
-          {id: planet.id},
-          {$set: {position: planet.position, angleToCenter: planet.angleToCenter}},
-          {upsert: true},
+          { id: planet.id },
+          { $set: { angleToCenter: planet.angleToCenter } },
+          { upsert: true },
           (err) => {
             if (err) {
               throw new Error('Cannot upsert timestamp')

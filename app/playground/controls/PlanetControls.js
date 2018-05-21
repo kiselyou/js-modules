@@ -1,59 +1,14 @@
 import ModelPlanet from './models/planet/ModelPlanet'
-import DebugPanel from '@app/debug/DebugPanel'
-import EventControls from './EventControls'
-import DetectObject3D from "@helper/DetectObject3D";
+import BaseModelControls from './BaseModelControls'
 
-class PlanetControls {
+class PlanetControls extends BaseModelControls {
   /**
    *
    * @param {Scene} scene
    * @param {Loader} loader
    */
   constructor(scene, loader) {
-
-    /**
-     *
-     * @type {Scene}
-     */
-    this.scene = scene
-
-    /**
-     * @type {Loader}
-     */
-    this.loader = loader
-
-    /**
-     *
-     * @type {Array.<ModelPlanet>}
-     */
-    this.planets = []
-
-    /**
-     *
-     * @type {Array.<Mesh>}
-     */
-    this.elements = []
-
-    /**
-     *
-     * @type {boolean}
-     */
-    this.enabled = true
-
-    /**
-     *
-     * @type {DebugPanel}
-     */
-    this.debugPanel = new DebugPanel()
-      .addFolder('Planet controls')
-      .add(this.planets, 'length', 'Count planets')
-      .add(this, 'enabled', 'Controls enabled')
-
-    /**
-     *
-     * @type {EventControls}
-     */
-    this.eventControls = new EventControls()
+    super(scene, loader)
   }
 
   /**
@@ -62,16 +17,14 @@ class PlanetControls {
    * @returns {void}
    */
   async beforeStart(loader) {
-    this.preparePlanets(this.planets)
-    for (const modelPlanet of this.planets) {
-      modelPlanet.beforeStart(loader)
-      this.elements.push(modelPlanet.planet)
-    }
+    this.preparePlanets(this.elements)
+    super.beforeStart(loader)
   }
 
   /**
    *
    * @param {Array.<ModelPlanet>} modelPlanets
+   * @returns {void}
    */
   preparePlanets(modelPlanets) {
     const prepare = {}
@@ -90,107 +43,12 @@ class PlanetControls {
 
   /**
    *
-   * @param {object} data
+   * @param {Array} dataModels
    * @returns {PlanetControls}
    */
-  copy(data) {
-    for (const planet of data.planet) {
-      this.planets.push(
-        new ModelPlanet(this.scene, this.loader)
-          .copy(planet)
-      )
-    }
+  copy(dataModels) {
+    super.copy(dataModels, ModelPlanet)
     return this
-  }
-
-  /**
-   *
-   * @param {number} delta
-   * @returns {void}
-   */
-  update(delta) {
-    if (!this.enabled) {
-      return
-    }
-    for (let model of this.planets) {
-      model.update(delta)
-    }
-  }
-
-  /**
-   * сенхронизация планет с server -> client
-   *
-   * @param {SwapInfo} data
-   */
-  setSwapInfo(data) {
-    const swapPlanets = data.sector.planets
-    for (const swapPlanet of swapPlanets) {
-      const planet = this.findPlanetById(swapPlanet.id)
-      if (planet) {
-        planet.copy(swapPlanet)
-      }
-    }
-  }
-
-  /**
-   *
-   * @param {string} id
-   * @returns {ModelPlanet|?}
-   */
-  findPlanetById(id) {
-    const planet = this.planets.find((planet) => planet.id === id)
-    return planet ? planet : null
-  }
-
-  /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  updateTooltip(intersect, mouseEvent) {
-    for (const modelPlanet of this.planets) {
-      modelPlanet.updateTooltip(intersect, mouseEvent)
-    }
-  }
-
-  /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  onClick(intersect, mouseEvent) {
-    for (const modelPlanet of this.planets) {
-
-      // DEBUG PANEL
-      const isIntersect = intersect.is(modelPlanet.planet)
-      if (isIntersect) {
-        const folderName = `Model planet control ${modelPlanet.name}`
-        this.eventControls.ifNotActive(folderName, () => {
-          this.debugPanel
-            .addFolder(folderName)
-            .add(modelPlanet.model.scale, 'x', 'Scale X', 0.01, 100)
-            .add(modelPlanet.model.scale, 'y', 'Scale Y', 0.01, 100)
-            .add(modelPlanet.model.scale, 'z', 'Scale Z', 0.01, 100)
-            .add(modelPlanet.model.position, 'x', 'Position X', -6000, 6000)
-            .add(modelPlanet.model.position, 'y', 'Position Y', -6000, 6000)
-            .add(modelPlanet.model.position, 'z', 'Position Z', -6000, 6000)
-            .add(modelPlanet.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
-            .add(modelPlanet.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
-            .add(modelPlanet.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
-
-          if (modelPlanet.isClouds()) {
-            this.debugPanel
-              .add(modelPlanet.modelClouds.model.scale, 'x', 'Scale X', 0.01, 100)
-              .add(modelPlanet.modelClouds.model.scale, 'y', 'Scale Y', 0.01, 100)
-              .add(modelPlanet.modelClouds.model.scale, 'z', 'Scale Z', 0.01, 100)
-          }
-        })
-      }
-
-      modelPlanet.onClick(intersect, mouseEvent)
-    }
   }
 }
 

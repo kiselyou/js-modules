@@ -1,10 +1,7 @@
 import Planet from '@entity/sector/Planet'
 import ModelPlanetClouds from './ModelPlanetClouds'
-import { Mesh, Group, MeshPhongMaterial, SphereGeometry, Color } from 'three'
+import { MeshPhongMaterial, SphereGeometry, Color } from 'three'
 import { getGlowInsideMesh, getGlowOutsideMesh } from '../../../../shader/glow'
-import MouseTooltip from '@helper/MouseTooltip'
-import DetectObject3D from '@helper/DetectObject3D'
-import EventControls from './../../EventControls'
 
 class ModelPlanet extends Planet {
   /**
@@ -14,18 +11,6 @@ class ModelPlanet extends Planet {
    */
   constructor(scene, loader) {
     super()
-
-    /**
-     *
-     * @type {Mesh}
-     */
-    this.planet = new Mesh()
-
-    /**
-     *
-     * @type {Group}
-     */
-    this.model = new Group()
 
     /**
      *
@@ -43,18 +28,6 @@ class ModelPlanet extends Planet {
      * @type {ModelPlanetClouds}
      */
     this.modelClouds = new ModelPlanetClouds()
-
-    /**
-     *
-     * @type {MouseTooltip}
-     */
-    this.tooltip = new MouseTooltip()
-
-    /**
-     *
-     * @type {EventControls}
-     */
-    this.eventControls = new EventControls()
   }
 
   /**
@@ -64,8 +37,8 @@ class ModelPlanet extends Planet {
   buildMesh() {
     const radius = this.params.radius
     const segments = this.params.segments
-    this.planet.geometry = new SphereGeometry(radius, segments, segments)
-    this.planet.material = new MeshPhongMaterial({
+    this.model.geometry = new SphereGeometry(radius, segments, segments)
+    this.model.material = new MeshPhongMaterial({
       map: this.getTextureMap(),
       bumpScale: this.getBumpScale(),
       bumpMap: this.getTextureBump(),
@@ -73,18 +46,16 @@ class ModelPlanet extends Planet {
       specular: this.getSpecular(),
     })
 
-    this.planet.castShadow = true
-    this.planet.receiveShadow = true
-    this.model.position.copy(this.position)
-    this.model.add(this.planet)
+    this.model.castShadow = true
+    this.model.receiveShadow = true
 
     if (this.glow.inside.enabled) {
-      const meshGlow = getGlowInsideMesh(this.planet, this.glow.inside)
+      const meshGlow = getGlowInsideMesh(this.model, this.glow.inside)
       this.model.add(meshGlow)
     }
 
     if (this.glow.outside.enabled) {
-      const meshGlow = getGlowOutsideMesh(this.planet, this.glow.outside)
+      const meshGlow = getGlowOutsideMesh(this.model, this.glow.outside)
       this.model.add(meshGlow)
     }
 
@@ -187,14 +158,10 @@ class ModelPlanet extends Planet {
    * @returns {void}
    */
   update(delta) {
-    if (this.planet) {
-      this.calculatePosition(delta)
-      this.model.position.copy(this.position)
-      this.planet.rotation.y -= 0.05 * delta
-
-      if (this.modelClouds.enabled) {
-        this.modelClouds.update(delta)
-      }
+    this.calculatePosition(delta)
+    this.model.rotation.y -= 0.05 * delta
+    if (this.modelClouds.enabled) {
+      this.modelClouds.update(delta)
     }
   }
 
@@ -205,22 +172,7 @@ class ModelPlanet extends Planet {
    * @returns {void}
    */
   updateTooltip(intersect, mouseEvent) {
-    const isIntersect = intersect.is(this.planet)
-    if (isIntersect) {
-      this.eventControls.ifNotActive('updateTooltip', () => {
-        const y = DetectObject3D.maxSize(this.planet) + 2
-        this.scene.add(
-          this.tooltip
-            .setPosition(this.position.x, y, this.position.z)
-            .write(this.name)
-            .getSprite()
-        )
-      })
-    } else {
-      this.eventControls.ifActive('updateTooltip', () => {
-        this.scene.remove(this.tooltip.getSprite())
-      })
-    }
+
   }
 
   /**

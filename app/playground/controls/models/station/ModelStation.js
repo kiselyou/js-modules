@@ -1,7 +1,5 @@
 import Station from '@entity/station/Station'
-import MouseTooltip from '@helper/MouseTooltip'
-import EventControls from './../../EventControls'
-import { Object3D } from 'three'
+import { MeshBasicMaterial, SphereGeometry } from 'three'
 import DetectObject3D from '@helper/DetectObject3D'
 import * as CONST from '@app/constants'
 
@@ -16,12 +14,6 @@ class ModelStation extends Station {
 
     /**
      *
-     * @type {Object3D}
-     */
-    this.model = new Object3D()
-
-    /**
-     *
      * @type {Scene}
      */
     this.scene = scene
@@ -33,15 +25,9 @@ class ModelStation extends Station {
 
     /**
      *
-     * @type {MouseTooltip}
+     * @type {number}
      */
-    this.tooltip = new MouseTooltip()
-
-    /**
-     *
-     * @type {EventControls}
-     */
-    this.eventControls = new EventControls()
+    this.maxSize = 0;
   }
 
   /**
@@ -50,6 +36,11 @@ class ModelStation extends Station {
    */
   buildMesh() {
     const model3D = this.loader.getModel(CONST.KEY_STATION_2)
+    this.maxSize = DetectObject3D.maxSize(model3D)
+
+    this.model.material = new MeshBasicMaterial({ transparent: true, opacity: 0.05 })
+    this.model.geometry = new SphereGeometry(this.maxSize, 25, 25)
+
     this.model.add(model3D)
     this.scene.add(this.model)
   }
@@ -80,7 +71,6 @@ class ModelStation extends Station {
    */
   update(delta) {
     this.calculatePosition(delta)
-    this.model.position.copy(this.position)
   }
 
   /**
@@ -90,22 +80,7 @@ class ModelStation extends Station {
    * @returns {void}
    */
   updateTooltip(intersect, mouseEvent) {
-    const isIntersect = intersect.is(this.model)
-    if (isIntersect) {
-      this.eventControls.ifNotActive('updateTooltip', () => {
-        const y = DetectObject3D.maxSize(this.element) + 2
-        this.scene.add(
-          this.tooltip
-            .setPosition(this.position.x, y, this.position.z)
-            .write(this.name)
-            .getSprite()
-        )
-      })
-    } else {
-      this.eventControls.ifActive('updateTooltip', () => {
-        this.scene.remove(this.tooltip.getSprite())
-      })
-    }
+
   }
 
   /**

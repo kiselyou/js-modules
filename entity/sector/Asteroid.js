@@ -1,5 +1,5 @@
 import AsteroidHasMineral from './dependence/AsteroidHasMineral'
-import {Vector3} from 'three'
+import { Mesh } from 'three'
 import uuidV4 from 'uuid/v4'
 
 class Asteroid {
@@ -25,18 +25,6 @@ class Asteroid {
      * @type {string|?}
      */
     this.sectorId = null
-
-    /**
-     *
-     * @type {Vector3}
-     */
-    this.position = new Vector3()
-
-    /**
-     *
-     * @type {Vector3}
-     */
-    this.rotation = new Vector3()
 
     /**
      *
@@ -67,6 +55,12 @@ class Asteroid {
      * @type {Array.<AsteroidHasMineral>}
      */
     this.asteroidHasMineral = []
+
+    /**
+     *
+     * @type {Mesh}
+     */
+    this.model = new Mesh()
   }
 
   /**
@@ -128,7 +122,7 @@ class Asteroid {
    * @returns {Asteroid}
    */
   setRotation(x, y, z) {
-    this.rotation.set(x, y, z)
+    this.model.rotation.set(x, y, z)
     return this
   }
 
@@ -150,7 +144,7 @@ class Asteroid {
    * @returns {Asteroid}
    */
   setPosition(x, y, z) {
-    this.position.set(x, y, z)
+    this.model.position.set(x, y, z)
     return this
   }
 
@@ -189,6 +183,7 @@ class Asteroid {
       if (data.hasOwnProperty(property)) {
         switch (property) {
           case 'entity':
+          case 'model':
             break
           case 'position':
           case 'rotation':
@@ -219,8 +214,8 @@ class Asteroid {
   calculatePosition(delta = 1) {
     let x = 0, z = 0;
     this.angleToCenter += this.speedMove * delta
-    this.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
-    this.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
+    this.model.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
+    this.model.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
     return this
   }
 }
