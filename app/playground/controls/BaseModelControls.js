@@ -4,6 +4,8 @@ import MouseTooltip from '@helper/MouseTooltip'
 import ModelStation from "@app/playground/controls/models/station/ModelStation";
 import DetectObject3D from '@helper/DetectObject3D'
 
+import ModelPlanet from './models/planet/ModelPlanet'
+
 class BaseModelControls {
   /**
    *
@@ -159,24 +161,48 @@ class BaseModelControls {
       const isIntersect = intersect.is(element.model)
       if (isIntersect) {
         const folderName = `${this.entity} ${element.name} - ${i}`
-
-        this.eventControls.ifNotActive(folderName, () => {
-          this.debugPanel
-            .addFolder(folderName)
-            .add(element.model.scale, 'x', 'Scale X', 0.01, 100)
-            .add(element.model.scale, 'y', 'Scale Y', 0.01, 100)
-            .add(element.model.scale, 'z', 'Scale Z', 0.01, 100)
-            .add(element.model.position, 'x', 'Position X', -6000, 6000)
-            .add(element.model.position, 'y', 'Position Y', -6000, 6000)
-            .add(element.model.position, 'z', 'Position Z', -6000, 6000)
-            .add(element.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
-            .add(element.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
-            .add(element.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
-        })
+        this.prepareDebugPanel(element, folderName)
       }
 
       element.onClick(intersect, mouseEvent)
     }
+  }
+
+  /**
+   *
+   * @param {ModelStation|ModelAsteroid|ModelPlanet} element
+   * @param {string} folderName
+   */
+  prepareDebugPanel(element, folderName) {
+    this.eventControls.ifNotActive(folderName, () => {
+      this.debugPanel
+        .addFolder(folderName)
+        .add(element.model.scale, 'x', 'Scale X', 0.01, 100)
+        .add(element.model.scale, 'y', 'Scale Y', 0.01, 100)
+        .add(element.model.scale, 'z', 'Scale Z', 0.01, 100)
+        .add(element.model.position, 'x', 'Position X', -6000, 6000)
+        .add(element.model.position, 'y', 'Position Y', -6000, 6000)
+        .add(element.model.position, 'z', 'Position Z', -6000, 6000)
+        .add(element.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
+        .add(element.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
+        .add(element.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
+
+      if (element instanceof ModelPlanet) {
+        if (element.glowInside) {
+          this.debugPanel
+            .add(element.glowInside.material.uniforms.coefficient, 'value', 'Glow coefficient', -5, 5)
+            .add(element.glowInside.material.uniforms.power, 'value', 'Glow power', -5, 5)
+            .add(element.glowInside.material.uniforms.glowColor, 'value', 'Glow color', null, null, true)
+        }
+
+        if (element.glowOutside) {
+          this.debugPanel
+            .add(element.glowOutside.material.uniforms.coefficient, 'value', 'Glow coefficient', -5, 5)
+            .add(element.glowOutside.material.uniforms.power, 'value', 'Glow power', -5, 5)
+            .add(element.glowOutside.material.uniforms.glowColor, 'value', 'Glow color', null, null, true)
+        }
+      }
+    })
   }
 }
 

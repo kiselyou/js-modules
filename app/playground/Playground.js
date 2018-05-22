@@ -141,6 +141,24 @@ class Playground {
             this.renderer.dispose()
         }
       })
+      .addFolder('Camera')
+      .add(this.camera, 'fov', 'Fov', 0, 100)
+      .add(this.camera, 'far', 'Far', 500, 15000)
+      .add(this.camera, 'zoom', 'Zoom', 0.1, 100)
+      .addEventOnChange((value, name) => {
+        switch (name) {
+          case 'fov':
+          case 'far':
+          case 'zoom':
+            this.camera.updateProjectionMatrix()
+        }
+      })
+      .addFolder('CameraControls')
+      .add(this.cameraControls, 'enableKeys', 'EnableKeys')
+      .add(this.cameraControls, 'enablePan', 'EnablePan')
+      .add(this.cameraControls, 'minDistance', 'MinDistance', 0, 100)
+      .add(this.cameraControls, 'maxDistance', 'MaxDistance', 101, 2000)
+      .add(this.cameraControls, 'maxPolarAngle', 'MaxPolarAngle', 0, Math.PI)
   }
 
   /**

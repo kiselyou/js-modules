@@ -116,8 +116,8 @@ export const map = [
         cloudMap: CONST.KEY_PLANET_EARTH_CLOUD_MAP,
         cloudMapTrans: CONST.KEY_PLANET_EARTH_CLOUD_MAP_TRANS,
       })
-      .setGlowInside({color: 0xA0D1E6, coefficient: 1, power: 3.5, length: 0.06})
-      .setGlowOutside({color: 0xA0D1E6, coefficient: 0.1, power: 2.5, length: 0.6})
+      .setGlowInside({color: 0xA0D1E6, coefficient: 1.2, power: 1.9, length: 0.06})
+      .setGlowOutside({color: 0xA0D1E6, coefficient: 0.01, power: 1.6, length: 0.6})
       .setId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId(ID_SECTOR_SUN),
@@ -134,8 +134,8 @@ export const map = [
           scale: 0.05
         },
       })
-      .setGlowInside({color: 0xCCCCCC, coefficient: 1, power: 2.0, length: 0.01})
-      .setGlowOutside({color: 0xFFFFFF, coefficient: 0.2, power: 2.5, length: 0.1})
+      .setGlowInside({color: 0xCCCCCC, coefficient: 1, power: 2.0, length: 0.1})
+      .setGlowOutside({color: 0xFFFFFF, coefficient: 0.2, power: 2.5, length: 0.5})
       .setId('ccc3fe37-1b8c-489c-bbbb-0b3e04783a71')
       .setParentId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')

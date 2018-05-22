@@ -28,6 +28,18 @@ class ModelPlanet extends Planet {
      * @type {ModelPlanetClouds}
      */
     this.modelClouds = new ModelPlanetClouds()
+
+    /**
+     *
+     * @type {Mesh|null}
+     */
+    this.glowInside = null
+
+    /**
+     *
+     * @type {Mesh|null}
+     */
+    this.glowOutside = null
   }
 
   /**
@@ -40,34 +52,34 @@ class ModelPlanet extends Planet {
     this.model.geometry = new SphereGeometry(radius, segments, segments)
     this.model.material = new MeshPhongMaterial({
       map: this.getTextureMap(),
-      bumpScale: this.getBumpScale(),
-      bumpMap: this.getTextureBump(),
-      specularMap: this.getTextureSpec(),
-      specular: this.getSpecular(),
+      // bumpScale: this.getBumpScale(),
+      // bumpMap: this.getTextureBump(),
+      // specularMap: this.getTextureSpec(),
+      // specular: this.getSpecular(),
     })
 
     this.model.castShadow = true
     this.model.receiveShadow = true
 
     if (this.glow.inside.enabled) {
-      const meshGlow = getGlowInsideMesh(this.model, this.glow.inside)
-      this.model.add(meshGlow)
+      this.glowInside = getGlowInsideMesh(this.model, this.glow.inside)
+      this.model.add(this.glowInside)
     }
 
     if (this.glow.outside.enabled) {
-      const meshGlow = getGlowOutsideMesh(this.model, this.glow.outside)
-      this.model.add(meshGlow)
+      this.glowOutside = getGlowOutsideMesh(this.model, this.glow.outside)
+      this.model.add(this.glowOutside)
     }
 
     if (this.isClouds()) {
-      this.model.add(
-        this.modelClouds.getMeshClouds(
-          radius,
-          this.params.segments,
-          this.getImageCloudMap(),
-          this.getImageCloudMapTrans()
-        )
-      )
+      // this.model.add(
+      //   this.modelClouds.getMeshClouds(
+      //     radius,
+      //     this.params.segments,
+      //     this.getImageCloudMap(),
+      //     this.getImageCloudMapTrans()
+      //   )
+      // )
     }
 
     this.scene.add(this.model)
