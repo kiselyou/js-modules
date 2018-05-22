@@ -3,6 +3,8 @@ import {
   Scene,
   WebGLRenderer,
   Clock,
+  Fog,
+  Color,
   MOUSE,
   PCFSoftShadowMap, Math as tMath,
   AxesHelper
@@ -55,6 +57,8 @@ class Playground {
      * @type {Scene}
      */
     this.scene = new Scene()
+    this.scene.background = new Color( 0xffffff );
+    this.scene.fog = new Fog(0xffffff, 1000, 4000)
 
     /**
      *
@@ -159,6 +163,10 @@ class Playground {
       .add(this.cameraControls, 'minDistance', 'MinDistance', 0, 100)
       .add(this.cameraControls, 'maxDistance', 'MaxDistance', 101, 2000)
       .add(this.cameraControls, 'maxPolarAngle', 'MaxPolarAngle', 0, Math.PI)
+      .addFolder('Fog')
+      .add(this.scene.fog, 'color', 'Color', null, null, true)
+      .add(this.scene.fog, 'near', 'Near', 100, 5000)
+      .add(this.scene.fog, 'far', 'far', 3000, 15000)
   }
 
   /**
