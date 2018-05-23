@@ -1,0 +1,14 @@
+# before start project please create file "api.config.yml" and paste this configuration
+db:
+  mongo:
+    host: localhost
+    port: 27017
+    dbName: null
+server:
+  host: localhost
+  port: 3000
+allowIP:
+  - http://localhost:8080
+socket:
+  host: 127.0.0.1
+  port: 3333

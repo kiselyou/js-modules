@@ -3,9 +3,11 @@ import multer from 'multer';
 import express from 'express'
 import bodyParser from 'body-parser'
 import routes from './routes'
-import { config } from './config/develop'
 import * as core from './core'
 import PlayGroundProcess from './socket/PlayGroundProcess'
+import yaml from 'js-yaml'
+import fs from 'fs'
+const config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './config/api.config.yml'), 'utf8'));
 
 const app = express()
 
@@ -53,7 +55,7 @@ for (const route of routes) {
 }
 
 app.listen(config.server.port, config.server.host, () => {
-  console.log(`Example app listening host ${config.server.host} on port ${config.server.port}`)
+  console.log(`Started host: ${config.server.host}, port: ${config.server.port}`)
 })
 
 const playProcess = new PlayGroundProcess(app)

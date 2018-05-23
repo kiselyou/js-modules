@@ -2,3 +2,5 @@
 /node_modules/
 /public/
 yarn-error.log
+/api/config/api.config.yml
+/api/config/app.config.yml
