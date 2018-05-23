@@ -167,6 +167,12 @@ class Playground {
       .add(this.scene.fog, 'color', 'Color', null, null, true)
       .add(this.scene.fog, 'near', 'Near', 100, 5000)
       .add(this.scene.fog, 'far', 'far', 3000, 15000)
+
+    /**
+     *
+     * @type {Object}
+     */
+    this.appConfig = {}
   }
 
   /**
@@ -190,6 +196,16 @@ class Playground {
     await this.characterControls.beforeStart()
 
     this.animateStart()
+    return this
+  }
+
+  /**
+   *
+   * @param {Object} data
+   * @return {Playground}
+   */
+  setAppConfig(data) {
+    this.appConfig = data
     return this
   }
 

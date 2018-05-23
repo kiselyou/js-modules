@@ -5,9 +5,10 @@ import bodyParser from 'body-parser'
 import routes from './routes'
 import * as core from './core'
 import PlayGroundProcess from './socket/PlayGroundProcess'
-import yaml from 'js-yaml'
-import fs from 'fs'
-const config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './config/api.config.yml'), 'utf8'));
+import { apiConfig, appConfig } from './config/config'
+
+appConfig['apiBaseUrl'] = `http://${apiConfig.server.host}:${apiConfig.server.port}`
+appConfig['socketPlayProcess'] = `http://${apiConfig.socket.host}:${apiConfig.socket.port}/play-process`
 
 const app = express()
 
@@ -15,7 +16,7 @@ const app = express()
 app.use((req, res, next) => {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', config.allowIP)
+  res.setHeader('Access-Control-Allow-Origin', apiConfig['accessControl'])
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
@@ -35,10 +36,14 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(express.static('public'))
-app.use('/app/web', express.static('public/' + process.env.npm_package_version))
+app.use('/app/web', express.static('public/' + appConfig['version']))
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.sendFile('/../../public/index.html')
+})
+
+app.post('/app/config', (req, res) => {
+  res.json(appConfig)
 })
 
 for (const route of routes) {
@@ -54,8 +59,8 @@ for (const route of routes) {
   }
 }
 
-app.listen(config.server.port, config.server.host, () => {
-  console.log(`Started host: ${config.server.host}, port: ${config.server.port}`)
+app.listen(apiConfig.server.port, apiConfig.server.host, () => {
+  console.log(`Started host: ${apiConfig.server.host}, port: ${apiConfig.server.port}`)
 })
 
 const playProcess = new PlayGroundProcess(app)

@@ -17,7 +17,9 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 (async () => {
 
-  const playGroundInfoJson = await Ajax.post('http://localhost:3000/user/data/1', player)
+  const appConfigJson = await Ajax.post('/app/config')
+  const appConfig = JSON.parse(appConfigJson)
+  const playGroundInfoJson = await Ajax.post('/user/data/1', player)
   const playGroundInfo = JSON.parse(playGroundInfoJson)
 
   const loader = new Loader()
@@ -27,11 +29,12 @@ ReactDOM.render(<App />, document.getElementById('root'));
     let playground = new Playground(loader)
 
     await playground
+      .setAppConfig(appConfig)
       .registrationEvents()
       .copy(playGroundInfo)
       .init('root', 'root-canvas')
 
-    const socket = io.connect('http://127.0.0.1:3333/play-process');
+    const socket = io.connect(appConfig.socketPlayProcess);
 
     socket.emit('swap-player', playground.player.getSwapInfo())
     socket.on('swap-player', (swapPlayer) => {

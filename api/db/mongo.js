@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import { config } from '../config/develop'
+import { apiConfig } from '../config/config'
 
 /**
  *
@@ -7,8 +7,8 @@ import { config } from '../config/develop'
  * @returns {Promise<Collection>}
  */
 export async function mgDB(collectionName) {
-  const url = `mongodb://${config.db.mongo.host}:${config.db.mongo.port}`
+  const url = `mongodb://${apiConfig.db.mongo.host}:${apiConfig.db.mongo.port}`
   const client = await MongoClient.connect(url)
-  const db = client.db(config.db.mongo.dbName);
+  const db = client.db(apiConfig.db.mongo.dbName);
   return db.collection(collectionName)
 }

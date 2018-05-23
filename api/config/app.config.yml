@@ -1,0 +1,6 @@
+# Dynamic properties
+apiBaseUrl: null
+socketPlayProcess: null
+
+# Static properties
+version: 0.0.0

@@ -5,12 +5,11 @@ const WebpackAutoInject = require('webpack-auto-inject-version');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const isDevelopmentTest = process.env.NODE_ENV === 'development'
+const isProduction = process.env.NODE_ENV === 'production'
 let dir = 'app'
+// dir = 'debug'
 
-// dir = 'app-debug'
-
-const version = prepareNewVersion(isDevelopmentTest);
+const version = prepareNewVersion(isProduction);
 
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   template: `./${dir}/index.html`,
@@ -39,7 +38,7 @@ const UglifyJsPluginConfig =  new UglifyJsPlugin({
 
 const CopyWebpackPluginConfig = new CopyWebpackPlugin([
   { from: `${dir}/web/images`, to: version +'/images' },
-  { from: `${dir}/web/images`, to: version +'/models' },
+  { from: `${dir}/web/models`, to: version +'/models' },
   `${dir}/icon.ico`
 ])
 
@@ -108,17 +107,18 @@ module.exports = {
     ExtractTextPluginConfig,
     UglifyJsPluginConfig,
     CopyWebpackPluginConfig
-  ]
+  ],
+  performance: { hints: false }
 };
 
 /**
  *
  * @returns {string}
  */
-function prepareNewVersion(isDevelopmentTest) {
-  if (isDevelopmentTest) {
-    return '0.0.0'
+function prepareNewVersion(isProduction) {
+  if (isProduction) {
+    const data = process.env.npm_package_version.split('.')
+    return data[0] + '.' + data[1] + '.' + (parseInt(data[2]) + 1)
   }
-  const data = process.env.npm_package_version.split('.')
-  return data[0] + '.' + data[1] + '.' + (parseInt(data[2]) + 1)
+  return '0.0.0'
 }

@@ -1,13 +1,13 @@
 {
     "name": "modules",
-    "version": "1.0.11",
+    "version": "1.0.20",
     "description": "",
     "main": "./app/index.js",
     "scripts": {
         "server:start": "nodemon ./api/index.js --exec babel-node --presets es2015",
         "server:migrate": "nodemon ./api/migrate/install.js --exec babel-node --presets es2015",
-        "client:start": "webpack-dev-server --mode development",
-        "client:build": "webpack --mode production --env.patch",
+        "client:watch": "NODE_ENV='development' webpack --watch --mode development",
+        "client:build": "NODE_ENV='production' webpack --mode production --env.patch",
         "test": "mocha --require babel-register ./modules -name '*.test.js' --recursive",
         "watch": "webpack --watch --mode development"
     },

@@ -1,6 +1,6 @@
 import http from 'http';
 import socket from 'socket.io';
-import { config } from './../config/develop'
+import { apiConfig } from './../config/config'
 
 class Server {
   /**
@@ -9,7 +9,7 @@ class Server {
    */
   constructor(app) {
     let server = http.createServer(app);
-    server.listen(config.socket.port, config.socket.host);
+    server.listen(apiConfig.socket.port, apiConfig.socket.host);
     this.io = socket(server);
   }
 
