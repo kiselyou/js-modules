@@ -36,10 +36,54 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
     const socket = io.connect(appConfig.socketPlayProcess);
 
-    socket.emit('swap-player', playground.player.getSwapInfo())
-    socket.on('swap-player', (swapPlayer) => {
-      playground.player.copy(swapPlayer)
+    // WARNING
+    // A Текущий игрок - твой браузер
+    // B Удаленный игрок - игрок или игроки в других браузерах
+
+    // Отправить информацию на сервер о текущем игроке A
+    socket.emit('swap-current-player', playground.character.getSwapInfo())
+    // Обновить информацию о текущем игроке A
+    socket.on('swap-current-player', (swapPlayer) => {
+      playground.character.copy(swapPlayer)
     })
+
+    // Добавление удаленного игрока B в сектор
+    socket.on('swap-add-player', (swapPlayer) => {
+      if (swapPlayer.sectorId === playground.sectorControls.id) {
+        playground.addPlayer(swapPlayer)
+        // отправить информацию о текущем игроке A у удаленного игрока B
+        socket.emit('swap-add-specific-player', {
+          destinationSocketId: swapPlayer.socketId,
+          character: playground.character.getSwapInfo()
+        })
+      }
+    })
+
+    // Добавление удаленного игрока B на карту текущего игрока A
+    socket.on('swap-add-specific-player', (swapPlayer) => {
+      if (swapPlayer.sectorId === playground.sectorControls.id) {
+        playground.addPlayer(swapPlayer)
+      }
+    })
+
+    // Слежение за действиями текущего игрока A
+    playground.characterControls.addMoveEventListener((moveSwapInfo) => {
+      // Отправить удаленным игрокам B информацию действиях текущего игрока A
+      socket.emit('swap-player-action-move', {
+        moveSwapInfo: moveSwapInfo,
+        characterId: playground.character.id
+      })
+    })
+
+    // Изменяем состояние текущего игрока A у удаленных игроков B
+    socket.on('swap-player-action-move', (data) => {
+      const playerControls = playground.findPlayerControls(data.characterId)
+      if (playerControls) {
+        playerControls.setMoveSwapInfo(data.moveSwapInfo)
+      } else {
+        throw new Error('Error PlayerControls: can not find player by id ' + data.characterId)
+      }
+    });
 
     socket.on('each-minute', (swapInfo) => {
       playground.setSwapInfo(

@@ -94,6 +94,12 @@ class Playground {
 
     /**
      *
+     * @type {Array.<CharacterControls>}
+     */
+    this.playersControls = []
+
+    /**
+     *
      * @type {LightControls}
      */
     this.scene.add(this.sectorControls.lightControls.pointLight)
@@ -168,6 +174,30 @@ class Playground {
       .add(this.scene.fog, 'near', 'Near', 100, 5000)
       .add(this.scene.fog, 'far', 'far', 3000, 15000)
 
+    const panel = new DebugPanel()
+      .addFolder('Ship Controls')
+      .add(this.characterControls, 'enabled', 'Controls enabled')
+      .open()
+      .addFolder('Ship Info')
+      .add(this.characterControls, 'speed', 'Ship Speed')
+      .add(this.characterControls.model.position, 'x', 'Ship X')
+      .add(this.characterControls.model.position, 'y', 'Ship Y')
+      .add(this.characterControls.model.position, 'z', 'Ship Z')
+      .addFolder('Ship speed')
+      .add(this.characterControls, 'maxSpeed', 'Max', 10, 400)
+      .add(this.characterControls, 'maxReverseSpeed', 'Max Reverse', -200, 0)
+      .add(this.characterControls, 'angularSpeed', 'Angular Speed', 0.01, 5)
+      .add(this.characterControls, 'acceleration', 'Acceleration', 10, 500)
+      .add(this.characterControls, 'deceleration', 'Deceleration', 10, 500)
+
+    setTimeout(() => {
+      panel
+        .addFolder('Scale')
+        .add(this.characterControls.model.children[1].scale, 'x', 'Scale X', 0, 5)
+        .add(this.characterControls.model.children[1].scale, 'y', 'Scale Y', 0, 5)
+        .add(this.characterControls.model.children[1].scale, 'z', 'Scale Z', 0, 5)
+    }, 5000)
+
     /**
      *
      * @type {Object}
@@ -216,8 +246,53 @@ class Playground {
    */
   copy(data) {
     this.sectorControls.copy(data)
-    this.characterControls.copy(data)
+    this.characterControls.copy(data.player)
     return this
+  }
+
+  /**
+   *
+   * @param {Object} data
+   * @return {Playground}
+   */
+  addPlayer(data) {
+    const playerControls = new CharacterControls(this.scene, this.loader)
+    playerControls.copy(data)
+    playerControls.beforeStart()
+    this.playersControls.push(playerControls)
+    this.scene.add(playerControls.model)
+    return this
+  }
+
+  /**
+   *
+   * @param {string} playerId
+   * @return {Playground}
+   */
+  removePlayer(playerId) {
+    for (let i = 0; i < this.playersControls.length; i++) {
+      const playerControls = this.playersControls[i]
+      if (playerControls.player.id === playerId) {
+        this.scene.remove(playerControls.model)
+        this.playersControls.splice(i, 1)
+        break;
+      }
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {string} playerId
+   * @return {CharacterControls|null}
+   */
+  findPlayerControls(playerId) {
+    for (const playerControls of this.playersControls) {
+      if (playerControls.player.id === playerId) {
+        return playerControls
+      }
+    }
+    return null
   }
 
   /**
@@ -228,6 +303,9 @@ class Playground {
     stats.update()
     this.delta = this.clock.getDelta()
     this.characterControls.update(this.delta)
+    for (const player of this.playersControls) {
+      player.update(this.delta)
+    }
     this.sectorControls.update(this.delta, this.characterControls.model.position)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
@@ -252,7 +330,7 @@ class Playground {
    *
    * @returns {Player}
    */
-  get player() {
+  get character() {
     return this.characterControls.player
   }
 
@@ -319,7 +397,7 @@ class Playground {
         this.characterControls.enableSlowdown(true)
         break
       default:
-        console.log(e, 'def')
+        // console.log(e, 'def')
     }
   }
 
@@ -346,7 +424,7 @@ class Playground {
         this.characterControls.enableSlowdown(false)
         break
       default:
-        console.log(e, 'def')
+        // console.log(e, 'def')
     }
   }
 

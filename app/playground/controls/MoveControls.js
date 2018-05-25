@@ -87,9 +87,26 @@ class MoveControls {
 
     /**
      *
-     * @type {Array}
+     * @type {Array.<moveActionCallback>}
      */
-    this.moveEvents = [(a, b, c) => console.log(a, b, c)]
+    this.moveEvents = []
+  }
+
+  /**
+   * @param {Object} moveSwapInfo
+   * @param {string} action
+   * @callback moveActionCallback
+   */
+
+  /**
+   * Следит за действиями игрока с кораблем
+   *
+   * @param {moveActionCallback} callback
+   * @return {MoveControls}
+   */
+  addMoveEventListener(callback) {
+    this.moveEvents.push(callback)
+    return this
   }
 
   /**
@@ -101,7 +118,7 @@ class MoveControls {
   _listen(action) {
     if (this.moveActions[action] !== this.prevMoveActions[action]) {
       for (const listener of this.moveEvents) {
-        listener(action, this.moveActions, this.prevMoveActions)
+        listener(this.getMoveSwapInfo(), action)
       }
     }
     return this
@@ -225,6 +242,68 @@ class MoveControls {
    */
   exponentialEaseOut(k) {
     return k === 1 ? 1 : - Math.pow(2, - 10 * k) + 1
+  }
+
+  /**
+   *
+   * @param {Object} data - this is value from "this.getSwapInfo()"
+   * @return {MoveControls}
+   */
+  setMoveSwapInfo(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'moveActions':
+            break
+          case 'position':
+          case 'rotation':
+            this['model'][property].copy(data[property])
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
+    const moveActions = data['moveActions']
+    this.enableLeft(moveActions[LEFT])
+    this.enableRight(moveActions[RIGHT])
+    this.enableForward(moveActions[FORWARD])
+    this.enableBackward(moveActions[BACKWARD])
+    this.enableSlowdown(moveActions[SLOWDOWN])
+    return this
+  }
+
+  /**
+   *
+   * @returns {Object}
+   */
+  getMoveSwapInfo() {
+    const data = {}
+    const properties = [
+      'deceleration',
+      'acceleration',
+      'bodyOrientation',
+      'angularSpeed',
+      'maxReverseSpeed',
+      'maxSpeed',
+      'speed',
+      'moveActions',
+      'prevMoveActions',
+      'model'
+    ]
+    for (const property of properties) {
+      switch (property) {
+        case 'model':
+          data['position'] = this[property]['position']
+          data['rotation'] = this[property]['rotation']
+          break
+        default:
+          data[property] = this[property]
+          break
+      }
+    }
+    return data
   }
 }
 
