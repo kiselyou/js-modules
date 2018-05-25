@@ -1,8 +1,6 @@
 import RaceControls from './RaceControls'
 import MoveControls from './MoveControls'
 import Player from '@entity/sector/Player'
-import * as CONST from '@app/constants'
-import DebugPanel from '@app/debug/DebugPanel'
 
 class CharacterControls extends MoveControls {
   /**
@@ -41,31 +39,6 @@ class CharacterControls extends MoveControls {
      * @type {boolean}
      */
     this.enabled = false
-
-    const panel = new DebugPanel()
-      .addFolder('Ship Controls')
-      .add(this, 'enabled', 'Controls enabled')
-      .open()
-      .addFolder('Ship Info')
-      .add(this, 'speed', 'Ship Speed')
-      .add(this.model.position, 'x', 'Ship X')
-      .add(this.model.position, 'y', 'Ship Y')
-      .add(this.model.position, 'z', 'Ship Z')
-      .addFolder('Ship speed')
-      .add(this, 'maxSpeed', 'Max', 10, 400)
-      .add(this, 'maxReverseSpeed', 'Max Reverse', -200, 0)
-      .add(this, 'angularSpeed', 'Angular Speed', 0.01, 5)
-      .add(this, 'acceleration', 'Acceleration', 10, 500)
-      .add(this, 'deceleration', 'Deceleration', 10, 500)
-
-    setTimeout(() => {
-      panel
-        .addFolder('Scale')
-        .add(this.model.children[1].scale, 'x', 'Scale X', 0, 5)
-        .add(this.model.children[1].scale, 'y', 'Scale Y', 0, 5)
-        .add(this.model.children[1].scale, 'z', 'Scale Z', 0, 5)
-    }, 5000)
-
   }
 
   /**
@@ -73,7 +46,7 @@ class CharacterControls extends MoveControls {
    * @returns {void}
    */
   buildMesh() {
-    const model3D = this.loader.getModel(CONST.KEY_SPACESHIP_3)
+    const model3D = this.loader.getModel(this.player.modelKey)
     this.model.add(model3D)
     this.model.position.copy(this.player.position)
   }
@@ -93,7 +66,7 @@ class CharacterControls extends MoveControls {
    * @returns {CharacterControls}
    */
   copy(data) {
-    this.player.copy(data.player)
+    this.player.copy(data)
     return this
   }
 

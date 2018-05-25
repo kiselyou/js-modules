@@ -3,6 +3,7 @@ import { Vector3 }  from 'three'
 import Monitor from './dependence/Monitor'
 import BankAccount from './dependence/BankAccount'
 import PlayerHasStation from './dependence/PlayerHasStation'
+import * as CONST from './../../app/constants'
 
 class Player {
   constructor() {
@@ -63,6 +64,12 @@ class Player {
      * @type {Array.<PlayerHasStation>}
      */
     this.playerHasStation = []
+
+    /**
+     *
+     * @type {string}
+     */
+    this.modelKey = CONST.KEY_SPACESHIP_3
   }
 
   /**
@@ -179,7 +186,7 @@ class Player {
    */
   getSwapInfo() {
     const data = {}
-    const properties = ['id', 'position', 'sectorId', 'raceId', 'socketId']
+    const properties = ['id', 'position', 'sectorId', 'raceId', 'socketId', 'modelKey']
     for (const property of properties) {
       switch (property) {
         default:

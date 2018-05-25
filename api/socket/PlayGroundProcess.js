@@ -75,17 +75,37 @@ class PlayGroundProcess extends Server {
       })
       .startTimer()
 
-    // Сокет соеденение с игроком
     this.connect('play-process', (socket) => {
 
+      // WARNING
+      // A Текущий игрок - твой браузер
+      // B Удаленный игрок - игрок или игроки в других браузерах
       const playerInfo = new Player()
 
-      // Получение основной информации о текущем игроке
-      socket.on('swap-player', (player) => {
-        playerInfo.copy(player)
+      // Получение основной информации о текущем игроке A
+      socket.on('swap-current-player', (character) => {
+        playerInfo.copy(character)
         playerInfo.setSocketId(socket.id)
-        socket.emit('swap-player', playerInfo.getSwapInfo())
+        const data = playerInfo.getSwapInfo()
+        // отправить инвормацию текущему игроку A измененные данные
+        socket.emit('swap-current-player', data)
+        // добавление текущего игрока A в секторе удаленных игроков B
+        // TODO: нужно как то фильтровать по сектор ID
+        socket.broadcast.emit('swap-add-player', data)
       })
+
+      // перенаправить данные конкретному игроку
+      socket.on('swap-add-specific-player', (data) => {
+        // TODO: нужно как то фильтровать по сектор ID
+        socket.broadcast.to(data.destinationSocketId).emit('swap-add-specific-player', data.character);
+      });
+
+      // перенаправить данные удаленным игрокам B в секторе крое текущего игрока A
+      socket.on('swap-player-action-move', (data) => {
+        // TODO: нужно как то фильтровать по сектор ID
+        socket.broadcast.emit('swap-player-action-move', data);
+      });
+
 
       // Подготовка параметров для обмена данными об игровом процессе
       const eachMinuteEmit = () => {
