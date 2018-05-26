@@ -1,7 +1,6 @@
 import { Mesh, Vector3, MeshStandardMaterial, SphereGeometry, BackSide } from 'three'
 import * as CONST from './../../constants'
 import StarControls from './StarControls'
-import LightControls from './LightControls'
 
 class SkyBoxControls {
   /**
@@ -53,12 +52,6 @@ class SkyBoxControls {
      * @type {StarControls}
      */
     this.starControls = new StarControls(this.sky)
-
-    /**
-     *
-     * @type {LightControls}
-     */
-    this.lightControls = new LightControls(this.scene, this.loader)
   }
 
   /**
@@ -102,7 +95,6 @@ class SkyBoxControls {
     if (this.enabled) {
       this.sky.position.copy(v)
       this.starControls.update(delta)
-      this.lightControls.update(delta, v)
     }
   }
 }

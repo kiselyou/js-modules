@@ -3,8 +3,9 @@ import EventControls from './EventControls'
 import MouseTooltip from '@helper/MouseTooltip'
 import ModelStation from "@app/playground/controls/models/station/ModelStation";
 import DetectObject3D from '@helper/DetectObject3D'
-
 import ModelPlanet from './models/planet/ModelPlanet'
+
+const debugPanel = new DebugPanel()
 
 class BaseModelControls {
   /**
@@ -53,11 +54,7 @@ class BaseModelControls {
      */
     this.eventControls = new EventControls()
 
-    /**
-     *
-     * @type {DebugPanel}
-     */
-    this.debugPanel = new DebugPanel()
+    this.debugPanel = debugPanel
       .addFolder(this.entity)
       .add(this.elements, 'length', 'Count elements')
       .add(this, 'enabled', 'Controls enabled')
@@ -175,7 +172,7 @@ class BaseModelControls {
    */
   prepareDebugPanel(element, folderName) {
     this.eventControls.ifNotActive(folderName, () => {
-      this.debugPanel
+      debugPanel
         .addFolder(folderName)
         .add(element.model.scale, 'x', 'Scale X', 0.01, 100)
         .add(element.model.scale, 'y', 'Scale Y', 0.01, 100)
@@ -183,23 +180,34 @@ class BaseModelControls {
         .add(element.model.position, 'x', 'Position X', -6000, 6000)
         .add(element.model.position, 'y', 'Position Y', -6000, 6000)
         .add(element.model.position, 'z', 'Position Z', -6000, 6000)
+        .add(element, 'angleToCenter', 'AngleToCenter', -6000, 6000)
+        .add(element, 'distanceToCenter', 'DistanceToCenter', -6000, 6000)
         .add(element.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
         .add(element.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
         .add(element.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
 
       if (element instanceof ModelPlanet) {
         if (element.glowInside) {
-          this.debugPanel
-            .add(element.glowInside.material.uniforms.coefficient, 'value', 'Glow coefficient', -5, 5)
-            .add(element.glowInside.material.uniforms.power, 'value', 'Glow power', -5, 5)
-            .add(element.glowInside.material.uniforms.glowColor, 'value', 'Glow color', null, null, true)
+          console.log(element.glowInside)
+          debugPanel
+            .addFolder('Glow inside ' + folderName)
+            .add(element.glowInside.material.uniforms.coefficient, 'value', 'In.Glow coeff', -5, 5)
+            .add(element.glowInside.material.uniforms.power, 'value', 'In.Glow power', -5, 5)
+            .add(element.glowInside.material.uniforms.glowColor, 'value', 'In.Glow color', null, null, true)
+            .add(element.glowInside.scale, 'x', 'Scale X', 0.01, 100)
+            .add(element.glowInside.scale, 'y', 'Scale Y', 0.01, 100)
+            .add(element.glowInside.scale, 'z', 'Scale Z', 0.01, 100)
         }
 
         if (element.glowOutside) {
-          this.debugPanel
-            .add(element.glowOutside.material.uniforms.coefficient, 'value', 'Glow coefficient', -5, 5)
-            .add(element.glowOutside.material.uniforms.power, 'value', 'Glow power', -5, 5)
-            .add(element.glowOutside.material.uniforms.glowColor, 'value', 'Glow color', null, null, true)
+          debugPanel
+            .addFolder('Glow outside ' + folderName)
+            .add(element.glowOutside.material.uniforms.coefficient, 'value', 'Out.Glow coeff', -5, 5)
+            .add(element.glowOutside.material.uniforms.power, 'value', 'Out.Glow power', -5, 5)
+            .add(element.glowOutside.material.uniforms.glowColor, 'value', 'Out.Glow color', null, null, true)
+            .add(element.glowOutside.scale, 'x', 'Scale X', 0.01, 100)
+            .add(element.glowOutside.scale, 'y', 'Scale Y', 0.01, 100)
+            .add(element.glowOutside.scale, 'z', 'Scale Z', 0.01, 100)
         }
       }
     })

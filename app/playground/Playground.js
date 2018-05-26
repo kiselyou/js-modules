@@ -19,6 +19,7 @@ import SectorControls from '@app/playground/controls/SectorControls'
 import Gyroscope from '@app/three-dependense/Gyroscope'
 import OrbitControls from '@app/three-dependense/OrbitControls'
 import DebugPanel from '@app/debug/DebugPanel'
+import LightControls from '@app/playground/controls/LightControls'
 
 const stats = new Stats()
 // stats.setMode(1)
@@ -82,6 +83,12 @@ class Playground {
 
     /**
      *
+     * @type {LightControls}
+     */
+    this.lightControls = new LightControls(this.scene, this.loader)
+
+    /**
+     *
      * @type {SectorControls}
      */
     this.sectorControls = new SectorControls(this.scene, this.loader)
@@ -102,9 +109,9 @@ class Playground {
      *
      * @type {LightControls}
      */
-    this.scene.add(this.sectorControls.lightControls.pointLight)
-    this.scene.add(this.sectorControls.lightControls.hemisphereLight)
-    this.scene.add(this.sectorControls.lightControls.ambientLight)
+    this.scene.add(this.lightControls.pointLight)
+    this.scene.add(this.lightControls.hemisphereLight)
+    this.scene.add(this.lightControls.ambientLight)
 
     /**
      *
@@ -138,7 +145,7 @@ class Playground {
     this.axesHelper = new AxesHelper(150)
     this.scene.add(this.axesHelper)
 
-    new DebugPanel()
+    const panel = new DebugPanel()
       .addFolder('Renderer controls')
       .add(this.renderer.shadowMap, 'enabled', 'Shadow map')
       .add(this.renderer, 'gammaInput', 'Gamma input')
@@ -151,6 +158,36 @@ class Playground {
             this.renderer.dispose()
         }
       })
+
+      .addFolder('Point light controls')
+      .add(this.lightControls, 'pointLightMoveWithModel', 'Move with model')
+      .add(this.lightControls.pointLight, 'castShadow', 'Cast Shadow')
+      .add(this.lightControls.pointLight, 'decay', 'Decay', 0, 5)
+      .add(this.lightControls.pointLight, 'distance', 'Distance', 0, 8000)
+      .add(this.lightControls.pointLight, 'power', 'Power', 0, 1000)
+      .add(this.lightControls.pointLight, 'color', 'Color', null, null, true)
+      .add(this.lightControls.pointLight, 'intensity', 'Intensity', 0, 100)
+      .add(this.lightControls.pointLight.position, 'x', 'X', -2000, 2000)
+      .add(this.lightControls.pointLight.position, 'y', 'Y', -2000, 2000)
+      .add(this.lightControls.pointLight.position, 'z', 'Z', -2000, 2000)
+
+      .addFolder('Hemisphere light controls')
+      .add(this.lightControls, 'hemisphereLightMoveWithModel', 'Move with model')
+      .add(this.lightControls.hemisphereLight, 'color', 'Sky Color', null, null, true)
+      .add(this.lightControls.hemisphereLight, 'groundColor', 'Ground Color', null, null, true)
+      .add(this.lightControls.hemisphereLight, 'intensity', 'Intensity', 0, 100)
+      .add(this.lightControls.hemisphereLight.position, 'x', 'X', -2000, 2000)
+      .add(this.lightControls.hemisphereLight.position, 'y', 'Y', -2000, 2000)
+      .add(this.lightControls.hemisphereLight.position, 'z', 'Z', -2000, 2000)
+
+      .addFolder('Ambient light controls')
+      .add(this.lightControls, 'ambientLightMoveWithModel', 'Move with model')
+      .add(this.lightControls.ambientLight, 'color', 'Color', null, null, true)
+      .add(this.lightControls.ambientLight, 'intensity', 'Intensity', 0, 2)
+      .add(this.lightControls.ambientLight.position, 'x', 'X', -2000, 2000)
+      .add(this.lightControls.ambientLight.position, 'y', 'Y', -2000, 2000)
+      .add(this.lightControls.ambientLight.position, 'z', 'Z', -2000, 2000)
+
       .addFolder('Camera')
       .add(this.camera, 'fov', 'Fov', 0, 100)
       .add(this.camera, 'far', 'Far', 500, 15000)
@@ -174,10 +211,8 @@ class Playground {
       .add(this.scene.fog, 'near', 'Near', 100, 5000)
       .add(this.scene.fog, 'far', 'far', 3000, 15000)
 
-    const panel = new DebugPanel()
       .addFolder('Ship Controls')
       .add(this.characterControls, 'enabled', 'Controls enabled')
-      .open()
       .addFolder('Ship Info')
       .add(this.characterControls, 'speed', 'Ship Speed')
       .add(this.characterControls.model.position, 'x', 'Ship X')
@@ -189,10 +224,10 @@ class Playground {
       .add(this.characterControls, 'angularSpeed', 'Angular Speed', 0.01, 5)
       .add(this.characterControls, 'acceleration', 'Acceleration', 10, 500)
       .add(this.characterControls, 'deceleration', 'Deceleration', 10, 500)
-
+//
     setTimeout(() => {
       panel
-        .addFolder('Scale')
+        .addFolder('Ship Scale')
         .add(this.characterControls.model.children[1].scale, 'x', 'Scale X', 0, 5)
         .add(this.characterControls.model.children[1].scale, 'y', 'Scale Y', 0, 5)
         .add(this.characterControls.model.children[1].scale, 'z', 'Scale Z', 0, 5)
@@ -306,7 +341,10 @@ class Playground {
     for (const player of this.playersControls) {
       player.update(this.delta)
     }
-    this.sectorControls.update(this.delta, this.characterControls.model.position)
+
+    const position = this.characterControls.model.position
+    this.sectorControls.update(this.delta, position)
+    this.lightControls.update(this.delta, position)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
