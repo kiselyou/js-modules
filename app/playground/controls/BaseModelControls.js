@@ -5,8 +5,6 @@ import ModelStation from "@app/playground/controls/models/station/ModelStation";
 import DetectObject3D from '@helper/DetectObject3D'
 import ModelPlanet from './models/planet/ModelPlanet'
 
-const debugPanel = new DebugPanel()
-
 class BaseModelControls {
   /**
    *
@@ -54,10 +52,13 @@ class BaseModelControls {
      */
     this.eventControls = new EventControls()
 
-    this.debugPanel = debugPanel
-      .addFolder(this.entity)
-      .add(this.elements, 'length', 'Count elements')
-      .add(this, 'enabled', 'Controls enabled')
+    this.debugPanel = null
+    setTimeout(() => {
+      this.debugPanel = new DebugPanel()
+        .addFolder(this.entity)
+        .add(this.elements, 'length', 'Count elements')
+        .add(this, 'enabled', 'Controls enabled')
+    }, 2000)
   }
 
   /**
@@ -172,7 +173,7 @@ class BaseModelControls {
    */
   prepareDebugPanel(element, folderName) {
     this.eventControls.ifNotActive(folderName, () => {
-      debugPanel
+      this.debugPanel
         .addFolder(folderName)
         .add(element.model.scale, 'x', 'Scale X', 0.01, 100)
         .add(element.model.scale, 'y', 'Scale Y', 0.01, 100)
@@ -188,8 +189,7 @@ class BaseModelControls {
 
       if (element instanceof ModelPlanet) {
         if (element.glowInside) {
-          console.log(element.glowInside)
-          debugPanel
+          this.debugPanel
             .addFolder('Glow inside ' + folderName)
             .add(element.glowInside.material.uniforms.coefficient, 'value', 'In.Glow coeff', -5, 5)
             .add(element.glowInside.material.uniforms.power, 'value', 'In.Glow power', -5, 5)
@@ -200,7 +200,7 @@ class BaseModelControls {
         }
 
         if (element.glowOutside) {
-          debugPanel
+          this.debugPanel
             .addFolder('Glow outside ' + folderName)
             .add(element.glowOutside.material.uniforms.coefficient, 'value', 'Out.Glow coeff', -5, 5)
             .add(element.glowOutside.material.uniforms.power, 'value', 'Out.Glow power', -5, 5)
