@@ -1,4 +1,5 @@
 import gui from 'dat.gui'
+import { Color } from 'three'
 
 class DebugPanel {
   constructor() {
@@ -80,12 +81,15 @@ class DebugPanel {
 
     let controller = null
     if (isColor) {
-      controller = folder.addColor(props, key, minValue, maxValue).name(name).listen()
+      controller = folder.addColor(props, key).name(name).listen()
     } else {
       controller = folder.add(props, key, minValue, maxValue).name(name).listen()
     }
 
     controller.onChange((value) => {
+      if (isColor) {
+        props[key] = new Color().copy(value);
+      }
       for (const event of this.events) {
         event(value, key)
       }
