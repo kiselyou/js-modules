@@ -58,8 +58,6 @@ class Playground {
      * @type {Scene}
      */
     this.scene = new Scene()
-    this.scene.background = new Color( 0xffffff );
-    this.scene.fog = new Fog(0xffffff, 1000, 4000)
 
     /**
      *
@@ -206,10 +204,6 @@ class Playground {
       .add(this.cameraControls, 'minDistance', 'MinDistance', 0, 100)
       .add(this.cameraControls, 'maxDistance', 'MaxDistance', 101, 2000)
       .add(this.cameraControls, 'maxPolarAngle', 'MaxPolarAngle', 0, Math.PI)
-      .addFolder('Fog')
-      .add(this.scene.fog, 'color', 'Color', null, null, true)
-      .add(this.scene.fog, 'near', 'Near', 100, 5000)
-      .add(this.scene.fog, 'far', 'far', 3000, 15000)
 
       .addFolder('Ship Controls')
       .add(this.characterControls, 'enabled', 'Controls enabled')
@@ -224,7 +218,7 @@ class Playground {
       .add(this.characterControls, 'angularSpeed', 'Angular Speed', 0.01, 5)
       .add(this.characterControls, 'acceleration', 'Acceleration', 10, 500)
       .add(this.characterControls, 'deceleration', 'Deceleration', 10, 500)
-//
+
     setTimeout(() => {
       panel
         .addFolder('Ship Scale')
