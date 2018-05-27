@@ -104,8 +104,7 @@ module.exports = {
  */
 function prepareNewVersion(isProduction) {
   if (isProduction) {
-    const data = process.env.npm_package_version.split('.')
-    return data[0] + '.' + data[1] + '.' + (parseInt(data[2]) + 1)
+    return process.env.npm_package_version
   }
   return '0.0.0'
 }
