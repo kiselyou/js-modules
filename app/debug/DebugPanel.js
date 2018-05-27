@@ -81,9 +81,15 @@ class DebugPanel {
 
     let controller = null
     if (isColor) {
-      controller = folder.addColor(props, key).name(name).listen()
+      controller = folder.addColor(props, key).name(name)
     } else {
-      controller = folder.add(props, key, minValue, maxValue).name(name).listen()
+      controller = folder.add(props, key).name(name)
+      if (minValue) {
+        controller.min(minValue)
+      }
+      if (maxValue) {
+        controller.max(maxValue)
+      }
     }
 
     controller.onChange((value) => {
