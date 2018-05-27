@@ -245,6 +245,6 @@ export const map = [
       .setId('3669cd3e-4cc7-42fc-a018-9eed7a5f41f0'),
   ],
 
-  // mapStarLights(starKeySectorAlpha),
+  mapStarLights(starKeySectorAlpha),
   // mapStar(starKeySectorAlpha)
 ]

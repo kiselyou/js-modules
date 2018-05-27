@@ -1,4 +1,4 @@
-import {Group, Object3D, Scene} from 'three'
+import { AdditiveBlending, Group, Object3D, Scene, Sprite, SpriteMaterial } from 'three'
 import StarLight from '@entity/sector/StarLight'
 
 class StarLightControls {
@@ -28,8 +28,15 @@ class StarLightControls {
    */
   async beforeStart(loader) {
     for (const light of this.lights) {
-      const object3D = light.getFlare(loader)
-      this.object.add(object3D)
+      light.sprite = new Sprite()
+      light.sprite.scale.set(50, 50, 50)
+      light.sprite.position.copy(light.position)
+      light.sprite.material = new SpriteMaterial({
+        transparent: true,
+        blending: AdditiveBlending,
+        map: loader.getTexture(light.textureKey),
+      })
+      this.object.add(light.sprite)
     }
   }
 

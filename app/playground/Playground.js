@@ -7,7 +7,8 @@ import {
   Color,
   MOUSE,
   PCFSoftShadowMap, Math as tMath,
-  AxesHelper
+  AxesHelper, Sprite, TextureLoader, SpriteMaterial,
+  AdditiveBlending
 } from 'three'
 
 import Stats from 'stats-js'
@@ -142,8 +143,6 @@ class Playground {
 
     this.axesHelper = new AxesHelper(150)
     this.scene.add(this.axesHelper)
-
-console.log(this.camera)
 
     const panel = new DebugPanel()
       .addFolder('Renderer controls')

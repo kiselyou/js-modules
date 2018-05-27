@@ -1,6 +1,5 @@
 import uuidV4 from 'uuid/v4'
-import {Object3D, Vector3} from 'three'
-import { LensFlare, LensFlareElement } from './../../app/three-dependense/LensFlare'
+import { Vector3 } from 'three'
 import * as CONST from './../../app/constants'
 
 class StarLight {
@@ -28,27 +27,58 @@ class StarLight {
 
     /**
      *
-     * @type {Vector3}
+     * @type {string}
      */
-    this.rotation = new Vector3()
+    this.textureKey = CONST.KEY_LIGHT_CONTROLS_1
 
     /**
      *
-     * @type {{enabled: boolean, textureKey: string, size: number}}
+     * @type {Sprite|null}
      */
-    this.flare = {enabled: true, textureKey: CONST.KEY_LIGHT_CONTROLS_1, size: 20}
+    this.sprite = null
 
     /**
      *
-     * @type {{enabled: boolean, textureKey: string, size: number}}
+     * @type {number}
      */
-    this.flareGlow = {enabled: false, textureKey: CONST.KEY_LIGHT_CONTROLS_2, size: 80}
+    this.rotation = 0
 
     /**
      *
-     * @type {Object3D|null}
+     * @type {boolean}
      */
-    this.flareElement = null
+    this.rotationEnabled = false
+  }
+
+  /**
+   *
+   * @param {string} value
+   * @returns {StarLight}
+   */
+  setTextureKey(value) {
+    this.textureKey = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {StarLight}
+   */
+  setRotationSpeed(value) {
+    this.rotation = value
+    this.enableRotation(true)
+    return this
+  }
+
+  /**
+   *
+   * @param {boolean} value
+   * @returns {StarLight}
+   */
+  enableRotation(value = true) {
+    this.rotationEnabled = value
+    return this
   }
 
   /**
@@ -85,70 +115,6 @@ class StarLight {
 
   /**
    *
-   * @param {number} x
-   * @param {number} y
-   * @param {number} z
-   * @returns {StarLight}
-   */
-  setRotation(x, y, z) {
-    this.rotation.set(x, y, z)
-    return this
-  }
-
-  /**
-   *
-   * @param {{[enabled]: boolean, [textureKey]: string, [size]: number}} options
-   * @returns {StarLight}
-   */
-  setFlareOptions(options) {
-    for (const property in options) {
-      if (options.hasOwnProperty(property)) {
-        this.flare[property] = options[property]
-      }
-    }
-    return this
-  }
-
-  /**
-   *
-   * @param {{[enabled]: boolean, [textureKey]: string, [size]: number}} options
-   * @returns {StarLight}
-   */
-  setFlareGlowOptions(options) {
-    this.flareGlow.enabled = true
-    for (const property in options) {
-      if (options.hasOwnProperty(property)) {
-        this.flareGlow[property] = options[property]
-      }
-    }
-    return this
-  }
-
-  /**
-   *
-   * @param {Loader} loader
-   * @returns {Object3D}
-   */
-  getFlare(loader) {
-    if (!this.flareElement) {
-      this.flareElement = new LensFlare()
-
-      this.flareElement.position.copy(this.position)
-
-      if (this.flare.enabled) {
-        const texture = loader.getTexture(this.flare.textureKey)
-        this.flareElement.addElement(new LensFlareElement(texture, this.flare.size, 0))
-      }
-      if (this.flareGlow.enabled) {
-        const texture = loader.getTexture(this.flareGlow.textureKey)
-        this.flareElement.addElement(new LensFlareElement(texture, this.flareGlow.size, 0))
-      }
-    }
-    return this.flareElement
-  }
-
-  /**
-   *
    * @param {object} data
    * @returns {StarLight}
    */
@@ -170,9 +136,14 @@ class StarLight {
     return this
   }
 
+  /**
+   *
+   * @param {number} delta
+   * @returns {void}
+   */
   update(delta) {
-    if (this.flareElement) {
-
+    if (this.sprite && this.rotationEnabled) {
+      this.sprite.material.rotation -= this.rotation
     }
   }
 }

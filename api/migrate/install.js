@@ -15,21 +15,19 @@ async function install(entities) {
       statistic[collectionName] = 0
     }
 
-    const collection = await mgDB(collectionName)
-    await collection.updateOne(
-      { id: entity.id },
-      { $set: entity },
-      { upsert: true },
-      async (err, res) => {
-        if (err === null) {
-          statistic[collectionName]++
-        } else {
+    mgDB((db, closeConnect) => {
+      const collection = db.collection(collectionName)
+      collection
+        .updateOne({ id: entity.id }, { $set: entity }, { upsert: true })
+        .catch(() => {
           console.log(`Can not create collection "${collectionName}"`, entity, err)
-        }
-      }
-    )
+        })
+        .then(() => {
+          statistic[collectionName]++
+        })
+        .finally(closeConnect)
+    })
   }
-  console.log(statistic)
 }
 
 /**
