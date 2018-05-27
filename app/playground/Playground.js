@@ -143,6 +143,8 @@ class Playground {
     this.axesHelper = new AxesHelper(150)
     this.scene.add(this.axesHelper)
 
+console.log(this.camera)
+
     const panel = new DebugPanel()
       .addFolder('Renderer controls')
       .add(this.renderer.shadowMap, 'enabled', 'Shadow map')
@@ -208,10 +210,12 @@ class Playground {
       .addFolder('Ship Controls')
       .add(this.characterControls, 'enabled', 'Controls enabled')
       .addFolder('Ship Info')
+      .listenFields(true)
       .add(this.characterControls, 'speed', 'Ship Speed')
       .add(this.characterControls.model.position, 'x', 'Ship X')
       .add(this.characterControls.model.position, 'y', 'Ship Y')
       .add(this.characterControls.model.position, 'z', 'Ship Z')
+      .listenFields(false)
       .addFolder('Ship speed')
       .add(this.characterControls, 'maxSpeed', 'Max', 10, 400)
       .add(this.characterControls, 'maxReverseSpeed', 'Max Reverse', -200, 0)

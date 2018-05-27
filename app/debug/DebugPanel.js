@@ -26,6 +26,12 @@ class DebugPanel {
      * @type {Array}
      */
     this.events = []
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.listen = false
   }
 
   /**
@@ -60,6 +66,16 @@ class DebugPanel {
 
   /**
    *
+   * @param {boolean} value
+   * @returns {DebugPanel}
+   */
+  listenFields(value = true) {
+    this.listen = Boolean(value)
+    return this
+  }
+
+  /**
+   *
    * @param {Object} props
    * @param {string} key
    * @param {string} [name]
@@ -83,13 +99,11 @@ class DebugPanel {
     if (isColor) {
       controller = folder.addColor(props, key).name(name)
     } else {
-      controller = folder.add(props, key).name(name)
-      if (minValue) {
-        controller.min(minValue)
-      }
-      if (maxValue) {
-        controller.max(maxValue)
-      }
+      controller = folder.add(props, key, minValue, maxValue).name(name)
+    }
+
+    if (this.listen) {
+      controller.listen()
     }
 
     controller.onChange((value) => {
