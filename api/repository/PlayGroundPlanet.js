@@ -7,39 +7,55 @@ class PlayGroundPlanet {
   }
 
   /**
+   * @param {Array.<Object>} planets
+   * @callback planetInfoCallback
+   */
+
+  /**
    *
    * @param {string} id
-   * @returns {Array.<Planet>}
+   * @param {planetInfoCallback} planetInfoCallback
    */
-  async getPlanetsInfoBySectorId(id) {
-    const res = []
-    const collection = await mgDB('Planet')
-    const planets = await collection.find({sectorId: id}).toArray()
-    for (const planet of planets) {
-      res.push(new Planet().copy(planet))
-    }
-    return this.preparePlanets(res)
+  getPlanetsBySectorId(id, planetInfoCallback) {
+    mgDB((db, closeConnect) => {
+      const collection = db.collection('Planet')
+      collection
+        .find({ sectorId: id })
+        .toArray()
+        .catch((e) => console.log(e))
+        .then((data) => {
+          const planets = this._preparePlanets(data)
+          planetInfoCallback(planets)
+        })
+        .finally(closeConnect)
+    })
   }
 
   /**
    *
-   * @param {Array.<Planet>} planets
+   * @param {Array.<Object>} planets
    * @returns {Array.<Planet>}
+   * @private
    */
-  preparePlanets(planets) {
-    const prepare = {}
+  _preparePlanets(planets) {
+    const arr = []
     for (const planet of planets) {
+      arr.push(new Planet().copy(planet))
+    }
+
+    const prepare = {}
+    for (const planet of arr) {
       prepare[planet.id] = planet
     }
 
-    for (const planet of planets) {
+    for (const planet of arr) {
       const parentId = planet.parentId
       if (prepare.hasOwnProperty(parentId)) {
         planet.setParentPlanet(prepare[parentId])
       }
       planet.calculatePosition()
     }
-    return planets
+    return arr
   }
 
   /**
@@ -47,21 +63,18 @@ class PlayGroundPlanet {
    * @param {Array.<Planet>} planets
    */
   updatePlanetsInfo(planets) {
-    const collection = mgDB('Planet')
-    for (const planet of planets) {
-      collection.then((db) => {
-        db.updateOne(
-          { id: planet.id },
-          { $set: { angleToCenter: planet.angleToCenter } },
-          { upsert: true },
-          (err) => {
-            if (err) {
-              throw new Error('Cannot upsert timestamp')
-            }
-          }
-        )
-      })
-    }
+    mgDB((db, closeConnect) => {
+      const collection = db.collection('Planet')
+      for (const planet of planets) {
+        collection.updateOne(
+            { id: planet.id },
+            { $set: { angleToCenter: planet.angleToCenter } },
+            { upsert: true }
+          )
+          .catch(() => new Error('Cannot create/update "Planet" angleToCenter'))
+          .finally(closeConnect)
+      }
+    })
   }
 
   /**

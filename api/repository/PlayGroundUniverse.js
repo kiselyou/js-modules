@@ -17,13 +17,27 @@ class PlayGroundUniverse {
   }
 
   /**
-   *
-   * @returns {Promise.<Universe>}
+   * @param {Universe} universe
+   * @callback universeInfoCallback
    */
-  async getUniverse() {
-    const collection = await mgDB('Universe')
-    const universeData = await collection.findOne({id: this.id})
-    return this.universe.copy(universeData)
+
+  /**
+   *
+   * @param {universeInfoCallback} universeInfoCallback
+   * @returns {void}
+   */
+  async findSectors(universeInfoCallback) {
+    mgDB((db, closeConnect) => {
+      const collection = db.collection('Universe')
+      collection
+        .findOne({ id: this.id })
+        .catch((e) => console.log(e))
+        .then((data) => {
+          this.universe.copy(data)
+          universeInfoCallback(this.universe)
+        })
+        .finally(closeConnect)
+    })
   }
 
   /**
@@ -33,18 +47,15 @@ class PlayGroundUniverse {
    */
   updateTimestamp(value) {
     this.universe.setTimestamp(value)
-    const collection = mgDB('Universe')
-    collection.then((db) => {
-      return db.updateOne(
-        { id: this.id },
-        { $set: { timestamp: value } },
-        { upsert: true },
-        (err) => {
-          if (err) {
-            throw new Error('Cannot upsert timestamp')
-          }
-        }
-      )
+    mgDB((db, closeConnect) => {
+      const collection = db.collection('Universe')
+      collection.updateOne(
+          { id: this.id },
+          { $set: { timestamp: value } },
+          { upsert: true }
+        )
+        .catch(() => new Error('Cannot create/update "Universe" timestamp'))
+        .finally(closeConnect)
     })
   }
 }

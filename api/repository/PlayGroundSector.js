@@ -12,22 +12,51 @@ class PlayGroundSector {
   }
 
   /**
-   *
-   * @returns {Promise.<Array.<Sector>>}
+   * @param {Array.<Sector>} sectors
+   * @callback sectorsInfoCallback
    */
-  async getSectorsInfo() {
+
+  /**
+   *
+   * @param {sectorsInfoCallback} sectorsInfoCallback
+   */
+  findSectors(sectorsInfoCallback) {
+    mgDB((db, closeConnect) => {
+      const collection = db.collection('Sector')
+      collection
+        .find()
+        .toArray()
+        .then((sectors) => {
+          this._prepareSectors(sectors, sectorsInfoCallback)
+        })
+        .finally(closeConnect)
+        .catch((e) => console.log(e))
+    })
+  }
+
+  /**
+   *
+   * @param {Array.<Object>} sectors
+   * @param {sectorsInfoCallback} sectorsInfoCallback
+   * @returns {void}
+   * @private
+   */
+  _prepareSectors(sectors, sectorsInfoCallback) {
     const res = []
-    const collection = await mgDB('Sector')
-    const sectors = await collection.find().toArray()
-    for (const sector of sectors) {
-      const planets = await this.playGroundPlanet.getPlanetsInfoBySectorId(sector.id)
-      res.push(
-        new Sector()
-          .copy(sector)
-          .addPlanets(planets)
-      )
+    for (let i = 0; i < sectors.length; i++) {
+      const sector = sectors[i]
+      this.playGroundPlanet.getPlanetsBySectorId(sector.id, (planets) => {
+        res.push(
+          new Sector()
+            .copy(sector)
+            .addPlanets(planets)
+        )
+
+        if (i === sectors.length - 1) {
+          sectorsInfoCallback(res)
+        }
+      })
     }
-    return res
   }
 
   /**
@@ -36,21 +65,8 @@ class PlayGroundSector {
    * @returns {void}
    */
   updateSectorsInfo(sectors) {
-    const collection = mgDB('Sector')
     for (const sector of sectors) {
       this.playGroundPlanet.updatePlanetsInfo(sector.planets)
-      collection.then((db) => {
-        db.updateOne(
-          {id: sector.id},
-          {$set: {position: sector.position}},
-          {upsert: true},
-          (err) => {
-            if (err) {
-              throw new Error('Cannot upsert timestamp')
-            }
-          }
-        )
-      })
     }
   }
 

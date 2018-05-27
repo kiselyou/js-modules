@@ -2,13 +2,30 @@ import { MongoClient } from 'mongodb'
 import { apiConfig } from '../config/config'
 
 /**
- *
- * @param {string} collectionName
- * @returns {Promise<Collection>}
+ * @callback closeConnectCallback
  */
-export async function mgDB(collectionName) {
+
+/**
+ * @param {Db} db - Example to use: db.collection('collectionName')
+ * @param {closeConnectCallback} closeConnect
+ * @callback onConnectCallback
+ */
+
+/**
+ *
+ * @param {onConnectCallback} onConnect
+ * @returns {void}
+ */
+export function mgDB(onConnect) {
   const url = `mongodb://${apiConfig.db.mongo.host}:${apiConfig.db.mongo.port}`
-  const client = await MongoClient.connect(url)
-  const db = client.db(apiConfig.db.mongo.dbName);
-  return db.collection(collectionName)
+  MongoClient.connect(url, (err, client) => {
+    if (err) {
+      console.log(`${url} connection refused`)
+      return
+    }
+    const db = client.db(apiConfig.db.mongo.dbName)
+    onConnect(db, () => {
+      client.close()
+    })
+  })
 }
