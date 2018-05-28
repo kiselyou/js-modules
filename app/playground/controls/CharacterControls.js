@@ -1,33 +1,14 @@
 import RaceControls from './RaceControls'
-import MoveControls from './MoveControls'
-import Player from '@entity/sector/Player'
+import ModelSpaceship from './models/spaceship/ModelSpaceship'
 
-class CharacterControls extends MoveControls {
+class CharacterControls extends ModelSpaceship {
   /**
    *
    * @param {Scene} scene
    * @param {Loader} loader
    */
   constructor(scene, loader) {
-    super()
-
-    /**
-     * @type {Scene}
-     */
-    this.scene = scene
-
-    /**
-     *
-     * @type {Loader}
-     */
-    this.loader = loader
-
-    /**
-     *
-     * @type {Player}
-     */
-    this.player = new Player()
-
+    super(scene, loader)
     /**
      *
      * @type {RaceControls}
@@ -42,22 +23,12 @@ class CharacterControls extends MoveControls {
   }
 
   /**
-   *
-   * @returns {void}
-   */
-  buildMesh() {
-    const model3D = this.loader.getModel(this.player.modelKey)
-    this.model.add(model3D)
-    this.model.position.copy(this.player.position)
-  }
-
-  /**
    * @returns {void}
    */
   async beforeStart() {
-    await this.raceControls.beforeStart()
-    await this.buildMesh()
+    this.setModel()
     this.enabled = true
+    await this.raceControls.beforeStart()
   }
 
   /**
@@ -66,7 +37,7 @@ class CharacterControls extends MoveControls {
    * @returns {CharacterControls}
    */
   copy(data) {
-    this.player.copy(data)
+    super.copy(data)
     return this
   }
 
@@ -78,7 +49,6 @@ class CharacterControls extends MoveControls {
   update(delta) {
     if (this.enabled) {
       super.update(delta)
-      this.player.position.copy(this.model.position)
     }
   }
 

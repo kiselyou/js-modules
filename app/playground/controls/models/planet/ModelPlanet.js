@@ -44,9 +44,9 @@ class ModelPlanet extends Planet {
 
   /**
    *
-   * @returns {void}
+   * @returns {ModelPlanet}
    */
-  buildMesh() {
+  setModel() {
     const radius = this.params.radius
     const segments = this.params.segments
     this.model.geometry = new SphereGeometry(radius, segments, segments)
@@ -83,6 +83,34 @@ class ModelPlanet extends Planet {
     }
 
     this.scene.add(this.model)
+    return this
+  }
+
+  /**
+   *
+   * @returns {ModelPlanet}
+   */
+  rebuildModel() {
+    this
+      .removeModel()
+      .setModel()
+    return this
+  }
+
+  /**
+   *
+   * @returns {ModelPlanet}
+   */
+  removeModel() {
+    if (this.glow.inside.enabled) {
+      this.model.remove(this.glowInside)
+    }
+
+    if (this.glow.outside.enabled) {
+      this.model.remove(this.glowOutside)
+    }
+    this.scene.remove(this.model)
+    return this
   }
 
   isClouds() {
@@ -151,7 +179,7 @@ class ModelPlanet extends Planet {
    * @returns {void}
    */
   async beforeStart(loader) {
-    this.buildMesh()
+    this.setModel()
   }
 
   /**

@@ -178,16 +178,27 @@ class BaseModelControls {
         .add(element.model.scale, 'x', 'Scale X', 0.01, 100)
         .add(element.model.scale, 'y', 'Scale Y', 0.01, 100)
         .add(element.model.scale, 'z', 'Scale Z', 0.01, 100)
-        .add(element.model.position, 'x', 'Position X', -6000, 6000)
-        .add(element.model.position, 'y', 'Position Y', -6000, 6000)
-        .add(element.model.position, 'z', 'Position Z', -6000, 6000)
-        .add(element, 'angleToCenter', 'AngleToCenter', -6000, 6000)
-        .add(element, 'distanceToCenter', 'DistanceToCenter', -6000, 6000)
+        .add(element.model.position, 'x', 'Position X', -1000000, 1000000)
+        .add(element.model.position, 'y', 'Position Y', -1000000, 1000000)
+        .add(element.model.position, 'z', 'Position Z', -1000000, 1000000)
+        .add(element, 'angleToCenter', 'AngleToCenter', 0, 360)
+        .add(element, 'distanceToCenter', 'distanceToCenter', -1000000, 1000000)
         .add(element.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
         .add(element.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
         .add(element.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
 
       if (element instanceof ModelPlanet) {
+
+        this.debugPanel
+          .add(element.params, 'radius', 'Radius', 0.1, 6000)
+          .addEventOnChange((value, name) => {
+            switch (name) {
+              case 'radius':
+                element.rebuildModel()
+                break;
+            }
+          })
+
         if (element.glowInside) {
           this.debugPanel
             .addFolder('Glow inside ' + folderName)
