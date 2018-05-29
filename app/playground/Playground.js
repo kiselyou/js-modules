@@ -146,9 +146,11 @@ class Playground {
 
     const panel = new DebugPanel()
       .addFolder('Renderer controls')
+      .listenFields(true)
       .add(this.renderer.shadowMap, 'enabled', 'Shadow map')
       .add(this.renderer, 'gammaInput', 'Gamma input')
       .add(this.renderer, 'gammaOutput', 'Gamma output')
+      .listenFields(false)
       .addEventOnChange((value, name) => {
         switch (name) {
           case 'enabled':
@@ -159,8 +161,10 @@ class Playground {
       })
 
       .addFolder('Point light controls')
+      .listenFields(true)
       .add(this.lightControls, 'pointLightMoveWithModel', 'Move with model')
       .add(this.lightControls.pointLight, 'castShadow', 'Cast Shadow')
+      .listenFields(false)
       .add(this.lightControls.pointLight, 'decay', 'Decay', 0, 5)
       .add(this.lightControls.pointLight, 'distance', 'Distance', 0, 8000)
       .add(this.lightControls.pointLight, 'power', 'Power', 0, 1000)
@@ -171,7 +175,9 @@ class Playground {
       .add(this.lightControls.pointLight.position, 'z', 'Z', -2000, 2000)
 
       .addFolder('Hemisphere light controls')
+      .listenFields(true)
       .add(this.lightControls, 'hemisphereLightMoveWithModel', 'Move with model')
+      .listenFields(false)
       .add(this.lightControls.hemisphereLight, 'color', 'Sky Color', null, null, true)
       .add(this.lightControls.hemisphereLight, 'groundColor', 'Ground Color', null, null, true)
       .add(this.lightControls.hemisphereLight, 'intensity', 'Intensity', 0, 100)
@@ -180,7 +186,9 @@ class Playground {
       .add(this.lightControls.hemisphereLight.position, 'z', 'Z', -2000, 2000)
 
       .addFolder('Ambient light controls')
+      .listenFields(true)
       .add(this.lightControls, 'ambientLightMoveWithModel', 'Move with model')
+      .listenFields(false)
       .add(this.lightControls.ambientLight, 'color', 'Color', null, null, true)
       .add(this.lightControls.ambientLight, 'intensity', 'Intensity', 0, 2)
       .add(this.lightControls.ambientLight.position, 'x', 'X', -2000, 2000)
@@ -200,14 +208,18 @@ class Playground {
         }
       })
       .addFolder('CameraControls')
+      .listenFields(true)
       .add(this.cameraControls, 'enableKeys', 'EnableKeys')
       .add(this.cameraControls, 'enablePan', 'EnablePan')
+      .listenFields(false)
       .add(this.cameraControls, 'minDistance', 'MinDistance', 0, 100)
       .add(this.cameraControls, 'maxDistance', 'MaxDistance', 101, 2000)
       .add(this.cameraControls, 'maxPolarAngle', 'MaxPolarAngle', 0, Math.PI)
 
       .addFolder('Ship Controls')
+      .listenFields(true)
       .add(this.characterControls, 'enabled', 'Controls enabled')
+      .listenFields(false)
       .addFolder('Ship Info')
       .listenFields(true)
       .add(this.characterControls, 'speed', 'Ship Speed')

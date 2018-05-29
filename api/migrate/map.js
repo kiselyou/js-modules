@@ -108,13 +108,6 @@ export const map = [
       .setTextures({
         specular: 0x4D5A62,
         map: CONST.KEY_PLANET_EARTH_MAP,
-        bump: {
-          key: CONST.KEY_PLANET_EARTH_BUMP,
-          scale: 0.4
-        },
-        spec: CONST.KEY_PLANET_EARTH_SPEC,
-        cloudMap: CONST.KEY_PLANET_EARTH_CLOUD_MAP,
-        cloudMapTrans: CONST.KEY_PLANET_EARTH_CLOUD_MAP_TRANS,
       })
       .setGlowInside({color: 0xA0D1E6, coefficient: 1.2, power: 1.9, length: 0.06})
       .setGlowOutside({color: 0xA0D1E6, coefficient: 0.01, power: 1.6, length: 0.6})
@@ -128,11 +121,7 @@ export const map = [
       .setParams({ radius: 1.737, segments: 40 })
       .setTextures({
         specular: 0x000000,
-        map: CONST.KEY_PLANET_MOON_MAP,
-        bump: {
-          key: CONST.KEY_PLANET_MOON_BUMP,
-          scale: 0.05
-        },
+        map: CONST.KEY_PLANET_MOON_MAP
       })
       .setGlowInside({color: 0xCCCCCC, coefficient: 1, power: 2.0, length: 0.1})
       .setGlowOutside({color: 0xFFFFFF, coefficient: 0.2, power: 2.5, length: 0.5})
@@ -149,14 +138,175 @@ export const map = [
       .setTextures({
         specular: 0x000000,
         map: CONST.KEY_PLANET_MARS_MAP,
-        bump: {
-          key: CONST.KEY_PLANET_MARS_BUMP,
-          scale: 0.03
-        },
       })
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('ccc3fe37-1b8c-489c-bbbb-0b3e04784d72')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Ceres')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(1200)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_CERES_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('47e4fe7c-3d17-4e39-8d11-e22a0f2c3b58')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Eris')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(1350)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_ERIS_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('c09575e9-b6c8-4944-8f69-43e5e89e6e12')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Haumea')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(1650)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_HAUMEA_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('5ef86d7b-cd7b-4fae-93c4-f44cd6a95f14')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Jupiter')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(1850)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_JUPITER_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('daa15781-cca1-437c-b3f4-f160cd8ab210')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Makemake')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(2050)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_MAKEMAKE_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('9e66d7f0-2ab5-4fec-ae48-dc8e5a2290ea')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Mercury')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(2050)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_MERCURY_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('31f311b6-4c0f-4fc9-9a2b-5e30c34f4f8a')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Neptun')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(2250)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_NEPTUN_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('96cdf3ca-4914-469c-a9fc-69b8949995a8')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Saturn')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(2450)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_SATURN_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('8b8bd117-5d1c-481a-874f-3f02c9a942cc')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Sun')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(2650)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_SUN_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('8beee4b1-73af-4909-9515-3062adf3fce6')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Uranus')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(2850)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_URANUS_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('45dd6bf4-3f22-4852-816a-4d0fcfadd61b')
+      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setSectorId(ID_SECTOR_SUN),
+    new Planet()
+      .setName('Venus')
+      .setSpeedMove(0.0004)
+      .setDistanceToCenter(3050)
+      .setParams({ radius: 3.39, segments: 40 })
+      .setPopulation(5000)
+      .setTextures({
+        specular: 0x000000,
+        map: CONST.KEY_PLANET_VENUS_MAP,
+      })
+      .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
+      .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
+      .setId('be2ec1ca-e957-4dc5-af39-0125d8909fbb')
       .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
       .setSectorId(ID_SECTOR_SUN),
   ],
