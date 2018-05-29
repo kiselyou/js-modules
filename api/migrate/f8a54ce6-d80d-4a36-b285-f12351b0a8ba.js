@@ -8,23 +8,96 @@ import Factory from './../../entity/station/Factory'
 import Equipment from './../../entity/station/Equipment'
 import Mineral from './../../entity/station/Mineral'
 import Status from './../../entity/sector/Status'
+import StarLight from './../../entity/sector/StarLight'
 
-import { mapStar } from './mapStar'
-import { mapStarLights } from './mapStarLights'
+import Slot from './../../entity/model/Slot'
+import Gun from './../../entity/model/particles/Gun'
+import Spaceship from './../../entity/model/Spaceship'
+import Engine from './../../entity/model/particles/Engine'
+
 import * as CONST from './../../app/constants'
 
-const starKeySectorAlpha = 1
-
+const KEY_STAR_SECTOR_ALPHA = 1
 const ID_SECTOR_SUN = 'f8a54ce6-d80d-4a36-b285-f12351b0a8ba'
 const ID_MINERAL_ORE = '4685f71d-c042-4252-a2a9-79ad558096ad'
 const ID_MINERAL_CRYSTAL = '5b22b60b-4f37-4a15-af28-ab95656334f9'
 const ID_MINERAL_WATER = '9907acc8-96be-43a4-92b8-f7be0ed07f92'
+const ID_RACE_PEOPLE = '2389afd5-5635-4b81-8a2c-13aec5955240'
 
-export const map = [
+export const sectorSun = [
+  [
+    new Engine()
+      .setId('a546531f-a38e-43db-8604-06b3b36d7291')
+      .setName('Двигатель M50')
+  ],
+  [
+    new Gun()
+      .setId('4443c766-ccd8-4bff-b12d-8353bc024617')
+      .setName('Импульсная пушка')
+  ],
+  [
+    new Spaceship()
+      .setModelKey(CONST.KEY_SPACESHIP_1)
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_ENGINE)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN_TURRET)
+      )
+      .setId('842d5a80-6880-4047-b10b-a69850cf577b'),
+    new Spaceship()
+      .setModelKey(CONST.KEY_SPACESHIP_2)
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_ENGINE)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN_TURRET)
+      )
+      .setId('c4148d8b-d1f0-4a51-96c8-7fa28c767813'),
+    new Spaceship()
+      .setModelKey(CONST.KEY_SPACESHIP_3)
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_ENGINE)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN)
+      )
+      .addSlot(
+        new Slot()
+          .setType(Slot.TYPE_GUN_TURRET)
+      )
+      .setId('4cfb2c5e-475d-4113-ad7e-929e84d41b60')
+  ],
   [
     new Race()
       .setName('Люди')
-      .setId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setId(ID_RACE_PEOPLE)
   ],
 
   [
@@ -91,7 +164,7 @@ export const map = [
 
   [
     new Sector()
-      .setStarKey(starKeySectorAlpha)
+      .setStarKey(KEY_STAR_SECTOR_ALPHA)
       .setName('Alpha')
       .setSize(1000, 1000, 1000)
       .setPosition(0, 0, 0)
@@ -112,7 +185,7 @@ export const map = [
       .setGlowInside({color: 0xA0D1E6, coefficient: 1.2, power: 1.9, length: 0.06})
       .setGlowOutside({color: 0xA0D1E6, coefficient: 0.01, power: 1.6, length: 0.6})
       .setId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Луна')
@@ -127,7 +200,7 @@ export const map = [
       .setGlowOutside({color: 0xFFFFFF, coefficient: 0.2, power: 2.5, length: 0.5})
       .setId('ccc3fe37-1b8c-489c-bbbb-0b3e04783a71')
       .setParentId('d3c7c591-0fe9-4c76-9ffd-63741131060d')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Марс')
@@ -142,7 +215,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('ccc3fe37-1b8c-489c-bbbb-0b3e04784d72')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Ceres')
@@ -157,7 +230,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('47e4fe7c-3d17-4e39-8d11-e22a0f2c3b58')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Eris')
@@ -172,7 +245,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('c09575e9-b6c8-4944-8f69-43e5e89e6e12')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Haumea')
@@ -187,7 +260,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('5ef86d7b-cd7b-4fae-93c4-f44cd6a95f14')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Jupiter')
@@ -202,7 +275,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('daa15781-cca1-437c-b3f4-f160cd8ab210')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Makemake')
@@ -217,7 +290,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('9e66d7f0-2ab5-4fec-ae48-dc8e5a2290ea')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Mercury')
@@ -232,7 +305,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('31f311b6-4c0f-4fc9-9a2b-5e30c34f4f8a')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Neptun')
@@ -247,7 +320,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('96cdf3ca-4914-469c-a9fc-69b8949995a8')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Saturn')
@@ -262,7 +335,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('8b8bd117-5d1c-481a-874f-3f02c9a942cc')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Sun')
@@ -277,7 +350,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('8beee4b1-73af-4909-9515-3062adf3fce6')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Uranus')
@@ -292,7 +365,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('45dd6bf4-3f22-4852-816a-4d0fcfadd61b')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
     new Planet()
       .setName('Venus')
@@ -307,7 +380,7 @@ export const map = [
       .setGlowInside({color: 0x625731, coefficient: 1, power: 2.0, length: 0.02})
       .setGlowOutside({color: 0x625731, coefficient: 0.1, power: 2.5, length: 0.5})
       .setId('be2ec1ca-e957-4dc5-af39-0125d8909fbb')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN),
   ],
 
@@ -364,7 +437,7 @@ export const map = [
     new Player()
       .setName('Валера')
       .setId('09839694-28d3-4504-9dc9-1cd3b6a539d7')
-      .setRaceId('2389afd5-5635-4b81-8a2c-13aec5955240')
+      .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN)
   ],
 
@@ -395,6 +468,61 @@ export const map = [
       .setId('3669cd3e-4cc7-42fc-a018-9eed7a5f41f0'),
   ],
 
-  mapStarLights(starKeySectorAlpha),
-  // mapStar(starKeySectorAlpha)
+  [
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('3879859e-d2cb-473d-b14c-e39078e0d2eb')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_1)
+      .setPosition(0, -1550, -1200),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('43105511-e59a-44b1-b435-bc8acb95a517')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_11)
+      .setPosition(2400, 0, -2200),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('4e39aae0-eea9-46a4-a55b-0c9001ce93e9')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_14)
+      .setRotationSpeed(0.003)
+      .setPosition(-1250, -100, 100),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('9a7dc8e2-4fc5-4dad-a0b7-8f6f3ae9857b')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_14)
+      .setRotationSpeed(-0.004)
+      .setPosition(-1200, 100, -500),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('4d30db52-a3fb-4755-b25b-c9dcdf534562')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_5)
+      .setPosition(1000, -580, -1600),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('88895e42-03ac-48ed-a0b4-3dbd5c7e75fc')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_6)
+      .setPosition(2200, 300, 100),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('5d633ccc-a8e6-4937-8c9e-6035c425cb56')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_9)
+      .setRotationSpeed(0.005)
+      .setPosition(900, 100, 1600),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('b83a4ac9-cf2c-426c-88b5-325d0c566011')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_13)
+      .setPosition(-2400, 600, -2400),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('52fb2dd9-d247-4c90-b110-bedbc9f9b281')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_14)
+      .setRotationSpeed(-0.005)
+      .setPosition(200, -600, -200),
+    new StarLight()
+      .setKey(KEY_STAR_SECTOR_ALPHA)
+      .setId('61093ac1-f40c-41b0-9681-c9c9f2599c6e')
+      .setTextureKey(CONST.KEY_LIGHT_CONTROLS_15)
+      .setPosition(-2100, -1800, 1900)
+  ]
+  // mapStar(KEY_STAR_SECTOR_ALPHA)
 ]

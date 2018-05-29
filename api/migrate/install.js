@@ -1,5 +1,5 @@
 import { mgDB } from '../db/mongo'
-import { map } from './map'
+import { sectorSun } from './f8a54ce6-d80d-4a36-b285-f12351b0a8ba'
 
 const statistic = {}
 
@@ -35,7 +35,7 @@ async function install(entities) {
  * @returns {void}
  */
 async function start() {
-  for (let entities of map) {
+  for (let entities of sectorSun) {
     await install(entities)
   }
 }
