@@ -40,14 +40,17 @@ export const sectorSun = [
       .setModelKey(CONST.KEY_SPACESHIP_1)
       .addSlot(
         new Slot()
+          .setParticleId('a546531f-a38e-43db-8604-06b3b36d7291')
           .setType(Slot.TYPE_ENGINE)
       )
       .addSlot(
         new Slot()
+          .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
           .setType(Slot.TYPE_GUN)
       )
       .addSlot(
         new Slot()
+          .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
           .setType(Slot.TYPE_GUN)
       )
       .addSlot(
@@ -59,14 +62,17 @@ export const sectorSun = [
       .setModelKey(CONST.KEY_SPACESHIP_2)
       .addSlot(
         new Slot()
+          .setParticleId('a546531f-a38e-43db-8604-06b3b36d7291')
           .setType(Slot.TYPE_ENGINE)
       )
       .addSlot(
         new Slot()
+          .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
           .setType(Slot.TYPE_GUN)
       )
       .addSlot(
         new Slot()
+          .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
           .setType(Slot.TYPE_GUN)
       )
       .addSlot(
@@ -78,14 +84,17 @@ export const sectorSun = [
       .setModelKey(CONST.KEY_SPACESHIP_3)
       .addSlot(
         new Slot()
+          .setParticleId('a546531f-a38e-43db-8604-06b3b36d7291')
           .setType(Slot.TYPE_ENGINE)
       )
       .addSlot(
         new Slot()
+          .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
           .setType(Slot.TYPE_GUN)
       )
       .addSlot(
         new Slot()
+          .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
           .setType(Slot.TYPE_GUN)
       )
       .addSlot(
