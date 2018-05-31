@@ -15,6 +15,8 @@ import Gun from './../../entity/model/particles/Gun'
 import Spaceship from './../../entity/model/Spaceship'
 import Engine from './../../entity/model/particles/Engine'
 
+import PlayerHasSpaceship from './../../entity/sector/dependence/PlayerHasSpaceship'
+
 import * as CONST from './../../app/constants'
 
 const KEY_STAR_SECTOR_ALPHA = 1
@@ -24,7 +26,7 @@ const ID_MINERAL_CRYSTAL = '5b22b60b-4f37-4a15-af28-ab95656334f9'
 const ID_MINERAL_WATER = '9907acc8-96be-43a4-92b8-f7be0ed07f92'
 const ID_RACE_PEOPLE = '2389afd5-5635-4b81-8a2c-13aec5955240'
 
-export const sectorSun = [
+export const sector = [
   [
     new Engine()
       .setId('a546531f-a38e-43db-8604-06b3b36d7291')
@@ -446,6 +448,7 @@ export const sectorSun = [
     new Player()
       .setName('Валера')
       .setId('09839694-28d3-4504-9dc9-1cd3b6a539d7')
+      .setSpaceshipId('842d5a80-6880-4047-b10b-a69850cf577b')
       .setRaceId(ID_RACE_PEOPLE)
       .setSectorId(ID_SECTOR_SUN)
   ],
@@ -534,4 +537,13 @@ export const sectorSun = [
       .setPosition(-2100, -1800, 1900)
   ]
   // mapStar(KEY_STAR_SECTOR_ALPHA)
+]
+
+export const relationship = [
+  [
+    new PlayerHasSpaceship()
+      .setId('05a68eac-6daa-4e43-9c6c-97164cfb76c8')
+      .setPlayerId('09839694-28d3-4504-9dc9-1cd3b6a539d7')
+      .setSpaceshipId('842d5a80-6880-4047-b10b-a69850cf577b')
+  ],
 ]

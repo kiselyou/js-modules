@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb'
 import { apiConfig } from '../config/config'
 
+let client = null
+
 /**
  * @callback closeConnectCallback
  */
@@ -17,7 +19,7 @@ import { apiConfig } from '../config/config'
  * @returns {void}
  */
 export function mgDB(onConnect) {
-  const url = `mongodb://${apiConfig.db.mongo.host}:${apiConfig.db.mongo.port}`
+  const url = getUrl()
   MongoClient.connect(url, (err, client) => {
     if (err) {
       console.log(`${url} connection refused`)
@@ -28,4 +30,34 @@ export function mgDB(onConnect) {
       client.close()
     })
   })
+}
+
+/**
+ *
+ * @returns {Promise<Db>}
+ */
+export async function mgDBAsync() {
+  const url = getUrl()
+  if (!client) {
+    client = await MongoClient.connect(url)
+  }
+  return client.db(apiConfig.db.mongo.dbName)
+}
+
+/**
+ * @returns {void}
+ */
+export function mgDBClose() {
+  if (client) {
+    client.close()
+  }
+  client = null
+}
+
+/**
+ *
+ * @returns {string}
+ */
+function getUrl() {
+  return `mongodb://${apiConfig.db.mongo.host}:${apiConfig.db.mongo.port}`
 }

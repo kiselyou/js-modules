@@ -42,6 +42,13 @@ class Player {
     this.socketId = null
 
     /**
+     * This is id of current ship
+     *
+     * @type {string|?}
+     */
+    this.spaceshipId = null
+
+    /**
      *
      * @type {Monitor}
      */
@@ -74,11 +81,11 @@ class Player {
 
   /**
    *
-   * @param {string} id
+   * @param {string} value
    * @returns {Player}
    */
-  setId(id) {
-    this.id = id
+  setId(value) {
+    this.id = value
     return this
   }
 
@@ -99,6 +106,16 @@ class Player {
    */
   setSectorId(id) {
     this.sectorId = id
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Player}
+   */
+  setSpaceshipId(id) {
+    this.spaceshipId = id
     return this
   }
 
