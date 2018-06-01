@@ -7,7 +7,7 @@ db:
 server:
   host: localhost
   port: 3000
-allowIP:
+accessControl:
   - http://localhost:8080
 socket:
   host: 127.0.0.1
