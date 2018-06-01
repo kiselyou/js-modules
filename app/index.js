@@ -22,6 +22,8 @@ ReactDOM.render(<App />, document.getElementById('root'));
   const playGroundInfoJson = await Ajax.post('/user/data/1', player)
   const playGroundInfo = JSON.parse(playGroundInfoJson)
 
+  console.log(playGroundInfo)
+
   const loader = new Loader()
   await loader.startLoad()
 
