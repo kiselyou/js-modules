@@ -8,9 +8,9 @@ import Planet from './particles-sector/Planet'
 import Station from './particles-sector/Station'
 import Asteroid from './particles-sector/Asteroid'
 import StarLight from './particles-sector/StarLight'
+import Spaceship from './particles-spaceship/Spaceship'
 import SectorHasParticle from './dependence/SectorHasParticle'
 import PlayerHasParticle from './dependence/PlayerHasParticle'
-import PlayerHasSpaceship from './dependence/PlayerHasSpaceship'
 
 class ParticlePlayGround {
   constructor() {
@@ -48,13 +48,13 @@ class ParticlePlayGround {
      *
      * @type {Array.<Player|Particle>}
      */
-    this.players = []
+    this.players = [this.player]//TODO: mast be clean array.
 
     /**
      *
      * @type {Array.<Sector|Particle>}
      */
-    this.sectors = []
+    this.sectors = [this.sector]//TODO: mast be clean array.
 
     /**
      *
@@ -67,12 +67,6 @@ class ParticlePlayGround {
      * @type {Array.<PlayerHasParticle>}
      */
     this.playerHasParticle = []
-
-    /**
-     *
-     * @type {Array.<PlayerHasSpaceship>}
-     */
-    this.playerHasSpaceship = []
   }
 
   /**
@@ -124,6 +118,20 @@ class ParticlePlayGround {
     for (const item of this.players) {
       if (item.id === id) {
         return new Player().copy(item)
+      }
+    }
+    return null
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Spaceship|?}
+   */
+  getSpaceshipById(id) {
+    for (const item of this.playerHasParticle) {
+      if (item.particle.id === id) {
+        return new Spaceship().copy(item.particle)
       }
     }
     return null
@@ -332,18 +340,6 @@ class ParticlePlayGround {
 
   /**
    *
-   * @param {Array.<Object>} data
-   * @returns {ParticlePlayGround}
-   */
-  setPlayerHasSpaceship(data) {
-    for (const particle of data) {
-      this.playerHasSpaceship.push(new PlayerHasSpaceship().copy(particle))
-    }
-    return this
-  }
-
-  /**
-   *
    * @param {Object} data
    * @param {Array} [except]
    * @returns {ParticlePlayGround}
@@ -367,9 +363,6 @@ class ParticlePlayGround {
             break
           case 'playerHasParticle':
             this.setPlayerHasParticle(data[property])
-            break
-          case 'playerHasSpaceship':
-            this.setPlayerHasSpaceship(data[property])
             break
           default:
             this[property] = data[property]

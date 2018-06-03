@@ -17,15 +17,13 @@ export async function playGroundData(req, res) {
     const universe = await getUniverse(db, 1)
     const sector = await getSector(db, player.sectorId)
     const playerParticle = await getPlayerParticle(db, playerId)
-    const playerSpaceship = await getPlayerSpaceship(db, playerId)
     const sectorParticle = await getSectorParticle(db, player.sectorId)
 
     particlePlayGround
       .setPlayer(player)
-      .setPlayer(sector)
+      .setSector(sector)
       .setUniverse(universe)
       .setPlayerHasParticle(playerParticle)
-      .setPlayerHasSpaceship(playerSpaceship)
       .setSectorHasParticle(sectorParticle)
   }
 
@@ -60,16 +58,6 @@ async  function getSector(db, id) {
  */
 async  function getUniverse(db, id) {
   return findOne(db, 'Universe', { id } )
-}
-
-/**
- *
- * @param {Db} db
- * @param {string} playerId
- * @returns {Promise<Array>}
- */
-async function getPlayerSpaceship(db, playerId) {
-  return await findMany(db, 'PlayerHasSpaceship', { playerId })
 }
 
 /**

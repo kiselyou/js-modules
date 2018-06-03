@@ -18,6 +18,16 @@ class Spaceship extends Particle {
     this.modelKey = null
   }
 
+  getParticlesBySlotType(type) {
+    const particles = []
+    for (const slot of this.slot) {
+      if (slot.type === type) {
+        particles.push(slot.particle)
+      }
+    }
+    return particles
+  }
+
   /**
    *
    * @param {string} value

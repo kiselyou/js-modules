@@ -38,7 +38,7 @@ async function start() {
  * @param {Db} db
  */
 async function clearCollection(db) {
-  const collections = ['Catalog', 'Sector', 'Player', 'SectorHasParticle', 'PlayerHasSpaceship', 'PlayerHasParticle']
+  const collections = ['Catalog', 'Sector', 'Player', 'SectorHasParticle', 'PlayerHasParticle']
   for (const collectionName of collections) {
     const collection = await db.createCollection(collectionName)
     await collection.deleteMany()

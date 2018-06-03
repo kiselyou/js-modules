@@ -96,7 +96,7 @@ class Slot extends Particle {
           case 'entity':
             break
           case 'particle':
-            this[property] = value ? Slot.copyParticle(value) : null
+            this._copyParticle(value)
             break
           case 'position':
             this[property].copy(value)
@@ -112,18 +112,31 @@ class Slot extends Particle {
 
   /**
    *
-   * @param {Object} data
-   * @returns {Particle}
+   * @param {Object} particle
+   * @returns {void}
    * @private
    */
-  static copyParticle(data) {
-    switch (data['type']) {
-      case Slot.TYPE_ENGINE:
-        return new Engine().copy(data)
-      case Slot.TYPE_GUN:
-        return new Gun().copy(data)
+  _copyParticle(particle) {
+    if ( ! particle) {
+      this.particle = null
+      return
     }
-    return null
+
+    const type = particle['type']
+
+    if (this.particle && this.particle['type'] === type) {
+      this.particle.copy(particle)
+      return
+    }
+
+    switch (type) {
+      case Slot.TYPE_ENGINE:
+        this.particle = new Engine().copy(particle)
+        break
+      case Slot.TYPE_GUN:
+        this.particle = new Gun().copy(particle)
+        break
+    }
   }
 
   /**

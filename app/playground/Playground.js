@@ -33,9 +33,16 @@ document.body.appendChild(stats.domElement);
 class Playground {
   /**
    *
+   * @param {ParticlePlayGround} particlePlayGround
    * @param {Loader} loader
    */
-  constructor(loader) {
+  constructor(loader, particlePlayGround) {
+
+    /**
+     *
+     * @type {ParticlePlayGround}
+     */
+    this.particlePlayGround = particlePlayGround
 
     /**
      *
@@ -267,6 +274,7 @@ class Playground {
 
     document.getElementById(parentId).appendChild(this.renderer.domElement)
 
+    this.copy(this.particlePlayGround)
     await this.sectorControls.beforeStart()
     await this.characterControls.beforeStart()
 
@@ -291,7 +299,7 @@ class Playground {
    */
   copy(data) {
     this.sectorControls.copy(data)
-    this.characterControls.copy(data.getCurrentPlayer())
+    this.characterControls.copy(data.getCurrentPlayer(), data)
     return this
   }
 
@@ -301,11 +309,12 @@ class Playground {
    * @return {Playground}
    */
   addPlayer(data) {
+    const player = this.particlePlayGround.getPlayerById(data.id)
     const playerControls = new CharacterControls(this.scene, this.loader)
-    playerControls.copy(data)
+    playerControls.copy(player, this.particlePlayGround)
     playerControls.beforeStart()
     this.playersControls.push(playerControls)
-    this.scene.add(playerControls.model)
+    this.scene.add(playerControls.mesh)
     return this
   }
 
@@ -318,7 +327,7 @@ class Playground {
     for (let i = 0; i < this.playersControls.length; i++) {
       const playerControls = this.playersControls[i]
       if (playerControls.player.id === playerId) {
-        this.scene.remove(playerControls.model)
+        this.scene.remove(playerControls.mesh)
         this.playersControls.splice(i, 1)
         break;
       }

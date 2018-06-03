@@ -4,7 +4,6 @@ import Slot from './../../entity/particles-spaceship/Slot'
 import Player from './../../entity/particles-sector/Player'
 import Spaceship from './../../entity/particles-spaceship/Spaceship'
 import PlayerHasParticle from './../../entity/dependence/PlayerHasParticle'
-import PlayerHasSpaceship from './../../entity/dependence/PlayerHasSpaceship'
 
 export const players = [
   new Player()
@@ -34,15 +33,15 @@ export const installPlayer = async function (db, catalog) {
         await installParticle(db, entity.id, slot, catalog)
       }
 
-      const playerHasSpaceship = new PlayerHasSpaceship()
+      const playerHasParticle = new PlayerHasParticle()
         .setPlayerId(entity.id)
-        .setSpaceship(spaceship)
+        .setParticle(spaceship)
 
       const collectionPlayer = await db.collection('Player');
       await collectionPlayer.updateOne({ id: entity.id }, { $set: entity }, { upsert: true })
 
-      const collectionSpaceship = await db.collection('PlayerHasSpaceship');
-      await collectionSpaceship.updateOne({ id: playerHasSpaceship.id }, { $set: playerHasSpaceship }, { upsert: true })
+      const collectionSpaceship = await db.collection('PlayerHasParticle');
+      await collectionSpaceship.updateOne({ id: playerHasParticle.id }, { $set: playerHasParticle }, { upsert: true })
     }
   }
 }

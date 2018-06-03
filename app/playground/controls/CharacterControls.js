@@ -10,6 +10,7 @@ class CharacterControls extends ModelSpaceship {
    */
   constructor(scene, loader) {
     super(scene, loader)
+
     /**
      *
      * @type {RaceControls}
@@ -34,11 +35,12 @@ class CharacterControls extends ModelSpaceship {
 
   /**
    *
-   * @param {Player} data
-   * @returns {CharacterControls}
+   * @param {Player} player
+   * @param {ParticlePlayGround} data
+   * @returns {ModelSpaceship}
    */
-  copy(data) {
-    super.copy(data)
+  copy(player, data) {
+    super.copy(player, data)
     return this
   }
 

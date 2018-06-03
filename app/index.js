@@ -23,12 +23,11 @@ ReactDOM.render(<App />, document.getElementById('root'));
   const loader = new Loader()
   await loader.startLoad()
 
-  let playground = new Playground(loader)
+  let playground = new Playground(loader, particlePlayGround)
 
   await playground
     .setAppConfig(appConfig)
     .registrationEvents()
-    .copy(particlePlayGround)
     .init('root', 'root-canvas')
 
   const socket = io.connect(appConfig.socketPlayProcess);
@@ -46,8 +45,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
   // Добавление удаленного игрока B в сектор
   socket.on('swap-add-player', (swapPlayer) => {
-    if (swapPlayer.sectorId === playground.sectorControls.id) {
-      //console.log(swapPlayer, '1')
+    if (swapPlayer.sectorId === playground.sectorControls.sector.id) {
       playground.addPlayer(swapPlayer)
       // отправить информацию о текущем игроке A у удаленного игрока B
       socket.emit('swap-add-specific-player', {
@@ -59,9 +57,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
   // Добавление удаленного игрока B на карту текущего игрока A
   socket.on('swap-add-specific-player', (swapPlayer) => {
-    //console.log(swapPlayer, '2')
-    if (swapPlayer.sectorId === playground.sectorControls.id) {
-      //console.log('3')
+    if (swapPlayer.sectorId === playground.sectorControls.sector.id) {
       playground.addPlayer(swapPlayer)
     }
   })
