@@ -1,9 +1,15 @@
 import DebugPanel from '@app/debug/DebugPanel'
 import EventControls from './EventControls'
 import MouseTooltip from '@helper/MouseTooltip'
-import ModelStation from "@app/playground/controls/models/station/ModelStation";
 import DetectObject3D from '@helper/DetectObject3D'
+
+import ModelAsteroid from './models/asteroid/ModelAsteroid'
+import ModelStation from './models/station/ModelStation'
 import ModelPlanet from './models/planet/ModelPlanet'
+
+import Asteroid from '@entity/particles-sector/Asteroid'
+import Station from '@entity/particles-sector/Station'
+import Planet from '@entity/particles-sector/Planet'
 
 class BaseModelControls {
   /**
@@ -97,15 +103,22 @@ class BaseModelControls {
 
   /**
    *
-   * @param {Array} dataModels
-   * @param {ModelStation|ModelAsteroid|ModelPlanet} model
+   * @param {(Array.<Asteroid>|Array.<Planet>|Array.<Station>)} data
    * @returns {BaseModelControls}
    */
-  copy(dataModels, model) {
-    for (const dataModel of dataModels) {
-      this.elements.push(
-        new model(this.scene, this.loader).copy(dataModel)
-      )
+  copy(data) {
+    for (const particle of data) {
+      switch (particle.entity) {
+        case 'Asteroid':
+          this.elements.push(new ModelAsteroid(this.scene, this.loader).copy(particle))
+          break
+        case 'Station':
+          this.elements.push(new ModelStation(this.scene, this.loader).copy(particle))
+          break
+        case 'Planet':
+          this.elements.push(new ModelPlanet(this.scene, this.loader).copy(particle))
+          break
+      }
     }
     return this
   }
@@ -190,7 +203,7 @@ class BaseModelControls {
       if (element instanceof ModelPlanet) {
 
         this.debugPanel
-          .add(element.params, 'radius', 'Radius', 0.1, 6000)
+          .add(element, 'radius', 'Radius', 0.1, 6000)
           .addEventOnChange((value, name) => {
             switch (name) {
               case 'radius':
@@ -202,23 +215,23 @@ class BaseModelControls {
         if (element.glowInside) {
           this.debugPanel
             .addFolder('Glow inside ' + folderName)
-            .add(element.glowInside.material.uniforms.coefficient, 'value', 'In.Glow coeff', -5, 5)
-            .add(element.glowInside.material.uniforms.power, 'value', 'In.Glow power', -5, 5)
-            .add(element.glowInside.material.uniforms.glowColor, 'value', 'In.Glow color', null, null, true)
-            .add(element.glowInside.scale, 'x', 'Scale X', 0.01, 100)
-            .add(element.glowInside.scale, 'y', 'Scale Y', 0.01, 100)
-            .add(element.glowInside.scale, 'z', 'Scale Z', 0.01, 100)
+            .add(element.glowInsideModel.material.uniforms.coefficient, 'value', 'In.Glow coeff', -5, 5)
+            .add(element.glowInsideModel.material.uniforms.power, 'value', 'In.Glow power', -5, 5)
+            .add(element.glowInsideModel.material.uniforms.glowColor, 'value', 'In.Glow color', null, null, true)
+            .add(element.glowInsideModel.scale, 'x', 'Scale X', 0.01, 100)
+            .add(element.glowInsideModel.scale, 'y', 'Scale Y', 0.01, 100)
+            .add(element.glowInsideModel.scale, 'z', 'Scale Z', 0.01, 100)
         }
 
         if (element.glowOutside) {
           this.debugPanel
             .addFolder('Glow outside ' + folderName)
-            .add(element.glowOutside.material.uniforms.coefficient, 'value', 'Out.Glow coeff', -5, 5)
-            .add(element.glowOutside.material.uniforms.power, 'value', 'Out.Glow power', -5, 5)
-            .add(element.glowOutside.material.uniforms.glowColor, 'value', 'Out.Glow color', null, null, true)
-            .add(element.glowOutside.scale, 'x', 'Scale X', 0.01, 100)
-            .add(element.glowOutside.scale, 'y', 'Scale Y', 0.01, 100)
-            .add(element.glowOutside.scale, 'z', 'Scale Z', 0.01, 100)
+            .add(element.glowOutsideModel.material.uniforms.coefficient, 'value', 'Out.Glow coeff', -5, 5)
+            .add(element.glowOutsideModel.material.uniforms.power, 'value', 'Out.Glow power', -5, 5)
+            .add(element.glowOutsideModel.material.uniforms.glowColor, 'value', 'Out.Glow color', null, null, true)
+            .add(element.glowOutsideModel.scale, 'x', 'Scale X', 0.01, 100)
+            .add(element.glowOutsideModel.scale, 'y', 'Scale Y', 0.01, 100)
+            .add(element.glowOutsideModel.scale, 'z', 'Scale Z', 0.01, 100)
         }
       }
     })

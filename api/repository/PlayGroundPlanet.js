@@ -1,5 +1,5 @@
 import { mgDB } from '../db/mongo'
-import Planet from './../../entity/sector/Planet'
+import Planet from './../../entity/particles-sector/Planet'
 
 class PlayGroundPlanet {
   constructor() {
@@ -17,18 +17,18 @@ class PlayGroundPlanet {
    * @param {planetInfoCallback} planetInfoCallback
    */
   getPlanetsBySectorId(id, planetInfoCallback) {
-    mgDB((db, closeConnect) => {
-      const collection = db.collection('Planet')
-      collection
-        .find({ sectorId: id })
-        .toArray()
-        .catch((e) => console.log(e))
-        .then((data) => {
-          const planets = this._preparePlanets(data)
-          planetInfoCallback(planets)
-        })
-        .finally(closeConnect)
-    })
+    // mgDB((db, closeConnect) => {
+    //   const collection = db.collection('Planet')
+    //   collection
+    //     .find({ sectorId: id })
+    //     .toArray()
+    //     .catch((e) => console.log(e))
+    //     .then((data) => {
+    //       const planets = this._preparePlanets(data)
+    //       planetInfoCallback(planets)
+    //     })
+    //     .finally(closeConnect)
+    // })
   }
 
   /**
@@ -53,7 +53,8 @@ class PlayGroundPlanet {
       if (prepare.hasOwnProperty(parentId)) {
         planet.setParentPlanet(prepare[parentId])
       }
-      planet.calculatePosition()
+      // TODO: переделать расчет движения планет
+      // planet.calculatePosition()
     }
     return arr
   }
@@ -84,7 +85,8 @@ class PlayGroundPlanet {
    */
   update(delta, planets) {
     for (let planet of planets) {
-      planet.calculatePosition(delta)
+      // TODO: переделать расчет движения планет
+      // planet.calculatePosition(delta)
     }
   }
 }

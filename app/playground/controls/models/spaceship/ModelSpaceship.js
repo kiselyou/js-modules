@@ -1,5 +1,9 @@
+import Player from '@entity/particles-sector/Player'
+import Spaceship from '@entity/particles-spaceship/Spaceship'
+
 import MoveControls from './../../MoveControls'
-import Player from '@entity/sector/Player'
+import ParticlePlayGround from '@entity/ParticlePlayGround'
+
 
 class ModelSpaceship extends MoveControls {
   /**
@@ -29,20 +33,33 @@ class ModelSpaceship extends MoveControls {
 
     /**
      *
+     * @type {Spaceship}
+     */
+    this.spaceship = new Spaceship()
+
+    /**
+     *
      * @type {null|Group}
      */
-    this.activeModel = null
+    this.model = null
+  }
+
+  /**
+   * @returns {void}
+   */
+  async beforeStart() {
+    this.buildModel()
   }
 
   /**
    *
    * @returns {ModelSpaceship}
    */
-  setModel() {
+  buildModel() {
     this.removeModel()
-    this.activeModel = this.loader.getModel(this.player.modelKey)
-    this.model.add(this.activeModel)
-    this.model.position.copy(this.player.position)
+    this.model = this.loader.getModel(this.player.modelKey)
+    this.mesh.add(this.model)
+    this.mesh.position.copy(this.player.position)
     return this
   }
 
@@ -51,15 +68,15 @@ class ModelSpaceship extends MoveControls {
    * @returns {ModelSpaceship}
    */
   removeModel() {
-    if (this.activeModel) {
-      this.model.remove(this.activeModel)
+    if (this.model) {
+      this.mesh.remove(this.model)
     }
     return this
   }
 
   /**
    *
-   * @param {Object} data
+   * @param {Player} data
    * @returns {ModelSpaceship}
    */
   copy(data) {
@@ -74,7 +91,7 @@ class ModelSpaceship extends MoveControls {
    */
   update(delta) {
     super.update(delta)
-    this.player.position.copy(this.model.position)
+    this.player.position.copy(this.mesh.position)
   }
 }
 

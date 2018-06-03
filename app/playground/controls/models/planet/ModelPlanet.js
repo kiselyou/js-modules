@@ -1,6 +1,6 @@
-import Planet from '@entity/sector/Planet'
+import Planet from '@entity/particles-sector/Planet'
 import ModelPlanetClouds from './ModelPlanetClouds'
-import { MeshPhongMaterial, SphereGeometry, Color } from 'three'
+import { MeshPhongMaterial, SphereGeometry, Color, Mesh } from 'three'
 import { getGlowInsideMesh, getGlowOutsideMesh } from '../../../../shader/glow'
 
 class ModelPlanet extends Planet {
@@ -33,53 +33,48 @@ class ModelPlanet extends Planet {
      *
      * @type {Mesh|null}
      */
-    this.glowInside = null
+    this.glowInsideModel = null
 
     /**
      *
      * @type {Mesh|null}
      */
-    this.glowOutside = null
+    this.glowOutsideModel = null
+
+    /**
+     *
+     * @type {Mesh}
+     */
+    this.model = new Mesh()
+
+    /**
+     *
+     * @type {null}
+     */
+    this.parentModel = null
   }
 
   /**
    *
    * @returns {ModelPlanet}
    */
-  setModel() {
-    const radius = this.params.radius
-    const segments = this.params.segments
-    this.model.geometry = new SphereGeometry(radius, segments, segments)
+  buildModel() {
+    this.model.geometry = new SphereGeometry(this.radius, this.segmentCount, this.segmentCount)
     this.model.material = new MeshPhongMaterial({
       map: this.getTextureMap(),
-      // bumpScale: this.getBumpScale(),
-      // bumpMap: this.getTextureBump(),
-      // specularMap: this.getTextureSpec(),
-      // specular: this.getSpecular(),
     })
 
     this.model.castShadow = true
     this.model.receiveShadow = true
 
-    if (this.glow.inside.enabled) {
-      this.glowInside = getGlowInsideMesh(this.model, this.glow.inside)
-      this.model.add(this.glowInside)
+    if (this.glowInsideOption.enabled) {
+      this.glowInsideModel = getGlowInsideMesh(this.model, this.glowInsideOption)
+      this.model.add(this.glowInsideModel)
     }
 
-    if (this.glow.outside.enabled) {
-      this.glowOutside = getGlowOutsideMesh(this.model, this.glow.outside)
-      this.model.add(this.glowOutside)
-    }
-
-    if (this.isClouds()) {
-      // this.model.add(
-      //   this.modelClouds.getMeshClouds(
-      //     radius,
-      //     this.params.segments,
-      //     this.getImageCloudMap(),
-      //     this.getImageCloudMapTrans()
-      //   )
-      // )
+    if (this.glowOutsideOption.enabled) {
+      this.glowOutsideModel = getGlowOutsideMesh(this.model, this.glowOutsideOption)
+      this.model.add(this.glowOutsideModel)
     }
 
     this.scene.add(this.model)
@@ -91,9 +86,7 @@ class ModelPlanet extends Planet {
    * @returns {ModelPlanet}
    */
   rebuildModel() {
-    this
-      .removeModel()
-      .setModel()
+    this.removeModel().buildModel()
     return this
   }
 
@@ -102,19 +95,15 @@ class ModelPlanet extends Planet {
    * @returns {ModelPlanet}
    */
   removeModel() {
-    if (this.glow.inside.enabled) {
-      this.model.remove(this.glowInside)
+    if (this.glowInsideOption.enabled) {
+      this.model.remove(this.glowInsideModel)
     }
 
-    if (this.glow.outside.enabled) {
-      this.model.remove(this.glowOutside)
+    if (this.glowOutsideOption.enabled) {
+      this.model.remove(this.glowOutsideModel)
     }
     this.scene.remove(this.model)
     return this
-  }
-
-  isClouds() {
-    return this.params.texturesKey.cloudMap && this.params.texturesKey.cloudMapTrans
   }
 
   /**
@@ -122,7 +111,7 @@ class ModelPlanet extends Planet {
    * @returns {Color}
    */
   getSpecular() {
-    return new Color(this.params.texturesKey.specular)
+    return new Color(this.textureMapSpecular)
   }
 
   /**
@@ -130,7 +119,7 @@ class ModelPlanet extends Planet {
    * @returns {number|?}
    */
   getBumpScale() {
-    return this.params.texturesKey.bump.scale
+    return this.textureBumpScale
   }
 
   /**
@@ -138,7 +127,7 @@ class ModelPlanet extends Planet {
    * @returns {Texture|?}
    */
   getTextureMap() {
-    return this.loader.getTexture(this.params.texturesKey.map)
+    return this.loader.getTexture(this.textureMapKey)
   }
 
   /**
@@ -146,31 +135,7 @@ class ModelPlanet extends Planet {
    * @returns {Texture|?}
    */
   getTextureBump() {
-    return this.loader.getTexture(this.params.texturesKey.bump.key)
-  }
-
-  /**
-   *
-   * @returns {Texture|?}
-   */
-  getTextureSpec() {
-    return this.loader.getTexture(this.params.texturesKey.spec)
-  }
-
-  /**
-   *
-   * @returns {HTMLImageElement|?}
-   */
-  getImageCloudMap() {
-    return this.loader.getImage(this.params.texturesKey.cloudMap)
-  }
-
-  /**
-   *
-   * @returns {HTMLImageElement|?}
-   */
-  getImageCloudMapTrans() {
-    return this.loader.getImage(this.params.texturesKey.cloudMapTrans)
+    return this.loader.getTexture(this.textureBumpKey)
   }
 
   /**
@@ -179,16 +144,18 @@ class ModelPlanet extends Planet {
    * @returns {void}
    */
   async beforeStart(loader) {
-    this.setModel()
+    this.buildModel()
+    this.calculatePosition(0)
   }
 
   /**
    *
-   * @param {object} data
+   * @param {Object} data
+   * @param {Array} [except]
    * @returns {ModelPlanet}
    */
-  copy(data) {
-    super.copy(data)
+  copy(data, except = []) {
+    super.copy(data, except)
     return this
   }
 
@@ -203,6 +170,24 @@ class ModelPlanet extends Planet {
     if (this.modelClouds.enabled) {
       this.modelClouds.update(delta)
     }
+  }
+
+  /**
+   *
+   * @param {number} delta
+   * @returns {ModelPlanet}
+   */
+  calculatePosition(delta = 1) {
+    let x = 0, z = 0;
+    if (this.parentModel) {
+      x = this.parentModel.model.position.x
+      z = this.parentModel.model.position.z
+    }
+
+    this.angleToCenter += this.speedMove * delta
+    this.model.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
+    this.model.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
+    return this
   }
 
   /**

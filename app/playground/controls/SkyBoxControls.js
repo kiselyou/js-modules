@@ -77,11 +77,11 @@ class SkyBoxControls {
 
   /**
    *
-   * @param {Object} data
+   * @param {ParticlePlayGround} data
    * @returns {SkyBoxControls}
    */
   copy( data) {
-    this.starControls.copy(data['star'])
+    this.starControls.copy(data.getStars())
     return this
   }
 

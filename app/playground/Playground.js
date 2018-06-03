@@ -21,6 +21,7 @@ import Gyroscope from '@app/three-dependense/Gyroscope'
 import OrbitControls from '@app/three-dependense/OrbitControls'
 import DebugPanel from '@app/debug/DebugPanel'
 import LightControls from '@app/playground/controls/LightControls'
+import ParticlePlayGround from "@entity/ParticlePlayGround";
 
 const stats = new Stats()
 // stats.setMode(1)
@@ -117,7 +118,7 @@ class Playground {
      * @type {OrbitControls}
      */
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.cameraControls.target.copy(this.characterControls.model.position)
+    this.cameraControls.target.copy(this.characterControls.mesh.position)
     this.cameraControls.enableKeys = false
     this.cameraControls.enablePan = false
     this.cameraControls.mouseButtons = { ORBIT: MOUSE.RIGHT, ZOOM: MOUSE.MIDDLE, PAN: MOUSE.LEFT };
@@ -132,8 +133,8 @@ class Playground {
      */
     this.gyroscope = new Gyroscope()
     this.gyroscope.add(this.camera);
-    this.characterControls.model.add(this.gyroscope)
-    this.scene.add(this.characterControls.model)
+    this.characterControls.mesh.add(this.gyroscope)
+    this.scene.add(this.characterControls.mesh)
 
     /**
      *
@@ -223,9 +224,9 @@ class Playground {
       .addFolder('Ship Info')
       .listenFields(true)
       .add(this.characterControls, 'speed', 'Ship Speed')
-      .add(this.characterControls.model.position, 'x', 'Ship X')
-      .add(this.characterControls.model.position, 'y', 'Ship Y')
-      .add(this.characterControls.model.position, 'z', 'Ship Z')
+      .add(this.characterControls.mesh.position, 'x', 'Ship X')
+      .add(this.characterControls.mesh.position, 'y', 'Ship Y')
+      .add(this.characterControls.mesh.position, 'z', 'Ship Z')
       .listenFields(false)
       .addFolder('Ship speed')
       .add(this.characterControls, 'maxSpeed', 'Max', 10, 400)
@@ -237,9 +238,9 @@ class Playground {
     setTimeout(() => {
       panel
         .addFolder('Ship Scale')
-        .add(this.characterControls.model.children[1].scale, 'x', 'Scale X', 0, 5)
-        .add(this.characterControls.model.children[1].scale, 'y', 'Scale Y', 0, 5)
-        .add(this.characterControls.model.children[1].scale, 'z', 'Scale Z', 0, 5)
+        .add(this.characterControls.mesh.children[1].scale, 'x', 'Scale X', 0, 5)
+        .add(this.characterControls.mesh.children[1].scale, 'y', 'Scale Y', 0, 5)
+        .add(this.characterControls.mesh.children[1].scale, 'z', 'Scale Z', 0, 5)
     }, 5000)
 
     /**
@@ -285,12 +286,12 @@ class Playground {
 
   /**
    *
-   * @param {Object} data
+   * @param {ParticlePlayGround} data
    * @return {Playground}
    */
   copy(data) {
     this.sectorControls.copy(data)
-    this.characterControls.copy(data.player)
+    this.characterControls.copy(data.getCurrentPlayer())
     return this
   }
 
@@ -351,7 +352,7 @@ class Playground {
       player.update(this.delta)
     }
 
-    const position = this.characterControls.model.position
+    const position = this.characterControls.mesh.position
     this.sectorControls.update(this.delta, position)
     this.lightControls.update(this.delta, position)
     this.renderer.render(this.scene, this.camera)

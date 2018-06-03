@@ -1,4 +1,3 @@
-import ModelPlanet from './models/planet/ModelPlanet'
 import BaseModelControls from './BaseModelControls'
 
 class PlanetControls extends BaseModelControls {
@@ -13,42 +12,29 @@ class PlanetControls extends BaseModelControls {
 
   /**
    *
+   * @returns {void}
+   */
+  prepareParentPlanets() {
+    const prepare = {}
+    for (const model of this.elements) {
+      prepare[model.id] = model
+    }
+
+    for (const model of this.elements) {
+      if (prepare.hasOwnProperty(model.parentId)) {
+        model.parentModel = prepare[model.parentId]
+      }
+    }
+  }
+
+  /**
+   *
    * @param {Loader} loader
    * @returns {void}
    */
   async beforeStart(loader) {
-    this.preparePlanets(this.elements)
+    this.prepareParentPlanets()
     super.beforeStart(loader)
-  }
-
-  /**
-   *
-   * @param {Array.<ModelPlanet>} modelPlanets
-   * @returns {void}
-   */
-  preparePlanets(modelPlanets) {
-    const prepare = {}
-    for (const modelPlanet of modelPlanets) {
-      prepare[modelPlanet.id] = modelPlanet
-    }
-
-    for (const modelPlanet of modelPlanets) {
-      const parentId = modelPlanet.parentId
-      if (prepare.hasOwnProperty(parentId)) {
-        modelPlanet.setParentPlanet(prepare[parentId])
-      }
-      modelPlanet.calculatePosition(0)
-    }
-  }
-
-  /**
-   *
-   * @param {Array} dataModels
-   * @returns {PlanetControls}
-   */
-  copy(dataModels) {
-    super.copy(dataModels, ModelPlanet)
-    return this
   }
 }
 

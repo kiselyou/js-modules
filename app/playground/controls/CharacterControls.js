@@ -1,5 +1,6 @@
 import RaceControls from './RaceControls'
 import ModelSpaceship from './models/spaceship/ModelSpaceship'
+import ParticlePlayGround from '@entity/ParticlePlayGround'
 
 class CharacterControls extends ModelSpaceship {
   /**
@@ -26,14 +27,14 @@ class CharacterControls extends ModelSpaceship {
    * @returns {void}
    */
   async beforeStart() {
-    this.setModel()
+    await super.beforeStart()
     this.enabled = true
     await this.raceControls.beforeStart()
   }
 
   /**
    *
-   * @param {Object} data
+   * @param {Player} data
    * @returns {CharacterControls}
    */
   copy(data) {

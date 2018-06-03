@@ -1,20 +1,9 @@
-
 class Universe {
-  /**
-   *
-   * @param {number} id
-   */
-  constructor(id) {
+  constructor() {
     /**
      * @type {string}
      */
     this.entity = this.constructor.name
-
-    /**
-     *
-     * @type {number}
-     */
-    this.id = id
 
     /**
      *
@@ -34,11 +23,15 @@ class Universe {
 
   /**
    *
-   * @param {object} data
+   * @param {Object} data
+   * @param {Array} [except]
    * @returns {Universe}
    */
-  copy(data) {
+  copy(data, except = []) {
     for (const property in data) {
+      if (except.includes(property)) {
+        continue
+      }
       if (data.hasOwnProperty(property)) {
         switch (property) {
           case 'entity':

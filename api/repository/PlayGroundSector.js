@@ -1,5 +1,5 @@
 import { mgDB } from '../db/mongo'
-import Sector from './../../entity/sector/Sector'
+import Sector from './../../entity/particles-sector/Sector'
 import PlayGroundPlanet from './PlayGroundPlanet'
 
 class PlayGroundSector {
@@ -21,17 +21,17 @@ class PlayGroundSector {
    * @param {sectorsInfoCallback} sectorsInfoCallback
    */
   findSectors(sectorsInfoCallback) {
-    mgDB((db, closeConnect) => {
-      const collection = db.collection('Sector')
-      collection
-        .find()
-        .toArray()
-        .then((sectors) => {
-          this._prepareSectors(sectors, sectorsInfoCallback)
-        })
-        .finally(closeConnect)
-        .catch((e) => console.log(e))
-    })
+    // mgDB((db, closeConnect) => {
+    //   const collection = db.collection('Sector')
+    //   collection
+    //     .find()
+    //     .toArray()
+    //     .then((sectors) => {
+    //       this._prepareSectors(sectors, sectorsInfoCallback)
+    //     })
+    //     .finally(closeConnect)
+    //     .catch((e) => console.log(e))
+    // })
   }
 
   /**

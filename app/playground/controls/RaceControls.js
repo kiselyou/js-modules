@@ -1,4 +1,4 @@
-import Race from '@entity/sector/Race'
+import Race from '@entity/particles-sector/Race'
 
 class RaceControls extends Race {
   constructor() {

@@ -1,5 +1,5 @@
 import Server from './Server'
-import Player from './../../entity/sector/Player'
+import Player from './../../entity/particles-sector/Player'
 import PlayGroundTimer from './PlayGroundTimer'
 
 class PlayGroundProcess extends Server {

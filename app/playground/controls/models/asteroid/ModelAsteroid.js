@@ -1,4 +1,4 @@
-import Asteroid from '@entity/sector/Asteroid'
+import Asteroid from '@entity/particles-sector/Asteroid'
 import {BoxGeometry, Mesh, MeshPhongMaterial} from 'three'
 
 class ModelAsteroid extends Asteroid {
@@ -20,6 +20,12 @@ class ModelAsteroid extends Asteroid {
      * @type {Loader}
      */
     this.loader = loader
+
+    /**
+     *
+     * @type {Mesh}
+     */
+    this.model = new Mesh()
   }
 
   /**
@@ -45,11 +51,24 @@ class ModelAsteroid extends Asteroid {
 
   /**
    *
-   * @param {object} data
+   * @param {Object} data
+   * @param {Array} [except]
    * @returns {ModelAsteroid}
    */
-  copy(data) {
-    super.copy(data)
+  copy(data, except = []) {
+    super.copy(data, except)
+    return this
+  }
+
+  /**
+   *
+   * @param {number} delta
+   * @returns {ModelAsteroid}
+   */
+  calculatePosition(delta = 1) {
+    this.angleToCenter += this.speedMove * delta
+    this.model.position.setX(this.distanceToCenter * Math.cos(this.angleToCenter))
+    this.model.position.setZ(this.distanceToCenter * Math.sin(this.angleToCenter))
     return this
   }
 

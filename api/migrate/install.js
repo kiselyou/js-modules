@@ -1,48 +1,13 @@
-import { mgDBAsync } from '../db/mongo'
-import { sector, relationship } from './f8a54ce6-d80d-4a36-b285-f12351b0a8ba'
+import { mgDBAsync } from './../db/mongo'
+import Catalog from './../../entity/Catalog'
 
-/**
- *
- * @param {Promise<Db>} db
- * @param {Array.<Object>} entities
- * @returns {Promise<void>}
- */
-async function install(db, entities) {
-  for (let entity of entities) {
-    await createOrUpdate(db, entity)
-  }
-}
-
-/**
- *
- * @param {Promise<Db>} db
- * @param {Array.<Object>} entities
- * @returns {Promise<void>}
- */
-async function installRelationship(db, entities) {
-  for (let entity of entities) {
-    switch (entity.constructor.name) {
-      case 'PlayerHasSpaceship':
-        const collection = db.collection('Spaceship')
-        const spaceship = await collection.findOne({ id: entity.spaceshipId })
-        entity.setSpaceship(spaceship)
-        break
-    }
-    await createOrUpdate(db, entity)
-  }
-}
-
-/**
- *
- * @param {Promise<Db>} db
- * @param {Object} entity
- * @returns {Promise<void>}
- */
-async function createOrUpdate(db, entity) {
-  const collectionName = entity.constructor.name
-  const collection = db.collection(collectionName)
-  await collection.updateOne({ id: entity.id }, { $set: entity }, { upsert: true })
-}
+import { installStarlight } from './map-star-light'
+import { installAsteroid } from './map-asteroid'
+import { installCatalog } from './map-catalog'
+import { installStation } from './map-station'
+import { installSector } from './map-sector'
+import { installPlayer } from './map-player'
+import { installPlanet } from './map-planet'
 
 /**
  *
@@ -50,14 +15,45 @@ async function createOrUpdate(db, entity) {
  */
 async function start() {
   const db = await mgDBAsync()
-  for (let entities of sector) {
-    await install(db, entities)
-  }
+  await clearCollection(db)
+  await installCatalog(db)
 
-  for (let entities of relationship) {
-    await installRelationship(db, entities)
+  const catalog = await getCatalog(db)
+
+  const sectorId = 'f8a54ce6-d80d-4a36-b285-f12351b0a8ba'
+
+  await installPlayer(db, catalog)
+  await installSector(db, catalog)
+  await installPlanet(db, catalog, sectorId)
+  await installAsteroid(db, catalog, sectorId)
+  await installStation(db, catalog, sectorId)
+  await installStarlight(db, catalog, sectorId)
+
+  console.log('FINISHED')
+  console.log('press "ctrl + z" to stop watcher')
+}
+
+/**
+ *
+ * @param {Db} db
+ */
+async function clearCollection(db) {
+  const collections = ['Catalog', 'Sector', 'Player', 'SectorHasParticle', 'PlayerHasSpaceship', 'PlayerHasParticle']
+  for (const collectionName of collections) {
+    const collection = await db.createCollection(collectionName)
+    await collection.deleteMany()
   }
-  console.log('==========MIGRATION FINISHED SUCCESSFULLY=========')
+}
+
+/**
+ *
+ * @param {Db} db
+ * @returns {Promise<Catalog>}
+ */
+async function getCatalog(db) {
+  const collection = await db.collection('Catalog');
+  const data = await collection.find().toArray()
+  return new Catalog().copy(data)
 }
 
 start()

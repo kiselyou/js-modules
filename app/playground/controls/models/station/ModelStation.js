@@ -1,5 +1,5 @@
-import Station from '@entity/station/Station'
-import { MeshBasicMaterial, SphereGeometry } from 'three'
+import { Mesh, MeshBasicMaterial, SphereGeometry } from 'three'
+import Station from '@entity/particles-sector/Station'
 import DetectObject3D from '@helper/DetectObject3D'
 import * as CONST from '@app/constants'
 
@@ -25,9 +25,9 @@ class ModelStation extends Station {
 
     /**
      *
-     * @type {number}
+     * @type {Mesh}
      */
-    this.maxSize = 0;
+    this.model = new Mesh()
   }
 
   /**
@@ -36,12 +36,13 @@ class ModelStation extends Station {
    */
   buildMesh() {
     const model3D = this.loader.getModel(CONST.KEY_STATION_2)
-    this.maxSize = DetectObject3D.maxSize(model3D)
+    const maxSize = DetectObject3D.maxSize(model3D)
 
     this.model.material = new MeshBasicMaterial({ transparent: true, opacity: 0.05 })
-    this.model.geometry = new SphereGeometry(this.maxSize, 25, 25)
+    this.model.geometry = new SphereGeometry(maxSize, 25, 25)
 
     this.model.add(model3D)
+
     this.scene.add(this.model)
   }
 
@@ -56,11 +57,24 @@ class ModelStation extends Station {
 
   /**
    *
-   * @param {object} data
+   * @param {Object} data
+   * @param {Array} [except]
    * @returns {ModelStation}
    */
-  copy(data) {
-    super.copy(data)
+  copy(data, except = []) {
+    super.copy(data, except)
+    return this
+  }
+
+  /**
+   *
+   * @param {number} delta
+   * @returns {ModelStation}
+   */
+  calculatePosition(delta = 1) {
+    this.angleToCenter += this.speedMove * delta
+    this.model.position.setX(this.distanceToCenter * Math.cos(this.angleToCenter))
+    this.model.position.setZ(this.distanceToCenter * Math.sin(this.angleToCenter))
     return this
   }
 

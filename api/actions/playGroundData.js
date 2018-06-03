@@ -1,404 +1,117 @@
 import * as core from './../core'
+import ParticlePlayGround from './../../entity/ParticlePlayGround'
 
 /**
  *
  * @param {object} req
  * @param {object} res
  */
-export function playGroundData(req, res) {
-  const result = {}
+export async function playGroundData(req, res) {
   const playerId = req.body['id']
-  let i = 0
+  const db = await core.mgDBAsync()
+  const particlePlayGround = new ParticlePlayGround()
 
-  getPlayerInfoById(playerId, (data) => {
-    i++
-    result['player'] = data
-    const sectorId = result.player.sectorId
+  const player = await getPlayer(db, playerId)
 
-    getSectorInfoById(sectorId, (data) => {
-      i++
-      result['sector'] = data
+  if (player) {
+    const universe = await getUniverse(db, 1)
+    const sector = await getSector(db, player.sectorId)
+    const playerParticle = await getPlayerParticle(db, playerId)
+    const playerSpaceship = await getPlayerSpaceship(db, playerId)
+    const sectorParticle = await getSectorParticle(db, player.sectorId)
 
-      getStarByKey(data.starKey, (data) => {
-        i++
-        result['star'] = data
-      })
-
-      getStarLightByKey(data.starKey, (data) => {
-        i++
-        result['starLight'] = data
-      })
-    })
-
-    getPlanetsInfoBySectorId(sectorId, (data) => {
-      i++
-      result['planet'] = data
-    })
-
-    getStationsInfoBySectorId(sectorId, (data) => {
-      i++
-      result['station'] = data
-    })
-
-    getAsteroidsInfoBySectorId(sectorId, (data) => {
-      i++
-      result['asteroid'] = data
-    })
-  })
-
-  getRace((data) => {
-    i++
-    result['race'] = data
-  })
-
-  getStatus((data) => {
-    i++
-    result['status'] = data
-  })
-
-  getMineral((data) => {
-    i++
-    result['mineral'] = data
-  })
-
-  getEquipment((data) => {
-    i++
-    result['equipment'] = data
-  })
-
-  getFactory((data) => {
-    i++
-    result['factory'] = data
-  })
-
-  getSpaceship((data) => {
-    i++
-    result['spaceship'] = data
-  })
-
-  getEngine((data) => {
-    i++
-    result['engine'] = data
-  })
-
-  getGun((data) => {
-    i++
-    result['gun'] = data
-  })
-
-  let waitResponse = () => {
-    if (i < 15) {
-      setTimeout(waitResponse, 50)
-    } else {
-      core.responseJSON(res, result)
-    }
+    particlePlayGround
+      .setPlayer(player)
+      .setPlayer(sector)
+      .setUniverse(universe)
+      .setPlayerHasParticle(playerParticle)
+      .setPlayerHasSpaceship(playerSpaceship)
+      .setSectorHasParticle(sectorParticle)
   }
 
-  waitResponse()
+  core.responseJSON(res, particlePlayGround)
 }
 
 /**
  *
- * @param {number} key
- * @param {Function} onDone
- * @returns {void}
- */
-function getStarByKey(key, onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Star')
-    collection
-      .find({ key: key })
-      .project({ position: 1, _id: 0 })
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
-}
-
-/**
- *
- * @param {number} key
- * @param {Function} onDone
- * @returns {void}
- */
-function getStarLightByKey(key, onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('StarLight')
-    collection
-      .find({ key: key })
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
-}
-
-/**
- *
+ * @param {Db} db
  * @param {string} id
- * @param {Function} onDone
- * @returns {void}
+ * @returns {Promise<Object>}
  */
-function getPlayerInfoById(id, onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Player')
-    collection
-      .findOne({ id: id })
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
+async  function getPlayer(db, id) {
+  return findOne(db, 'Player', { id } )
 }
 
 /**
  *
+ * @param {Db} db
  * @param {string} id
- * @param {Function} onDone
- * @returns {void}
+ * @returns {Promise<Object>}
  */
-function getSectorInfoById(id, onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Sector')
-    collection
-      .findOne({ id: id })
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
+async  function getSector(db, id) {
+  return findOne(db, 'Sector', { id } )
 }
 
 /**
  *
- * @param {string} id
- * @param {Function} onDone
- * @returns {void}
+ * @param {Db} db
+ * @param {number} id
+ * @returns {Promise<Object>}
  */
-function getPlanetsInfoBySectorId(id, onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Planet')
-    collection
-      .find({sectorId: id})
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
+async  function getUniverse(db, id) {
+  return findOne(db, 'Universe', { id } )
 }
 
 /**
  *
- * @param {string} id
- * @param {Function} onDone
- * @returns {void}
+ * @param {Db} db
+ * @param {string} playerId
+ * @returns {Promise<Array>}
  */
-function getStationsInfoBySectorId(id, onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Station')
-    collection
-      .find({sectorId: id})
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
+async function getPlayerSpaceship(db, playerId) {
+  return await findMany(db, 'PlayerHasSpaceship', { playerId })
 }
 
 /**
  *
- * @param {string} id
- * @param {Function} onDone
- * @returns {void}
+ * @param {Db} db
+ * @param {string} playerId
+ * @returns {Promise<Array>}
  */
-function getAsteroidsInfoBySectorId(id, onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Asteroid')
-    collection
-      .find({sectorId: id})
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
+async function getPlayerParticle(db, playerId) {
+  return await findMany(db, 'PlayerHasParticle', { playerId })
 }
 
 /**
  *
- * @param {Function} onDone
- * @returns {void}
+ * @param {Db} db
+ * @param {string} sectorId
+ * @returns {Promise<Array>}
  */
-function getRace(onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Race')
-    collection
-      .find()
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
+async function getSectorParticle(db, sectorId) {
+  return await findMany(db, 'SectorHasParticle', { sectorId })
 }
 
 /**
  *
- * @param {Function} onDone
- * @returns {void}
+ * @param {Db} db
+ * @param {string} collectionName
+ * @param {Object} where
+ * @returns {Promise<Array>}
  */
-function getStatus(onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Status')
-    collection
-      .find()
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
+async function findMany(db, collectionName, where) {
+  const collection = await db.collection(collectionName)
+  return await collection.find(where).toArray()
 }
 
 /**
  *
- * @param {Function} onDone
- * @returns {void}
+ * @param {Db} db
+ * @param {string} collectionName
+ * @param {Object} where
+ * @returns {Promise<Object>}
  */
-function getFactory(onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Factory')
-    collection
-      .find()
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
-}
-
-/**
- *
- * @param {Function} onDone
- * @returns {void}
- */
-function getMineral(onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Mineral')
-    collection
-      .find()
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
-}
-
-/**
- *
- * @param {Function} onDone
- * @returns {void}
- */
-function getEquipment(onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Equipment')
-    collection
-      .find()
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
-}
-
-/**
- *
- * @param {Function} onDone
- * @returns {void}
- */
-function getSpaceship(onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Spaceship')
-    collection
-      .find()
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
-}
-
-/**
- *
- * @param {Function} onDone
- * @returns {void}
- */
-function getEngine(onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Engine')
-    collection
-      .find()
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
-}
-
-/**
- *
- * @param {Function} onDone
- * @returns {void}
- */
-function getGun(onDone) {
-  core.mgDB((db, closeConnect) => {
-    const collection = db.collection('Gun')
-    collection
-      .find()
-      .toArray()
-      .catch((e) => {
-        console.log(e)
-        onDone(null)
-      })
-      .then(onDone)
-      .finally(closeConnect)
-  })
+async function findOne(db, collectionName, where) {
+  const collection = await db.collection(collectionName)
+  return await collection.findOne(where)
 }

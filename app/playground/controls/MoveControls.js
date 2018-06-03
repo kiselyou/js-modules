@@ -1,4 +1,5 @@
 import { Object3D, Math as TMath } from 'three'
+import Engine from '@entity/particles-spaceship/Engine'
 
 export const FORWARD = 'forward'
 export const BACKWARD = 'backward'
@@ -59,7 +60,13 @@ class MoveControls {
      *
      * @type {Object3D}
      */
-    this.model = new Object3D()
+    this.mesh = new Object3D()
+
+    /**
+     *
+     * @type {Engine}
+     */
+    this.engine = new Engine()
 
     /**
      *
@@ -230,9 +237,9 @@ class MoveControls {
     }
 
     let forwardDelta = this.speed * delta
-    this.model.position.x += Math.sin(this.bodyOrientation) * forwardDelta
-    this.model.position.z += Math.cos(this.bodyOrientation) * forwardDelta
-    this.model.rotation.y = this.bodyOrientation
+    this.mesh.position.x += Math.sin(this.bodyOrientation) * forwardDelta
+    this.mesh.position.z += Math.cos(this.bodyOrientation) * forwardDelta
+    this.mesh.rotation.y = this.bodyOrientation
   }
 
   /**
@@ -257,7 +264,7 @@ class MoveControls {
             break
           case 'position':
           case 'rotation':
-            this['model'][property].copy(data[property])
+            this['mesh'][property].copy(data[property])
             break
           default:
             this[property] = data[property]
@@ -290,11 +297,11 @@ class MoveControls {
       'speed',
       'moveActions',
       'prevMoveActions',
-      'model'
+      'mesh'
     ]
     for (const property of properties) {
       switch (property) {
-        case 'model':
+        case 'mesh':
           data['position'] = this[property]['position']
           data['rotation'] = this[property]['rotation']
           break

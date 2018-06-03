@@ -1,4 +1,3 @@
-import HelperSector from './../../entity/sector/helper/HelperSector'
 import PlayGroundUniverse from './../repository/PlayGroundUniverse'
 import PlayGroundSector from './../repository/PlayGroundSector'
 import SpaceTimer from '../../helper/SpaceTimer'
@@ -25,12 +24,6 @@ class PlayGroundTimer {
      * @type {SpaceTimer}
      */
     this.spaceTimer = new SpaceTimer()
-
-    /**
-     *
-     * @type {HelperSector}
-     */
-    this.helperSector = new HelperSector()
 
     /**
      *
@@ -111,9 +104,12 @@ class PlayGroundTimer {
    * @return {SwapInfo}
    */
   getSwapInfo(sectorId) {
+    const sector = this.sectors.find((item) => {
+      return item.id === sectorId
+    })
     return new SwapInfo()
       .setUniverse(this.universe.getSwapInfo())
-      .setSector(this.helperSector.getSwapInfoById(this.sectors, sectorId))
+      .setSector(sector || null)
   }
 
   /**

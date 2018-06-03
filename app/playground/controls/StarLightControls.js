@@ -1,5 +1,5 @@
 import { AdditiveBlending, Group, Object3D, Scene, Sprite, SpriteMaterial } from 'three'
-import StarLight from '@entity/sector/StarLight'
+import StarLight from '@entity/particles-sector/StarLight'
 
 class StarLightControls {
   /**
@@ -42,12 +42,11 @@ class StarLightControls {
 
   /**
    *
-   * @param {Array} data
+   * @param {Array.<StarLight>} data
    * @returns {void}
    */
   copy(data) {
-    for (const starLightData of data) {
-      const light = new StarLight().copy(starLightData)
+    for (const light of data) {
       this.lights.push(light)
     }
   }

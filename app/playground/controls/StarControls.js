@@ -43,11 +43,11 @@ class StarControls {
 
   /**
    *
-   * @param data
+   * @param {Array.<Star>} data
    */
   copy(data) {
     for (const item of data) {
-      this.geometry.vertices.push(item['position'])
+      this.geometry.vertices.push(item.position)
     }
   }
 

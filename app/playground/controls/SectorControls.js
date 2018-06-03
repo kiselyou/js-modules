@@ -1,19 +1,19 @@
 import PlanetControls from './PlanetControls'
 import StationControls from './StationControls'
 import AsteroidControls from './AsteroidControls'
-import Sector from '@entity/sector/Sector'
+import Sector from '@entity/particles-sector/Sector'
 import SkyBoxControls from './SkyBoxControls'
 import StarLightControls from './StarLightControls'
 import { Vector3 } from 'three'
+import ParticlePlayGround from "@entity/ParticlePlayGround";
 
-class SectorControls extends Sector {
+class SectorControls {
   /**
    *
    * @param {Scene} scene
    * @param {Loader} loader
    */
   constructor(scene, loader) {
-    super()
 
     /**
      * @type {Scene}
@@ -24,6 +24,12 @@ class SectorControls extends Sector {
      * @type {Loader}
      */
     this.loader = loader
+
+    /**
+     *
+     * @type {Sector}
+     */
+    this.sector = new Sector()
 
     /**
      *
@@ -69,16 +75,16 @@ class SectorControls extends Sector {
 
   /**
    *
-   * @param {object} data
+   * @param {ParticlePlayGround} data
    * @returns {SectorControls}
    */
   copy(data) {
-    super.copy(data['sector'])
-    this.planetsControls.copy(data.planet)
-    this.stationControls.copy(data.station)
-    this.asteroidControls.copy(data.asteroid)
     this.skyBoxControls.copy(data)
-    this.starLightControls.copy(data['starLight'])
+    this.sector.copy(data.getCurrentSector())
+    this.planetsControls.copy(data.getPlanets())
+    this.stationControls.copy(data.getStations())
+    this.asteroidControls.copy(data.getAsteroids())
+    this.starLightControls.copy(data.getStarLights())
     return this
   }
 

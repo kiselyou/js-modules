@@ -1,4 +1,5 @@
 import { ShaderMaterial, Color, Face4, Face3, Object3D, Mesh, BackSide } from 'three'
+import PlanetGlow from "@entity/PlanetGlow";
 
 export function glowShaderMaterial() {
   const vertexShader	= [
@@ -88,7 +89,7 @@ export function dilateGeometry(geometry, length) {
 /**
  *
  * @param {Mesh} mesh
- * @param {{color: number, coefficient: number, power: number, length: number}} options
+ * @param {PlanetGlow} options
  * @returns {Mesh}
  * @constructor
  */
@@ -107,7 +108,7 @@ export function getGlowInsideMesh(mesh, options) {
 /**
  *
  * @param {Mesh} mesh
- * @param {{color: number, coefficient: number, power: number, length: number}} options
+ * @param {PlanetGlow} options
  * @returns {Mesh}
  * @constructor
  */

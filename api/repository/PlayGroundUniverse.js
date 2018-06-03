@@ -13,7 +13,7 @@ class PlayGroundUniverse {
      *
      * @type {Universe}
      */
-    this.universe = new Universe(this.id)
+    this.universe = new Universe()
   }
 
   /**
