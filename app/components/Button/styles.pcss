@@ -1,9 +1,25 @@
 @import '../../web/variables.css';
 
-.content {
+.btn {
+  height: 16px;
+  margin: 2px 4px;
   display: inline-flex;
+  cursor: pointer;
+  border: solid 1px rgba(10, 155, 155, 0.5);
+  background: rgba(10, 155, 155, 0.1);
+  outline: none;
 
-  & .text {
-    color: var(--myColor);
+  &:hover {
+    background: rgba(10, 155, 155, 0.1);
+    border: solid 1px rgba(10,255,255,0.6)
+  }
+
+  &.default {
+    height: 40px;
+  }
+
+  &.round {
+    width: 16px;
+    border-radius: 50%;
   }
 }

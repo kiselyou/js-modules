@@ -39,6 +39,26 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.less$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            },
+            {
+              loader: 'less-loader',
+              options: {
+                sourceMap: true
+              }
+            }
+          ]
+        })
+      },
+      {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
@@ -81,7 +101,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json', '.pcss', '.css'],
+    extensions: ['.js', '.jsx', '.json', '.pcss', '.css', '.less'],
     alias: {
       '@app': path.resolve(__dirname, './app'),
       '@app-debug': path.resolve(__dirname, './app-debug'),
@@ -93,7 +113,7 @@ module.exports = {
     HtmlWebpackPluginConfig,
     ExtractTextPluginConfig,
     UglifyJsPluginConfig,
-    CopyWebpackPluginConfig
+    CopyWebpackPluginConfig,
   ],
   performance: { hints: false }
 };

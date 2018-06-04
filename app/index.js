@@ -1,4 +1,4 @@
-import './style.css'
+import './less/index.less'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App.jsx'
@@ -11,9 +11,11 @@ import Loader from '@app/playground/Loader'
 import SwapInfo from '@helper/SwapInfo'
 import io from 'socket.io-client'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));
 
 (async () => {
+
+  return
 
   const appConfigJson = await Ajax.post('/app/config')
   const appConfig = JSON.parse(appConfigJson)
