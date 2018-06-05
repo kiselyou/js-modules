@@ -7,22 +7,34 @@ class Button extends React.Component {
 
   static get defaultProps() {
     return {
-      type: Button.TYPE_DEFAULT
+      type: Button.TYPE_DEFAULT,
+      onclick: null,
+      height: null,
+      width: null
     }
   }
 
   static get propTypes() {
     return {
-      type: PropTypes.number
+      type: PropTypes.number,
+      onclick: PropTypes.func,
+      height: PropTypes.string,
+      width: PropTypes.string,
     }
   }
 
   render() {
     return (
-      <button className={cx(styles.btn, {
-        [styles.default]: this.props.type === Button.TYPE_DEFAULT,
-        [styles.round]: this.props.type === Button.TYPE_ROUND
-      })}>
+      <button
+        className={cx(styles.btn, {
+          [styles.default]: this.props.type === Button.TYPE_DEFAULT,
+          [styles.square]: this.props.type === Button.TYPE_SQUARE,
+          [styles.round]: this.props.type === Button.TYPE_ROUND,
+        })}
+        onClick={this.props.onclick}
+        style={{width: this.props.width, height: this.props.height}}
+      >
+        { this.props.children }
       </button>
     );
   }
@@ -33,6 +45,10 @@ class Button extends React.Component {
 
   static get TYPE_ROUND() {
     return 1
+  }
+
+  static get TYPE_SQUARE() {
+    return 2
   }
 }
 

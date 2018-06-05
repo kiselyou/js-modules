@@ -1,4 +1,7 @@
 import './less/index.less'
+import './../vendor/components-font-awesome/less/fa-solid.less'
+import './../vendor/components-font-awesome/less/fontawesome.less'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App.jsx'

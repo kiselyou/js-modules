@@ -1,5 +1,6 @@
 import React from 'react'
 import cx from 'classnames'
+import FontAwesome from 'react-fontawesome'
 import styles from './styles.pcss'
 import PropTypes from 'prop-types'
 import Button from './../Button'
@@ -14,44 +15,64 @@ class Modal extends React.Component {
     }
   }
 
+  static get defaultProps() {
+    return {
+      title: null,
+      foot: null,
+      onClose: null
+    }
+  }
+
   static get propTypes() {
     return {
-      title: PropTypes.string
+      /*title: PropTypes.string || PropTypes.object,
+      foot: PropTypes.string || PropTypes.object,*/
+      onClose: PropTypes.func,
     }
   }
 
   componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 3000)
+    // this.timerID = setInterval(() => this.tick(), 3000)
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerID);
+    // clearInterval(this.timerID)
   }
 
-  tick() {
-    // this.setState({
-    //   show: ! this.state.show
-    // });
+  close() {
+    this.setState({
+      show: false
+    })
+    if (this.props.onClose) {
+      this.props.onClose()
+    }
   }
 
   render() {
     return (
-      <div className={cx(styles.modal, {[styles.hide]: ! this.state.show})}>
+      <div className={cx(styles.modal, { [styles.hidden]: ! this.state.show })}>
         <div className={cx(styles.content, {
           [styles.animation]: this.state.show
         })}>
           <div className={styles.head}>
-            <div>{this.props.title} asdasdasd</div>
+            <div>{ this.props.title }</div>
             <div>
-              <Button type={Button.TYPE_ROUND}/>
-              <Button type={Button.TYPE_ROUND}/>
-              <Button type={Button.TYPE_ROUND}/>
+              <Button
+                type={Button.TYPE_SQUARE}
+                onclick={() => this.close()}
+              >
+                <FontAwesome name='times'/>
+              </Button>
             </div>
           </div>
+
           <div className={styles.body}>
             { this.props.children }
-            </div>
-          <div className={styles.foot}>asdasd</div>
+          </div>
+
+          { this.props.foot &&
+            <div className={styles.foot}>{ this.props.foot }</div>
+          }
         </div>
       </div>
     );

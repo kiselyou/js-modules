@@ -1,25 +1,40 @@
 @import '../../web/variables.css';
 
 .btn {
-  height: 16px;
   margin: 2px 4px;
-  display: inline-flex;
+  //display: inline-flex;
   cursor: pointer;
-  border: solid 1px rgba(10, 155, 155, 0.5);
-  background: rgba(10, 155, 155, 0.1);
+  border: solid 1px var(--c-green-bright);
+  background: var(--c-green-dark);
   outline: none;
+  color: var(--c-green-bright);
+  border-radius: var(--border-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
-    background: rgba(10, 155, 155, 0.1);
-    border: solid 1px rgba(10,255,255,0.6)
+    background: var(--c-green-middle);
+    border: solid 1px var(--c-green-light);
+  }
+
+  &:active {
+    border: solid 1px var(--c-green-bright);
   }
 
   &.default {
-    height: 40px;
+    height: 32px;
+    padding: 4px 12px;
+  }
+
+  &.square {
+    height: 22px;
+    width: 22px;
   }
 
   &.round {
-    width: 16px;
+    height: 22px;
+    width: 22px;
     border-radius: 50%;
   }
 }

@@ -1,3 +1,9 @@
+#DEPENDS
+```
+sudo npm install -g bower
+bower install
+```
+
 # PROD SERVER FIRST START
     
 ```

@@ -1,3 +1,14 @@
 :root {
-  --bg-transparent: rgba(10, 10, 10, 0.2);
+  --c-gray: rgb(225, 225, 225);
+
+  --c-green-bright: rgb(2, 145, 145);
+  --c-green-light: rgb(1, 82, 83);
+  --c-green-middle: rgb(1, 36, 40);
+  --c-green-dark: rgb(4, 27, 31);
+
+  --c-black-dark: rgb(2, 10, 14);
+
+  --border-xs: 2px;
+  --border-sm: 4px;
+  --border-md: 6px;
 }

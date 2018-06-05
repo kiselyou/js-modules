@@ -1,0 +1,21 @@
+{
+  "name": "modules",
+  "description": "modules",
+  "main": "app/index.js",
+  "authors": [
+    "Valery Kiseliou <v.a.kiselyov@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/kiselyou/modules",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/bower-asset",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "components-font-awesome": "5.0.6"
+  }
+}

@@ -26,7 +26,8 @@ const UglifyJsPluginConfig =  new UglifyJsPlugin({
 const CopyWebpackPluginConfig = new CopyWebpackPlugin([
   { from: `${dir}/web/images`, to: version +'/images' },
   { from: `${dir}/web/models`, to: version +'/models' },
-  // { from: `${dir}/web/models/**/*.3ds`, to: version +'/models' },
+  { from: `${dir}/less/Audiowide`, to: version +'/assets/fonts' },
+  { from: `vendor/components-font-awesome/webfonts`, to: version +'/assets/fonts' },
   `${dir}/icon.ico`
 ])
 
@@ -38,6 +39,16 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            name: "[name].[ext]",
+            outputPath: "/assets/fonts/"
+          }
+        }
+      },
       {
         test: /\.less$/,
         use: ExtractTextPlugin.extract({
