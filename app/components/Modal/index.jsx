@@ -19,15 +19,17 @@ class Modal extends React.Component {
     return {
       title: null,
       foot: null,
-      onClose: null
+      onClose: null,
+      useAnimation: true
     }
   }
 
   static get propTypes() {
     return {
-      /*title: PropTypes.string || PropTypes.object,
-      foot: PropTypes.string || PropTypes.object,*/
+      title: PropTypes.string,
+      foot: PropTypes.element,
       onClose: PropTypes.func,
+      useAnimation: PropTypes.bool
     }
   }
 
@@ -52,13 +54,13 @@ class Modal extends React.Component {
     return (
       <div className={cx(styles.modal, { [styles.hidden]: ! this.state.show })}>
         <div className={cx(styles.content, {
-          [styles.animation]: this.state.show
+          [styles.animation]: this.state.useAnimation
         })}>
           <div className={styles.head}>
             <div>{ this.props.title }</div>
             <div>
               <Button
-                type={Button.TYPE_SQUARE}
+                type={Button.TYPE_LINK}
                 onclick={() => this.close()}
               >
                 <FontAwesome name='times'/>

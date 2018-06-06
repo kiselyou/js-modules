@@ -30,6 +30,7 @@ class Button extends React.Component {
           [styles.default]: this.props.type === Button.TYPE_DEFAULT,
           [styles.square]: this.props.type === Button.TYPE_SQUARE,
           [styles.round]: this.props.type === Button.TYPE_ROUND,
+          [styles.link]: this.props.type === Button.TYPE_LINK,
         })}
         onClick={this.props.onclick}
         style={{width: this.props.width, height: this.props.height}}
@@ -49,6 +50,10 @@ class Button extends React.Component {
 
   static get TYPE_SQUARE() {
     return 2
+  }
+
+  static get TYPE_LINK() {
+    return 3
   }
 }
 

@@ -1,0 +1,27 @@
+@import '../../web/variables.css';
+
+.field-controls {
+
+  & .label {
+    padding: 4px 0;
+    display: flex;
+  }
+
+  & .input {
+    padding: 0 8px;
+    height: 30px;
+    outline: none;
+    border: solid 1px var(--c-green-bright);
+    background: var(--c-green-dark);
+    color: var(--c-green-bright);
+    border-radius: var(--border-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 18px);
+
+    &:hover {
+      background: var(--c-green-middle);
+    }
+  }
+}

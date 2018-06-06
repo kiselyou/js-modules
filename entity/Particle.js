@@ -72,9 +72,14 @@ class Particle {
    */
   copy(data, except = []) {
     for (const property in data) {
+      if ( ! this.hasOwnProperty(property)) {
+        continue
+      }
+
       if (except.includes(property)) {
         continue
       }
+
       if (data.hasOwnProperty(property)) {
         switch (property) {
           case 'entity':

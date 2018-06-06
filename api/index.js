@@ -1,6 +1,9 @@
 import path from 'path'
-import multer from 'multer';
+import multer from 'multer'
 import express from 'express'
+import expressSession from 'express-session'
+import redisStore from 'connect-redis'
+
 import bodyParser from 'body-parser'
 import routes from './routes'
 import * as core from './core'
@@ -11,6 +14,16 @@ appConfig['apiBaseUrl'] = `http://${apiConfig.server.host}:${apiConfig.server.po
 appConfig['socketPlayProcess'] = `http://${apiConfig.socket.host}:${apiConfig.socket.port}/play-process`
 
 const app = express()
+
+let RedisStore = redisStore(expressSession);
+let session = expressSession({
+  // store: new RedisStore({}),
+  secret: '8ae49100-ec0c-4a2f-9e4c-e7b39dae61c5',
+  resave: true,
+  saveUninitialized: true
+});
+
+app.use(session);
 
 // Add headers
 app.use((req, res, next) => {
