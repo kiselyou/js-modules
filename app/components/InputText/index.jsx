@@ -34,6 +34,7 @@ class InputText extends React.Component {
           type={this.props.type}
           name={this.props.name}
         />
+        { this.props.error && <div className={styles.error}>{ this.props.error }</div> }
       </div>
     );
   }

@@ -1,4 +1,5 @@
 :root {
+  --c-error: rgb(225, 186, 0);
   --c-gray: rgb(225, 225, 225);
 
   --c-green-bright: rgb(2, 145, 145);

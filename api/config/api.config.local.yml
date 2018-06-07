@@ -12,3 +12,12 @@ accessControl:
 socket:
   host: 127.0.0.1
   port: 3333
+mail:
+  sender: Game Iron War Online
+  transporter:
+    host: smtp.gmail.com
+    port: 465
+    secure: false # true for 465, false for other ports
+    auth:
+      user: game.iron.war@gmail.com  # generated ethereal user
+      pass: account.pass  # generated ethereal password

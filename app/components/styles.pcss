@@ -23,14 +23,22 @@
   }
 }
 
-.inline {
-  width: 100%;
+.error {
+  padding-top: 8px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  font-size: 9px;
+  color: var(--c-error);
 }
 
 .inline {
+  width: 100%;
   display: inline-flex;
   align-items: center;
+
+  &.left {
+    justify-content: flex-start;
+  }
+  &.right {
+    justify-content: flex-end;
+  }
 }

@@ -1,8 +1,7 @@
 import * as core from './../core'
 import User from './../../entity/User'
-import passwordHash from 'password-hash'
-import objectPath from 'object-path'
-import generator from 'generate-password'
+
+const errorMsg = `Something went wrong. Try again some late.`
 
 /**
  *
@@ -12,7 +11,12 @@ import generator from 'generate-password'
 export async function userAuthorization(req, res) {
   const user = new User()
     .setEmail(req.body.email)
-    .setPassword(hashPassword(req.body.password))
+    .setPassword(req.body.password)
+
+  if (core.getUserSession(req)) {
+    core.responseJSON(res, { status: 0, msg: 'User is already logged on.' })
+    return
+  }
 
   const validator = core.validate('user-authorization', user)
   if (validator.length > 0) {
@@ -20,31 +24,22 @@ export async function userAuthorization(req, res) {
     return
   }
 
-  if (getUserSession(req) === user.email) {
-    core.responseJSON(res, { status: 0, msg: 'User is already logged on.' })
-    return
-  }
-
   const db = await core.mgDBAsync()
   const collection = db.collection('User')
-  const userId = await collection.findOne({ email: user.email, password: user.password })
+  const userData = await collection.findOne({ email: user.email })
 
-
-  if ( ! userId) {
+  if ( ! userData) {
     core.responseJSON(res, { status: 0, msg: 'User not found.' })
     return
   }
 
-  // setUserSession(req, )
-  // console.log(isUser)
+  if ( ! core.comparePassword(user.password, userData.password)) {
+    core.responseJSON(res, { status: 0, msg: 'Login or password is not correct.' })
+    return
+  }
 
-  console.log(req.session)
-  // if (!req.session) {
-  //   req.session = {a: 1}
-  // }
-
-
-  core.responseJSON(res, {user: 1})
+  core.setUserSession(req, userData)
+  core.responseJSON(res, { status: 1, msg: 'Login successful.' })
 }
 
 /**
@@ -53,7 +48,15 @@ export async function userAuthorization(req, res) {
  * @param {object} res
  */
 export async function userRegistration(req, res) {
-  const user = new User().setEmail(req.body.email)
+  const originPassword = core.generatePassword()
+  const user = new User()
+    .setEmail(req.body.email)
+    .setPassword(core.hashPassword(originPassword))
+
+  if (core.getUserSession(req)) {
+    core.responseJSON(res, { status: 0, msg: 'User is already logged on.' })
+    return
+  }
 
   const validator = core.validate('user-registration', user)
   if (validator.length > 0) {
@@ -70,7 +73,22 @@ export async function userRegistration(req, res) {
     return
   }
 
-  core.responseJSON(res, {user: 2})
+  const subject = `Registration in Iron War Online Game.`
+
+  const html = `
+    <h4>Access to Iron War</h4><hr/>
+    <b>Login:</b> ${user.email} <br/>
+    <b>Password:</b> ${originPassword} <br/>
+    <a href="http://${core.apiConfig.server.host}">Open Iron War</a>
+  `
+
+  core.sendMailHtml(user.email, subject, html)
+    .then(() => {
+      collection.insertOne(user)
+        .then(() => core.responseJSON(res, { status: 1, msg: 'Check your email to get access to Iron War.' }))
+        .catch(() => core.responseJSON(res, { status: 0, msg: errorMsg }))
+    })
+    .catch(() => core.responseJSON(res, { status: 0, msg: errorMsg }))
 }
 
 /**
@@ -79,7 +97,14 @@ export async function userRegistration(req, res) {
  * @param {object} res
  */
 export async function userRestore(req, res) {
-  const user = new User().setEmail(req.body.email)
+  const originPassword = core.generatePassword()
+  const user = new User()
+    .setEmail(req.body.email)
+
+  if (core.getUserSession(req)) {
+    core.responseJSON(res, { status: 0, msg: 'User is already logged on.' })
+    return
+  }
 
   const validator = core.validate('user-restore', user)
   if (validator.length > 0) {
@@ -87,54 +112,33 @@ export async function userRestore(req, res) {
     return
   }
 
-  core.responseJSON(res, {user: 2})
-}
+  const db = await core.mgDBAsync()
+  const collection = db.collection('User')
+  const userData = await collection.findOne({ email: user.email })
 
-function sendPassword() {
-  
-}
+  if ( ! userData) {
+    core.responseJSON(res, { status: 0, msg: `User with email "${user.email}" does not exists.` })
+    return
+  }
 
-/**
- * @return {string}
- */
-function generatePassword() {
-  return generator.generate({ length: 10, numbers: true })
-}
+  const subject = `Restore password for Iron War Online Game.`
 
+  const html = `
+    <h4>Access to Iron War</h4><hr/>
+    <b>Login:</b> ${user.email} <br/>
+    <b>New password:</b> ${originPassword} <br/>
+    <a href="http://${core.apiConfig.server.host}">Open Iron War</a>
+  `
 
-/**
- *
- * @param {Object} req
- * @param {string} email
- */
-function setUserSession(req, email) {
-  req.session.userEmail = email
-}
-
-/**
- *
- * @param {Object} req
- * @returns {string|null}
- */
-function getUserSession(req) {
-  return objectPath.get(req, ['session', 'user'], null)
-}
-
-/**
- *
- * @param {string} password
- * @returns {string}
- */
-function hashPassword(password) {
-  return passwordHash.generate(password);
-}
-
-/**
- *
- * @param {string} password
- * @param {string} hashedPassword
- * @returns {boolean}
- */
-function comparePassword(password, hashedPassword) {
-  return passwordHash.verify(password, hashedPassword);
+  core.sendMailHtml(user.email, subject, html)
+    .then(() => {
+      collection.updateOne(
+          { id: userData.id },
+          { $set: { password: core.hashPassword(originPassword) } },
+          { upsert: true }
+        )
+        .then(() => core.responseJSON(res, { status: 1, msg: 'Check your email to get access to Iron War.' }))
+        .catch(() => core.responseJSON(res, { status: 0, msg: errorMsg }))
+    })
+    .catch(() => core.responseJSON(res, { status: 0, msg: errorMsg }))
 }

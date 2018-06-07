@@ -1,5 +1,5 @@
 import { playGroundData } from './actions/playground'
-import { userAuthorization, userRegistration } from './actions/auth'
+import { userAuthorization, userRegistration, userRestore } from './actions/auth'
 
 const routes = [
   {
@@ -16,6 +16,11 @@ const routes = [
     method: 'post',
     path: '/user/registration',
     action: userRegistration
+  },
+  {
+    method: 'post',
+    path: '/user/restore',
+    action: userRestore
   }
 ]
 
