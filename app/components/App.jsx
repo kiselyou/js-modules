@@ -21,7 +21,19 @@ class App extends React.Component {
       showModalRestore: false,
       errorAuth: null,
       errorReg: null,
-      errorRestore: null
+      errorRestore: null,
+    }
+  }
+
+  static get defaultProps() {
+    return {
+      appConfig: null,
+    }
+  }
+
+  static get propTypes() {
+    return {
+      appConfig: PropTypes.object.isRequired,
     }
   }
 

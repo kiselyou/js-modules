@@ -14,14 +14,15 @@ import Loader from '@app/playground/Loader'
 import SwapInfo from '@helper/SwapInfo'
 import io from 'socket.io-client'
 
-ReactDOM.render(<App/>, document.getElementById('root'));
-
 (async () => {
-
-  return
 
   const appConfigJson = await Ajax.post('/app/config')
   const appConfig = JSON.parse(appConfigJson)
+
+  ReactDOM.render(<App appConfig={appConfig}/>, document.getElementById('root'));
+
+  return
+
   const playGroundJson = await Ajax.post('/user/data/1', { id: '09839694-28d3-4504-9dc9-1cd3b6a539d7' })
   const particlePlayGround = new ParticlePlayGround().jsonToObject(playGroundJson)
 

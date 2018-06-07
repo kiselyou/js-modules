@@ -54,7 +54,7 @@ class Modal extends React.Component {
     return (
       <div className={cx(styles.modal, { [styles.hidden]: ! this.state.show })}>
         <div className={cx(styles.content, {
-          [styles.animation]: this.state.useAnimation
+          [styles.animation]: this.props.useAnimation
         })}>
           <div className={styles.head}>
             <div>{ this.props.title }</div>

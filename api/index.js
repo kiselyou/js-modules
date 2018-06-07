@@ -56,6 +56,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/app/config', (req, res) => {
+  appConfig['isUser'] = Boolean(core.getUserSession(req))
   res.json(appConfig)
 })
 
