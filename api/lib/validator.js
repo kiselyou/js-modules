@@ -9,8 +9,8 @@ const files = fs.readdirSync(directory)
 
 let rules = []
 for (const file of files) {
-  const rule = yaml.safeLoad(fs.readFileSync(path.join(directory, file), 'utf8'))
-  rules.push(rule)
+  const key = file.replace('.yml', '')
+  rules[key] = yaml.safeLoad(fs.readFileSync(path.join(directory, file), 'utf8'))
 }
 
 /**
@@ -20,16 +20,11 @@ for (const file of files) {
  * @returns {Array.<{message: string, path: string, keyword: string}>}
  */
 export function validate(action, value) {
-  for (const rule of rules) {
-    const ruleConfig = objectPath.get(rule, action, null)
-    if ( ! ruleConfig) {
-      continue
-    }
-
-    const validator = jsen(ruleConfig)
-    if ( ! validator(value)) {
-      return validator.errors
-    }
+  const path = action.split('-')
+  const ruleConfig = objectPath.get(rules, path, null)
+  const validator = jsen(ruleConfig)
+  if ( ! validator(value)) {
+    return validator.errors
   }
 
   return []

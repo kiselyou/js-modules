@@ -1,4 +1,4 @@
-userAuthorization:
+authorization:
   type: 'object'
   properties:
     email:
@@ -16,7 +16,7 @@ userAuthorization:
     - 'email'
     - 'password'
 
-userRegistration:
+registration:
   type: 'object'
   properties:
     email:
@@ -26,7 +26,7 @@ userRegistration:
       invalidMessage: 'Invalid email'
       requiredMessage: 'Email is required'
 
-userRestore:
+restore:
   type: 'object'
   properties:
     email:

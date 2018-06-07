@@ -14,7 +14,7 @@ export async function userAuthorization(req, res) {
     .setEmail(req.body.email)
     .setPassword(hashPassword(req.body.password))
 
-  const validator = core.validate('userAuthorization', user)
+  const validator = core.validate('user-authorization', user)
   if (validator.length > 0) {
     core.responseJSON(res, { status: 0, msg: validator[0].message })
     return
@@ -55,7 +55,7 @@ export async function userAuthorization(req, res) {
 export async function userRegistration(req, res) {
   const user = new User().setEmail(req.body.email)
 
-  const validator = core.validate('userRegistration', user)
+  const validator = core.validate('user-registration', user)
   if (validator.length > 0) {
     core.responseJSON(res, { status: 0, msg: validator[0].message })
     return
@@ -81,7 +81,7 @@ export async function userRegistration(req, res) {
 export async function userRestore(req, res) {
   const user = new User().setEmail(req.body.email)
 
-  const validator = core.validate('userRestore', user)
+  const validator = core.validate('user-restore', user)
   if (validator.length > 0) {
     core.responseJSON(res, { status: 0, msg: validator[0].message })
     return
