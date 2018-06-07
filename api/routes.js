@@ -1,5 +1,5 @@
-import { playGroundData } from './actions/playGroundData'
-import { userAuthorization, userRegistration } from './actions/userAuthorization'
+import { playGroundData } from './actions/playground'
+import { userAuthorization, userRegistration } from './actions/auth'
 
 const routes = [
   {

@@ -2,6 +2,7 @@ import * as core from './../core'
 import User from './../../entity/User'
 import passwordHash from 'password-hash'
 import objectPath from 'object-path'
+import generator from 'generate-password'
 
 /**
  *
@@ -13,8 +14,9 @@ export async function userAuthorization(req, res) {
     .setEmail(req.body.email)
     .setPassword(hashPassword(req.body.password))
 
-  if (user.email === '' || user.password === '') {
-    core.responseJSON(res, { status: 0, msg: 'Data is not valid.' })
+  const validator = core.validate('userAuthorization', user)
+  if (validator.length > 0) {
+    core.responseJSON(res, { status: 0, msg: validator[0].message })
     return
   }
 
@@ -28,7 +30,7 @@ export async function userAuthorization(req, res) {
   const userId = await collection.findOne({ email: user.email, password: user.password })
 
 
-  if ( ! isUser) {
+  if ( ! userId) {
     core.responseJSON(res, { status: 0, msg: 'User not found.' })
     return
   }
@@ -47,6 +49,61 @@ export async function userAuthorization(req, res) {
 
 /**
  *
+ * @param {object} req
+ * @param {object} res
+ */
+export async function userRegistration(req, res) {
+  const user = new User().setEmail(req.body.email)
+
+  const validator = core.validate('userRegistration', user)
+  if (validator.length > 0) {
+    core.responseJSON(res, { status: 0, msg: validator[0].message })
+    return
+  }
+
+  const db = await core.mgDBAsync()
+  const collection = db.collection('User')
+  const userData = await collection.findOne({ email: user.email })
+
+  if (userData) {
+    core.responseJSON(res, { status: 0, msg: `User "${user.email}" has already exists.` })
+    return
+  }
+
+  core.responseJSON(res, {user: 2})
+}
+
+/**
+ *
+ * @param {object} req
+ * @param {object} res
+ */
+export async function userRestore(req, res) {
+  const user = new User().setEmail(req.body.email)
+
+  const validator = core.validate('userRestore', user)
+  if (validator.length > 0) {
+    core.responseJSON(res, { status: 0, msg: validator[0].message })
+    return
+  }
+
+  core.responseJSON(res, {user: 2})
+}
+
+function sendPassword() {
+  
+}
+
+/**
+ * @return {string}
+ */
+function generatePassword() {
+  return generator.generate({ length: 10, numbers: true })
+}
+
+
+/**
+ *
  * @param {Object} req
  * @param {string} email
  */
@@ -61,18 +118,6 @@ function setUserSession(req, email) {
  */
 function getUserSession(req) {
   return objectPath.get(req, ['session', 'user'], null)
-}
-
-/**
- *
- * @param {object} req
- * @param {object} res
- */
-export async function userRegistration(req, res) {
-  const email = req.body['email']
-
-
-  core.responseJSON(res, {user: 2})
 }
 
 /**

@@ -1,0 +1,37 @@
+userAuthorization:
+  type: 'object'
+  properties:
+    email:
+      type: 'string'
+      format: 'email'
+      minLength: 5
+      invalidMessage: 'Invalid email'
+      requiredMessage: 'Email is required'
+    password:
+      type: 'string'
+      minLength: 8
+      invalidMessage: 'Invalid password'
+      requiredMessage: 'Password is required'
+  required:
+    - 'email'
+    - 'password'
+
+userRegistration:
+  type: 'object'
+  properties:
+    email:
+      type: 'string'
+      format: 'email'
+      minLength: 5
+      invalidMessage: 'Invalid email'
+      requiredMessage: 'Email is required'
+
+userRestore:
+  type: 'object'
+  properties:
+    email:
+      type: 'string'
+      format: 'email'
+      minLength: 5
+      invalidMessage: 'Invalid email'
+      requiredMessage: 'Email is required'
