@@ -259,12 +259,10 @@ class Playground {
 
   /**
    *
-   * @param {string} parentId
-   * @param {string} canvasId
+   * @param {string} rootContainerId
    * @returns {Playground}
    */
-  async init(parentId, canvasId) {
-    this.renderer.domElement.id = canvasId
+  async init(rootContainerId) {
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = PCFSoftShadowMap;
@@ -272,7 +270,8 @@ class Playground {
     this.renderer.gammaInput = true;
     this.renderer.gammaOutput = true;
 
-    document.getElementById(parentId).appendChild(this.renderer.domElement)
+    document.getElementById(rootContainerId)
+      .appendChild(this.renderer.domElement)
 
     this.copy(this.particlePlayGround)
     await this.sectorControls.beforeStart()
@@ -288,7 +287,7 @@ class Playground {
    * @return {Playground}
    */
   setAppConfig(data) {
-    this.appConfig = data
+    // this.appConfig = data
     return this
   }
 

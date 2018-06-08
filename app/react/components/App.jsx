@@ -1,11 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { setUser } from '../actions/authAction'
+
+import User from '@entity/User'
+
 import FontAwesome from 'react-fontawesome'
 import styles from './styles.pcss'
 import cx from 'classnames'
-import Modal from './Modal'
-import Button from './Button'
-import InputText from './InputText'
+import Modal from './Modal/index'
+import Button from './Button/index'
+import InputText from './InputText/index'
 import Ajax from '@helper/ajax/Ajax'
 import objectPath from 'object-path'
 
@@ -15,25 +21,23 @@ class App extends React.Component {
     super(props)
 
     this.state = {
-      isUser: false,
       showModalAuth: false,
       showModalReg: false,
       showModalRestore: false,
       errorAuth: null,
       errorReg: null,
       errorRestore: null,
-    }
-  }
-
-  static get defaultProps() {
-    return {
-      appConfig: null,
+      successAuth: null,
+      successReg: null,
+      successRestore: null,
     }
   }
 
   static get propTypes() {
     return {
-      appConfig: PropTypes.object.isRequired,
+      user: PropTypes.instanceOf(User),
+      setUser: PropTypes.func,
+      onPlay: PropTypes.func.isRequired,
     }
   }
 
@@ -47,42 +51,6 @@ class App extends React.Component {
 
   /**
    *
-   * @param {string} value
-   * @returns {App}
-   */
-  errorAuth(value) {
-    this.setState({
-      errorAuth: value,
-    })
-    return this
-  }
-
-  /**
-   *
-   * @param {string} value
-   * @returns {App}
-   */
-  errorReg(value) {
-    this.setState({
-      errorReg: value,
-    })
-    return this
-  }
-
-  /**
-   *
-   * @param {string} value
-   * @returns {App}
-   */
-  errorRestore(value) {
-    this.setState({
-      errorRestore: value,
-    })
-    return this
-  }
-
-  /**
-   *
    * @returns {App}
    */
   clearError() {
@@ -90,6 +58,9 @@ class App extends React.Component {
       errorAuth: null,
       errorReg: null,
       errorRestore: null,
+      successAuth: null,
+      successReg: null,
+      successRestore: null,
     })
     return this
   }
@@ -175,11 +146,13 @@ class App extends React.Component {
         const status = objectPath.get(data, 'status', null)
         if (status === 0) {
           this.setState({ errorAuth: msg })
+          return
         }
-        console.log(res, 'authorization')
-      })
-      .catch((error) => {
-        console.log(error, 'authorization')
+        if (status === 1) {
+          const userData = objectPath.get(data, 'user', null)
+          this.props.setUser(userData)
+          this.setState({ successAuth: msg, showModalAuth: false })
+        }
       })
   }
 
@@ -198,11 +171,11 @@ class App extends React.Component {
         const status = objectPath.get(data, 'status', null)
         if (status === 0) {
           this.setState({ errorReg: msg })
+          return
         }
-        console.log(res, 'registration')
-      })
-      .catch((error) => {
-        console.log(error, 'registration')
+        if (status === 1) {
+          this.setState({ successReg: msg })
+        }
       })
   }
 
@@ -221,10 +194,12 @@ class App extends React.Component {
         const status = objectPath.get(data, 'status', null)
         if (status === 0) {
           this.setState({ errorRestore: msg })
+          return
         }
-      })
-      .catch((error) => {
-        console.log(error, 'restore')
+
+        if (status === 1) {
+          this.setState({ successRestore: msg })
+        }
       })
   }
 
@@ -232,11 +207,23 @@ class App extends React.Component {
     return (
       <div>
 
-        { ! this.state.isUser && !this.state.showModalAuth &&
+        { ! this.props.user.isAuthorized &&
           <div className={styles.app}>
             <div className={styles.start}>
               <Button onclick={() => this.openAuth()} height={'40px'} width={'220px'}>
                 Sign in to Iron-War
+              </Button>
+            </div>
+          </div>
+        }
+
+        { this.props.user.isAuthorized &&
+          <div className={styles.app}>
+            <div className={styles.start}>
+              <Button onclick={(e) => {
+                this.props.onPlay(this.props.user)
+              }} height={'40px'} width={'220px'}>
+                Play
               </Button>
             </div>
           </div>
@@ -269,6 +256,7 @@ class App extends React.Component {
             </form>
 
             { this.state.errorAuth && <div className={styles.error}>{ this.state.errorAuth }</div> }
+            { this.state.successAuth && <div className={styles.success}>{ this.state.successAuth }</div> }
 
           </Modal>
         }
@@ -298,6 +286,7 @@ class App extends React.Component {
             </form>
 
             { this.state.errorReg && <div className={styles.error}>{ this.state.errorReg }</div> }
+            { this.state.successReg && <div className={styles.success}>{ this.state.successReg }</div> }
 
           </Modal>
         }
@@ -327,12 +316,9 @@ class App extends React.Component {
             </form>
 
             { this.state.errorRestore && <div className={styles.error}>{ this.state.errorRestore }</div> }
+            { this.state.successRestore && <div className={styles.success}>{ this.state.successRestore }</div> }
 
           </Modal>
-        }
-
-        { this.state.isUser &&
-          <Button>Play</Button>
         }
 
       </div>
@@ -340,4 +326,16 @@ class App extends React.Component {
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setUser: bindActionCreators(setUser, dispatch),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -4,14 +4,12 @@ import express from 'express'
 import expressSession from 'express-session'
 import redisStore from 'connect-redis'
 
+import { defaultHeaders } from './middleware/headers'
+
 import bodyParser from 'body-parser'
 import routes from './routes'
 import * as core from './core'
 import PlayGroundProcess from './socket/PlayGroundProcess'
-import { apiConfig, appConfig } from './config/config'
-
-appConfig['apiBaseUrl'] = `http://${apiConfig.server.host}:${apiConfig.server.port}`
-appConfig['socketPlayProcess'] = `http://${apiConfig.socket.host}:${apiConfig.socket.port}/play-process`
 
 const app = express()
 
@@ -26,38 +24,26 @@ let session = expressSession({
 app.use(session);
 
 // Add headers
-app.use((req, res, next) => {
-
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', apiConfig['accessControl'])
-
-  // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
-
-  // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type')
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true)
-
-  // Pass to next layer of middleware
-  next()
-})
+app.use(defaultHeaders)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(express.static('public'))
-app.use('/app/web', express.static('public/' + appConfig['version']))
+app.use('/app/web', express.static('public/' + core.appConfig['version']))
 
 app.get('/', (req, res) => {
   res.sendFile('/../../public/index.html')
 })
 
 app.post('/app/config', (req, res) => {
-  appConfig['isUser'] = Boolean(core.getUserSession(req))
-  res.json(appConfig)
+
+  core.appConfig
+    .setApiBaseUrl(`http://${core.apiConfig.server.host}:${core.apiConfig.server.port}`)
+    .setSocketPlayProcessUrl(`http://${core.apiConfig.socket.host}:${core.apiConfig.socket.port}/play-process`)
+    .setUser(core.getUserSession(req))
+
+  res.json(core.appConfig)
 })
 
 for (const route of routes) {
@@ -73,8 +59,8 @@ for (const route of routes) {
   }
 }
 
-app.listen(apiConfig.server.port, apiConfig.server.host, () => {
-  console.log(`Started host: ${apiConfig.server.host}, port: ${apiConfig.server.port}`)
+app.listen(core.apiConfig.server.port, core.apiConfig.server.host, () => {
+  console.log(`Started host: ${core.apiConfig.server.host}, port: ${core.apiConfig.server.port}`)
 })
 
 const playProcess = new PlayGroundProcess(app)

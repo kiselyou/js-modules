@@ -3,7 +3,7 @@ import cx from 'classnames'
 import FontAwesome from 'react-fontawesome'
 import styles from './styles.pcss'
 import PropTypes from 'prop-types'
-import Button from './../Button'
+import Button from '../Button/index'
 
 class Modal extends React.Component {
 

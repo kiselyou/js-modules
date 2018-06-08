@@ -3,6 +3,7 @@ import Particle from './Particle'
 class User extends Particle {
   constructor() {
     super()
+
     /**
      *
      * @type {string|?}
@@ -14,6 +15,14 @@ class User extends Particle {
      * @type {string|?}
      */
     this.password = null
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  get isAuthorized() {
+    return Boolean(this.email)
   }
 
   /**

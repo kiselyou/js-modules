@@ -1,8 +1,2 @@
-# before start project please create file "app.config.yml" and paste this configuration
-# Dynamic properties
-apiBaseUrl: null
-socketPlayProcess: null
-isUser: null
-
 # Static properties
 version: 0.0.0

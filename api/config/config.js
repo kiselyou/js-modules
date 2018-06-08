@@ -1,6 +1,10 @@
 import fs from 'fs'
 import path from 'path'
-import yaml from 'js-yaml'
+import yml from 'js-yaml'
+import AppConfig from './../../entity/AppConfig'
 
-export const apiConfig = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './api.config.yml'), 'utf8'));
-export const appConfig = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './app.config.yml'), 'utf8'));
+const api = yml.safeLoad(fs.readFileSync(path.join(__dirname, './api.config.yml'), 'utf8'))
+const app = yml.safeLoad(fs.readFileSync(path.join(__dirname, './app.config.yml'), 'utf8'))
+
+export const appConfig = new AppConfig().copy(app);
+export const apiConfig = api;

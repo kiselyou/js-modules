@@ -38,8 +38,11 @@ export async function userAuthorization(req, res) {
     return
   }
 
+  delete userData['_id']
+  delete userData['password']
+
   core.setUserSession(req, userData)
-  core.responseJSON(res, { status: 1, msg: 'Login successful.' })
+  core.responseJSON(res, { status: 1, msg: 'Login successful.', user: userData })
 }
 
 /**
