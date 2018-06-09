@@ -1,57 +1,31 @@
 @import '../../../web/variables.css';
 
-.btn {
-  cursor: pointer;
-  border: solid 1px var(--c-green-bright);
-  background: var(--c-green-dark);
-  outline: none;
-  color: var(--c-green-bright);
-  border-radius: var(--border-sm);
+.wrap {
   display: flex;
   align-items: center;
   justify-content: center;
 
-  &:hover {
-    background: var(--c-green-middle);
-    border: solid 1px var(--c-green-light);
-  }
-
-  &:active {
+  & .btn {
+    cursor: pointer;
     border: solid 1px var(--c-green-bright);
-  }
-
-  &.default {
-    height: 30px;
-    padding: 4px 12px;
-  }
-
-  &.square {
-    height: 22px;
-    width: 22px;
-  }
-
-  &.round {
-    height: 22px;
-    width: 22px;
-    border-radius: 50%;
-  }
-
-  &.link {
-    background: transparent;
-    border-color: transparent;
+    background: var(--c-green-dark);
+    outline: none;
+    color: var(--c-green-bright);
+    border-radius: var(--border-xs);
+    padding: 8px;
 
     &:hover {
-      background: transparent;
-      border-color: transparent;
-      color: var(--c-green-light);
+      background: var(--c-green-middle);
+      border: solid 1px var(--c-green-light);
     }
 
-    &.xxs {
-      font-size: 6px;
+    &:active {
+      border: solid 1px var(--c-green-bright);
     }
 
+    /* size of button */
     &.xs {
-      font-size: 8px;
+      font-size: 6px;
     }
 
     &.sm {
@@ -59,15 +33,39 @@
     }
 
     &.md {
-      font-size: 12px;
-    }
-
-    &.lg {
       font-size: 14px;
     }
 
-    &.xlg {
+    &.lg {
       font-size: 16px;
+    }
+
+    /* skin of button */
+    &.gray {
+      color: var(--c-gray) !important;
+    }
+
+    /* type of button */
+    &.square {
+      //height: 22px;
+      //width: 22px;
+    }
+
+    &.round {
+      //height: 22px;
+      //width: 22px;
+      border-radius: 50%;
+    }
+
+    &.link {
+      background: transparent;
+      border-color: transparent;
+
+      &:hover {
+        background: transparent;
+        border-color: transparent;
+        color: var(--c-green-light);
+      }
     }
   }
 }

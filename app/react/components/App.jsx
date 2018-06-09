@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -9,9 +9,12 @@ import User from '@entity/User'
 import FontAwesome from 'react-fontawesome'
 import styles from './styles.pcss'
 import cx from 'classnames'
-import Modal from './Modal/index'
-import Button from './Button/index'
-import InputText from './InputText/index'
+import Modal from './Modal'
+import Button from './Button'
+import Inline from './Inline'
+import BodyWrapper from './BodyWrapper'
+import Informer from './Informer'
+import InputText from './InputText'
 import Ajax from '@helper/ajax/Ajax'
 import objectPath from 'object-path'
 
@@ -32,14 +35,22 @@ class App extends React.Component {
       successAuth: null,
       successReg: null,
       successRestore: null,
+      process: false
+    }
+  }
+
+  static get defaultProps() {
+    return {
+      timeout: 500,
     }
   }
 
   static get propTypes() {
     return {
-      user: PropTypes.instanceOf(User),
-      setUser: PropTypes.func,
+      user: PropTypes.instanceOf(User).isRequired,
       onPlay: PropTypes.func.isRequired,
+      setUser: PropTypes.func.isRequired,
+      timeout: PropTypes.number
     }
   }
 
@@ -138,10 +149,30 @@ class App extends React.Component {
 
   /**
    *
+   * @returns {App}
+   */
+  startProcess() {
+    this.setState({ process: true })
+    return this
+  }
+
+  /**
+   *
+   * @returns {App}
+   */
+  stopProcess() {
+    setTimeout(() => this.setState({ process: false }), this.props.timeout)
+    return this
+  }
+
+  /**
+   *
    * @returns {void}
    */
   authorization() {
-    this.clearError()
+    this
+      .startProcess()
+      .clearError()
     const form = document.getElementById('form-authorization')
     const formData = new FormData(form)
     Ajax.post('/user/authorization', formData)
@@ -156,9 +187,13 @@ class App extends React.Component {
         if (status === 1) {
           const userData = objectPath.get(data, 'user', null)
           this.props.setUser(userData)
-          this.setState({ successAuth: msg, showModalAuth: false })
+          setTimeout(
+            () => this.setState({ successAuth: msg, showModalAuth: false }),
+            this.props.timeout
+          )
         }
       })
+      .finally(() => this.stopProcess())
   }
 
   /**
@@ -166,7 +201,10 @@ class App extends React.Component {
    * @returns {void}
    */
   registration() {
-    this.clearError()
+    this
+      .startProcess()
+      .clearError()
+
     const form = document.getElementById('form-registration')
     const formData = new FormData(form)
     Ajax.post('/user/registration', formData)
@@ -182,6 +220,7 @@ class App extends React.Component {
           this.setState({ successReg: msg })
         }
       })
+      .finally(() => this.stopProcess())
   }
 
   /**
@@ -189,7 +228,10 @@ class App extends React.Component {
    * @returns {void}
    */
   restore() {
-    this.clearError()
+    this
+      .startProcess()
+      .clearError()
+
     const form = document.getElementById('form-restore')
     const formData = new FormData(form)
     Ajax.post('/user/restore', formData)
@@ -206,6 +248,7 @@ class App extends React.Component {
           this.setState({ successRestore: msg })
         }
       })
+      .finally(() => this.stopProcess())
   }
 
   render() {
@@ -225,6 +268,7 @@ class App extends React.Component {
         { this.props.user.isAuthorized && this.state.showBtnPlay &&
           <div className={styles.app}>
             <div className={styles.start}>
+
               <Button onclick={() => {
                 this.setState({ showBtnPlay: false })
                 this.props.onPlay(this.props.user)
@@ -239,30 +283,48 @@ class App extends React.Component {
           <Modal
             title={'Sign in to Iron-War'}
             onClose={() => this.closeAuth()}
+            process={this.state.process}
             foot={
-              <div className={styles.inline}>
-                <div className={cx(styles.inline, {[styles.left]: true})}>
-                  <Button onclick={() => this.openReg()} type={Button.TYPE_LINK} size={Button.SIZE_SM}>
-                    Create an account.
-                  </Button>
-                  <Button onclick={() => this.openRestore()} type={Button.TYPE_LINK} size={Button.SIZE_SM}>
-                    Restore an account.
-                  </Button>
-                </div>
-                <div className={cx(styles.inline, {[styles.right]: true})}>
-                  <Button onclick={() => this.authorization()}>Sign in</Button>
-                </div>
-              </div>
+              <Inline
+                left={
+                  <Fragment>
+                    <Button
+                      onclick={() => this.openReg()}
+                      type={Button.TYPE_LINK}
+                      size={Button.SIZE_SM}
+                      skin={Button.SKIN_GRAY}
+                    >
+                      Create an account.
+                    </Button>
+                    <Button
+                      onclick={() => this.openRestore()}
+                      type={Button.TYPE_LINK}
+                      size={Button.SIZE_SM}
+                      skin={Button.SKIN_GRAY}
+                    >
+                      Restore an account.
+                    </Button>
+                  </Fragment>
+                }
+                right={<Button onclick={() => this.authorization()}>Sign in</Button>}
+              />
             }
           >
 
-            <form id={'form-authorization'}>
-              <InputText name={'email'} label={'Email address'}/>
-              <InputText name={'password'} label={'Password'} type={InputText.TYPE_PASS}/>
-            </form>
+            <BodyWrapper margin={BodyWrapper.MD}>
+              <form id={'form-authorization'}>
+                <InputText name={'email'} label={'Email address'}/>
+                <InputText name={'password'} label={'Password'} type={InputText.TYPE_PASS}/>
+              </form>
+            </BodyWrapper>
 
-            { this.state.errorAuth && <div className={styles.error}>{ this.state.errorAuth }</div> }
-            { this.state.successAuth && <div className={styles.success}>{ this.state.successAuth }</div> }
+            { this.state.errorAuth &&
+              <Informer type={Informer.TYPE_WARNING}>{ this.state.errorAuth }</Informer>
+            }
+
+            { this.state.successAuth &&
+              <Informer type={Informer.TYPE_SUCCESS}>{ this.state.successAuth }</Informer>
+            }
 
           </Modal>
         }
@@ -271,28 +333,41 @@ class App extends React.Component {
           <Modal
             title={'Create your personal account.'}
             onClose={() => this.closeReg()}
+            process={this.state.process}
             foot={
-              <div className={styles.inline}>
-                <div className={cx(styles.inline, {[styles.left]: true})}>
-                  <Button onclick={() => this.openAuth()} type={Button.TYPE_LINK} size={Button.SIZE_SM}>
+              <Inline
+                left={
+                  <Button
+                    onclick={() => this.openAuth()}
+                    type={Button.TYPE_LINK}
+                    size={Button.SIZE_SM}
+                    skin={Button.SKIN_GRAY}
+                  >
                     Sign in
                   </Button>
-                </div>
-                <div className={cx(styles.inline, {[styles.right]: true})}>
+                }
+                right={
                   <Button onclick={() => this.registration()}>
                     Create an account.
                   </Button>
-                </div>
-              </div>
+                }
+              />
             }
           >
 
-            <form id={'form-registration'}>
-              <InputText name={'email'} label={'Email address'}/>
-            </form>
+            <BodyWrapper margin={BodyWrapper.MD}>
+              <form id={'form-registration'}>
+                <InputText name={'email'} label={'Email address'}/>
+              </form>
+            </BodyWrapper>
 
-            { this.state.errorReg && <div className={styles.error}>{ this.state.errorReg }</div> }
-            { this.state.successReg && <div className={styles.success}>{ this.state.successReg }</div> }
+            { this.state.errorReg &&
+              <Informer type={Informer.TYPE_WARNING}>{ this.state.errorReg }</Informer>
+            }
+
+            { this.state.successReg &&
+              <Informer type={Informer.TYPE_SUCCESS}>{ this.state.successReg }</Informer>
+            }
 
           </Modal>
         }
@@ -301,28 +376,41 @@ class App extends React.Component {
           <Modal
             title={'Restore account.'}
             onClose={() => this.closeRestore()}
+            process={this.state.process}
             foot={
-              <div className={styles.inline}>
-                <div className={cx(styles.inline, {[styles.left]: true})}>
-                  <Button onclick={() => this.openAuth()} type={Button.TYPE_LINK} size={Button.SIZE_SM}>
+              <Inline
+                left={
+                  <Button
+                    onclick={() => this.openAuth()}
+                    type={Button.TYPE_LINK}
+                    size={Button.SIZE_SM}
+                    skin={Button.SKIN_GRAY}
+                  >
                     Sign in
                   </Button>
-                </div>
-                <div className={cx(styles.inline, {[styles.right]: true})}>
+                }
+                right={
                   <Button onclick={() => this.restore()}>
                     Restore an account.
                   </Button>
-                </div>
-              </div>
+                }
+              />
             }
           >
 
-            <form id={'form-restore'}>
-              <InputText name={'email'} label={'Email address'}/>
-            </form>
+            <BodyWrapper margin={BodyWrapper.MD}>
+              <form id={'form-restore'}>
+                <InputText name={'email'} label={'Email address'}/>
+              </form>
+            </BodyWrapper>
 
-            { this.state.errorRestore && <div className={styles.error}>{ this.state.errorRestore }</div> }
-            { this.state.successRestore && <div className={styles.success}>{ this.state.successRestore }</div> }
+            { this.state.errorRestore &&
+              <Informer type={Informer.TYPE_WARNING}>{ this.state.errorRestore }</Informer>
+            }
+
+            { this.state.successRestore &&
+              <Informer type={Informer.TYPE_SUCCESS}>{ this.state.successRestore }</Informer>
+            }
 
           </Modal>
         }

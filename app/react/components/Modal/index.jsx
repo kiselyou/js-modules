@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome'
 import styles from './styles.pcss'
 import PropTypes from 'prop-types'
 import Button from '../Button/index'
+import Loader from 'react-loader-spinner'
 
 class Modal extends React.Component {
 
@@ -20,7 +21,8 @@ class Modal extends React.Component {
       title: null,
       foot: null,
       onClose: null,
-      useAnimation: true
+      process: false,
+      useAnimation: true,
     }
   }
 
@@ -29,7 +31,8 @@ class Modal extends React.Component {
       title: PropTypes.string,
       foot: PropTypes.element,
       onClose: PropTypes.func,
-      useAnimation: PropTypes.bool
+      process: PropTypes.bool,
+      useAnimation: PropTypes.bool,
     }
   }
 
@@ -70,6 +73,11 @@ class Modal extends React.Component {
 
           <div className={styles.body}>
             { this.props.children }
+            { this.props.process &&
+            <div className={styles.cover}>
+              <Loader type="Ball-Triangle" color="rgb(205, 205, 205)" height={40} width={40}/>
+            </div>
+            }
           </div>
 
           { this.props.foot &&

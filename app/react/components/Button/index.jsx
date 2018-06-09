@@ -7,7 +7,6 @@ class Button extends React.Component {
 
   static get defaultProps() {
     return {
-      type: Button.TYPE_DEFAULT,
       size: Button.SIZE_MD,
       onclick: null,
       height: null,
@@ -18,6 +17,7 @@ class Button extends React.Component {
   static get propTypes() {
     return {
       type: PropTypes.number,
+      skin: PropTypes.number,
       size: PropTypes.number,
       onclick: PropTypes.func,
       height: PropTypes.string,
@@ -27,29 +27,27 @@ class Button extends React.Component {
 
   render() {
     return (
-      <button
-        className={cx(styles.btn, {
-          [styles.default]: this.props.type === Button.TYPE_DEFAULT,
-          [styles.square]: this.props.type === Button.TYPE_SQUARE,
-          [styles.round]: this.props.type === Button.TYPE_ROUND,
-          [styles.link]: this.props.type === Button.TYPE_LINK,
-          [styles.xxs]: this.props.size === Button.SIZE_XXS,
-          [styles.xs]: this.props.size === Button.SIZE_XS,
-          [styles.sm]: this.props.size === Button.SIZE_SM,
-          [styles.md]: this.props.size === Button.SIZE_MD,
-          [styles.lg]: this.props.size === Button.SIZE_LG,
-          [styles.xlg]: this.props.size === Button.SIZE_XLG,
-        })}
-        onClick={this.props.onclick}
-        style={{width: this.props.width, height: this.props.height}}
-      >
-        { this.props.children }
-      </button>
-    );
-  }
+      <div className={styles.wrap}>
+        <button
+          className={cx(styles.btn, {
+            [styles.square]: this.props.type === Button.TYPE_SQUARE,
+            [styles.round]: this.props.type === Button.TYPE_ROUND,
+            [styles.link]: this.props.type === Button.TYPE_LINK,
 
-  static get TYPE_DEFAULT() {
-    return 0
+            [styles.xs]: this.props.size === Button.SIZE_XS,
+            [styles.sm]: this.props.size === Button.SIZE_SM,
+            [styles.md]: this.props.size === Button.SIZE_MD,
+            [styles.lg]: this.props.size === Button.SIZE_LG,
+
+            [styles.gray]: this.props.skin === Button.SKIN_GRAY,
+          })}
+          onClick={this.props.onclick}
+          style={{width: this.props.width, height: this.props.height}}
+        >
+          { this.props.children }
+        </button>
+      </div>
+    );
   }
 
   static get TYPE_ROUND() {
@@ -62,10 +60,6 @@ class Button extends React.Component {
 
   static get TYPE_LINK() {
     return 3
-  }
-
-  static get SIZE_XXS() {
-    return 0
   }
 
   static get SIZE_XS() {
@@ -84,8 +78,8 @@ class Button extends React.Component {
     return 4
   }
 
-  static get SIZE_XLG() {
-    return 5
+  static get SKIN_GRAY() {
+    return 1
   }
 }
 
