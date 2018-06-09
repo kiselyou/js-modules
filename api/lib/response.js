@@ -1,8 +1,8 @@
 
 /**
  *
- * @param {object} res
- * @param {object|Array} data
+ * @param {Object} res
+ * @param {Object|Array} data
  */
 export function responseJSON(res, data) {
   const str = JSON.stringify(data)
@@ -11,4 +11,13 @@ export function responseJSON(res, data) {
     'Content-Length': Buffer.byteLength(str, 'utf-8')
   })
   res.end(str, 'utf-8', true)
+}
+
+/**
+ *
+ * @param {Object} res
+ * @param {string} [path]
+ */
+export function redirect(res, path = '/') {
+  res.redirect(path);
 }

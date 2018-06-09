@@ -15,7 +15,7 @@ class Particle {
 
     /**
      *
-     * @type {string}
+     * @type {string|?}
      */
     this.description = null
 
@@ -66,7 +66,7 @@ class Particle {
 
   /**
    *
-   * @param {Object} data
+   * @param {Object|null} data - if is null then values will be reset to null
    * @param {Array} [except]
    * @returns {Particle}
    */

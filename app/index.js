@@ -20,11 +20,7 @@ import startPlay from './start-play'
   ReactDOM.render(
     <Provider store={store}>
       <App onPlay={async (user) => {
-        // console.log(appConfig, user)
         await startPlay(appConfig)
-
-        console.log(12312111)
-
       }}/>
     </Provider>,
     document.getElementById('root')

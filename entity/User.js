@@ -52,7 +52,7 @@ class User extends Particle {
    * @returns {User}
    */
   copy(data, except = []) {
-    super.copy(data, except.concat(['password']))
+    super.copy(data || new User(), except.concat(['password']))
     return this
   }
 }

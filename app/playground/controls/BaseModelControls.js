@@ -212,7 +212,7 @@ class BaseModelControls {
             }
           })
 
-        if (element.glowInside) {
+        if (element.glowInsideModel) {
           this.debugPanel
             .addFolder('Glow inside ' + folderName)
             .add(element.glowInsideModel.material.uniforms.coefficient, 'value', 'In.Glow coeff', -5, 5)
@@ -223,7 +223,7 @@ class BaseModelControls {
             .add(element.glowInsideModel.scale, 'z', 'Scale Z', 0.01, 100)
         }
 
-        if (element.glowOutside) {
+        if (element.glowOutsideModel) {
           this.debugPanel
             .addFolder('Glow outside ' + folderName)
             .add(element.glowOutsideModel.material.uniforms.coefficient, 'value', 'Out.Glow coeff', -5, 5)

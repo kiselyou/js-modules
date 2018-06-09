@@ -145,3 +145,13 @@ export async function userRestore(req, res) {
     })
     .catch(() => core.responseJSON(res, { status: 0, msg: errorMsg }))
 }
+
+/**
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
+export function logout(req, res) {
+  core.removeUserSession(req)
+  core.redirect(res)
+}

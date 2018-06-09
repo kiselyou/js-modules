@@ -15,10 +15,10 @@ const app = express()
 
 let RedisStore = redisStore(expressSession);
 let session = expressSession({
-  // store: new RedisStore({}),
+  store: new RedisStore({}),
   secret: '8ae49100-ec0c-4a2f-9e4c-e7b39dae61c5',
-  resave: true,
-  saveUninitialized: true
+  resave: false,
+  saveUninitialized: false
 });
 
 app.use(session);
@@ -37,7 +37,6 @@ app.get('/', (req, res) => {
 })
 
 app.post('/app/config', (req, res) => {
-
   core.appConfig
     .setApiBaseUrl(`http://${core.apiConfig.server.host}:${core.apiConfig.server.port}`)
     .setSocketPlayProcessUrl(`http://${core.apiConfig.socket.host}:${core.apiConfig.socket.port}/play-process`)

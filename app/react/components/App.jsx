@@ -21,6 +21,8 @@ class App extends React.Component {
     super(props)
 
     this.state = {
+      showBtnPlay: true,
+      showBtnSignIn: true,
       showModalAuth: false,
       showModalReg: false,
       showModalRestore: false,
@@ -73,6 +75,7 @@ class App extends React.Component {
     this.setState({
       showModalAuth: true,
       showModalReg: false,
+      showBtnSignIn: false,
       showModalRestore: false,
     })
     return this
@@ -83,7 +86,7 @@ class App extends React.Component {
    * @returns {App}
    */
   closeAuth() {
-    this.setState({ showModalAuth: false })
+    this.setState({ showModalAuth: false, showBtnSignIn: true })
     return this
   }
 
@@ -95,6 +98,7 @@ class App extends React.Component {
     this.setState({
       showModalReg: true,
       showModalAuth: false,
+      showBtnSignIn: false,
       showModalRestore: false,
     })
     return this
@@ -105,7 +109,7 @@ class App extends React.Component {
    * @returns {App}
    */
   closeReg() {
-    this.setState({ showModalReg: false })
+    this.setState({ showModalReg: false, showBtnSignIn: true })
     return this
   }
 
@@ -118,6 +122,7 @@ class App extends React.Component {
       showModalRestore: true,
       showModalAuth: false,
       showModalReg: false,
+      showBtnSignIn: false,
     })
     return this
   }
@@ -127,7 +132,7 @@ class App extends React.Component {
    * @returns {App}
    */
   closeRestore() {
-    this.setState({ showModalRestore: false })
+    this.setState({ showModalRestore: false, showBtnSignIn: true })
     return this
   }
 
@@ -207,7 +212,7 @@ class App extends React.Component {
     return (
       <div>
 
-        { ! this.props.user.isAuthorized &&
+        { ! this.props.user.isAuthorized && this.state.showBtnSignIn &&
           <div className={styles.app}>
             <div className={styles.start}>
               <Button onclick={() => this.openAuth()} height={'40px'} width={'220px'}>
@@ -217,10 +222,11 @@ class App extends React.Component {
           </div>
         }
 
-        { this.props.user.isAuthorized &&
+        { this.props.user.isAuthorized && this.state.showBtnPlay &&
           <div className={styles.app}>
             <div className={styles.start}>
-              <Button onclick={(e) => {
+              <Button onclick={() => {
+                this.setState({ showBtnPlay: false })
                 this.props.onPlay(this.props.user)
               }} height={'40px'} width={'220px'}>
                 Play
