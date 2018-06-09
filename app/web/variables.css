@@ -3,6 +3,7 @@
   --c-warning: rgb(225, 186, 0);
   --c-success: rgb(20, 160, 20);
   --c-gray: rgb(205, 205, 205);
+  --c-white: rgb(255, 255, 255);
 
   --c-green-bright: rgb(2, 145, 145);
   --c-green-light: rgb(1, 82, 83);
@@ -10,7 +11,7 @@
   --c-green-dark: rgb(4, 27, 31);
 
   --c-black-dark: rgb(2, 10, 14);
-  --c-black-transparent: rgba(0, 0, 0, 0.6);
+  --c-black-transparent: rgba(0, 0, 0, 0.1);
 
   --border-xs: 2px;
   --border-sm: 4px;

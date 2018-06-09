@@ -17,6 +17,7 @@ import Informer from './Informer'
 import InputText from './InputText'
 import Ajax from '@helper/ajax/Ajax'
 import objectPath from 'object-path'
+import AsyncLoader from "@app/react/components/AsyncLoader";
 
 class App extends React.Component {
 
@@ -35,7 +36,8 @@ class App extends React.Component {
       successAuth: null,
       successReg: null,
       successRestore: null,
-      process: false
+      process: false,
+      processLoad: false
     }
   }
 
@@ -45,6 +47,16 @@ class App extends React.Component {
     }
   }
 
+  /**
+   * @param {User} user
+   * @param {Function} stopLoader
+   * @callback startPlayCallback
+   */
+
+  /**
+   *
+   * @returns {{user: *, onPlay: startPlayCallback, setUser: *, timeout: shim}}
+   */
   static get propTypes() {
     return {
       user: PropTypes.instanceOf(User).isRequired,
@@ -265,13 +277,17 @@ class App extends React.Component {
           </div>
         }
 
+        { this.state.processLoad && <AsyncLoader size={AsyncLoader.SIZE_SM}/> }
+
         { this.props.user.isAuthorized && this.state.showBtnPlay &&
           <div className={styles.app}>
             <div className={styles.start}>
 
               <Button onclick={() => {
-                this.setState({ showBtnPlay: false })
-                this.props.onPlay(this.props.user)
+                this.setState({ showBtnPlay: false, processLoad: true })
+                this.props.onPlay(this.props.user, () => {
+                  this.setState({ processLoad: false })
+                })
               }} height={'40px'} width={'220px'}>
                 Play
               </Button>

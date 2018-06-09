@@ -19,8 +19,9 @@ import startPlay from './start-play'
 
   ReactDOM.render(
     <Provider store={store}>
-      <App onPlay={async (user) => {
+      <App onPlay={async (user, stopProcessLoader) => {
         await startPlay(appConfig)
+        stopProcessLoader()
       }}/>
     </Provider>,
     document.getElementById('root')

@@ -5,6 +5,7 @@ import styles from './styles.pcss'
 import PropTypes from 'prop-types'
 import Button from '../Button/index'
 import Loader from 'react-loader-spinner'
+import AsyncLoader from './../AsyncLoader'
 
 class Modal extends React.Component {
 
@@ -22,6 +23,7 @@ class Modal extends React.Component {
       foot: null,
       onClose: null,
       process: false,
+      processAsync: false,
       useAnimation: true,
     }
   }
@@ -32,16 +34,9 @@ class Modal extends React.Component {
       foot: PropTypes.element,
       onClose: PropTypes.func,
       process: PropTypes.bool,
+      processAsync: PropTypes.bool,
       useAnimation: PropTypes.bool,
     }
-  }
-
-  componentDidMount() {
-    // this.timerID = setInterval(() => this.tick(), 3000)
-  }
-
-  componentWillUnmount() {
-    // clearInterval(this.timerID)
   }
 
   close() {
@@ -59,6 +54,9 @@ class Modal extends React.Component {
         <div className={cx(styles.content, {
           [styles.animation]: this.props.useAnimation
         })}>
+
+          { this.props.processAsync && <AsyncLoader/> }
+
           <div className={styles.head}>
             <div>{ this.props.title }</div>
             <div>
@@ -73,16 +71,18 @@ class Modal extends React.Component {
 
           <div className={styles.body}>
             { this.props.children }
-            { this.props.process &&
-            <div className={styles.cover}>
-              <Loader type="Ball-Triangle" color="rgb(205, 205, 205)" height={40} width={40}/>
-            </div>
-            }
           </div>
 
           { this.props.foot &&
             <div className={styles.foot}>{ this.props.foot }</div>
           }
+
+          { (this.props.process && !this.props.processAsync) &&
+            <div className={styles.cover}>
+              <Loader type="Ball-Triangle" color="rgb(205, 205, 205)" height={40} width={40}/>
+            </div>
+          }
+
         </div>
       </div>
     );
