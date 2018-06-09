@@ -84,6 +84,7 @@ class Loader {
 
 
     this._textures[CONST.KEY_SECTOR_ALPHA] = await this._textureLoader.load('./app/web/images/skybox/sector_alpha.jpg')
+    this._textures[CONST.KEY_SECTOR_ALPHA_STARS] = await this._textureLoader.load('./app/web/images/skybox/2k_stars.jpg')
 
     this._models[CONST.KEY_SPACESHIP_1] = await this.loadModel('./app/web/models/spaceship/1/spaceship.3ds')
     this._models[CONST.KEY_SPACESHIP_2] = await this.loadModel('./app/web/models/spaceship/2/spaceship.3ds')

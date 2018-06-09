@@ -46,16 +46,17 @@ class LightControls {
      *
      * @type {PointLight}
      */
-    this.pointLight = new PointLight(0XFFFFFF, 2.5, 4000)
-    this.pointLight.position.set(0, 0, 0)
+    this.pointLight = new PointLight(0X666666, 3, 8000, 1.5)
+    this.pointLight.position.set(0, 2000, 0)
     this.pointLight.castShadow = false
+    this.pointLight.power = 20
 
     /**
      *
      * @type {HemisphereLight}
      */
-    this.hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, 0.2)
-    this.hemisphereLight.position.set(0, 0, 0)
+    this.hemisphereLight = new HemisphereLight(0xffffbb, 0x080820, 1)
+    this.hemisphereLight.position.set(2000, 2000, 0)
 
     /**
      *

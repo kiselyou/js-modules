@@ -267,8 +267,8 @@ class Playground {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = PCFSoftShadowMap;
     this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.gammaInput = true;
-    this.renderer.gammaOutput = true;
+    this.renderer.gammaInput = false;
+    this.renderer.gammaOutput = false;
 
     document.getElementById(rootContainerId)
       .appendChild(this.renderer.domElement)
