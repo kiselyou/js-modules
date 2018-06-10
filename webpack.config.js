@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -18,9 +20,14 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 
 const ExtractTextPluginConfig = new ExtractTextPlugin(version + '/bundle.min.css')
 
-const UglifyJsPluginConfig =  new UglifyJsPlugin({
+const UglifyJsPluginConfig = new UglifyJsPlugin({
   sourceMap: true,
-  extractComments: true
+  extractComments: true,
+  uglifyOptions: {
+    mangle: {
+      keep_fnames: true
+    }
+  },
 });
 
 const CopyWebpackPluginConfig = new CopyWebpackPlugin([
@@ -32,6 +39,11 @@ const CopyWebpackPluginConfig = new CopyWebpackPlugin([
 ])
 
 module.exports = {
+  optimization: {
+    minimizer: [
+      ExtractTextPluginConfig,
+    ]
+  },
   entry: `./${dir}/index.js`,
   output: {
     path: path.resolve('public'),
@@ -102,7 +114,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: "babel-loader"
+        use: "babel-loader",
       },
       {
         test: /\.jsx?$/,
