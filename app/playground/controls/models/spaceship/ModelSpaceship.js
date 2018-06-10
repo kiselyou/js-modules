@@ -30,12 +30,6 @@ class ModelSpaceship extends MoveControls {
 
     /**
      *
-     * @type {Spaceship}
-     */
-    this.spaceship = new Spaceship()
-
-    /**
-     *
      * @type {null|Group}
      */
     this.model = null
@@ -46,6 +40,8 @@ class ModelSpaceship extends MoveControls {
    */
   async beforeStart() {
     this.buildModel()
+    await super.beforeStart()
+    this.mesh.position.copy(this.player.position)
   }
 
   /**
@@ -56,7 +52,6 @@ class ModelSpaceship extends MoveControls {
     this.removeModel()
     this.model = this.loader.getModel(this.spaceship.modelKey)
     this.mesh.add(this.model)
-    this.mesh.position.copy(this.player.position)
     return this
   }
 

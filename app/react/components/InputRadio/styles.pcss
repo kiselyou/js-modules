@@ -1,0 +1,74 @@
+@import '../../../web/variables.css';
+
+.field-controls {
+
+  & .label {
+    padding: 4px 0;
+    display: flex;
+  }
+  & .error {
+    padding: 4px 0;
+    display: flex;
+    font-size: 9px;
+    color: var(--c-error);
+  }
+
+  & .item {
+    margin-top: 6px;
+
+    &.inline {
+      display: inline-flex;
+    }
+
+    & .input {
+      vertical-align: top;
+      width: 17px;
+      height: 17px;
+      margin: 0 3px 0 0;
+
+      & + label {
+        cursor: pointer;
+      }
+      &:not(checked) {
+        position: absolute;
+        opacity: 0;
+      }
+      &:not(checked) + label {
+        position: relative;
+        padding: 0 10px 0 30px;
+        display: inline-flex;
+        align-items: center;
+        height: 20px;
+      }
+      &:not(checked) + label:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 1px solid var(--c-green-bright);
+        background: var(--c-green-light);
+      }
+      &:not(checked) + label:after {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--c-green-bright);
+        opacity: 0;
+        transition: all .2s;
+      }
+      &:checked + label:after {
+        opacity: 1;
+      }
+      &:focus + label:before {
+
+      }
+    }
+  }
+}

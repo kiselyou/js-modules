@@ -92,6 +92,33 @@ class Particle {
     }
     return this
   }
+
+  get swapProperties() {
+    return []
+  }
+
+  /**
+   *
+   * @param {Object} data
+   * @returns {Engine}
+   */
+  setSwapInfo(data) {
+    for (const property of this.swapProperties) {
+      this[property] = data[property]
+    }
+    return this
+  }
+
+  /**
+   * @returns {Object}
+   */
+  getSwapInfo() {
+    const res = {}
+    for (const property of this.swapProperties) {
+      res[property] = this[property]
+    }
+    return res
+  }
 }
 
 export default Particle

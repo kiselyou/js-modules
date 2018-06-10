@@ -43,7 +43,7 @@ export const asteroid = [
  */
 export async function installAsteroid(db, catalog, sectorId) {
   for (let entity of asteroid) {
-    const particle = new Asteroid().copy(entity, ['id'])
+    const particle = new Asteroid().copy(entity).rebuildId()
     const data = new SectorHasParticle().setSectorId(sectorId).setParticle(particle)
     await createOrUpdate(db, data)
   }

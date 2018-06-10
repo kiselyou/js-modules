@@ -1,4 +1,5 @@
 import Catalog from './../../entity/Catalog'
+import { insertCatalog } from '../repository/RepositoryCatalog'
 
 import { spaceship } from './map-spaceship'
 import { starlight } from './map-star-light'
@@ -35,13 +36,8 @@ export const catalog = new Catalog()
 
 /**
  *
- * @param {Db} db
  * @returns {Promise<void>}
  */
-export const installCatalog = async function (db) {
-  const collection = await db.createCollection('Catalog')
-  await collection.deleteMany()
-  for (const item of catalog.items) {
-    await collection.updateOne({ id: item.id }, { $set: item }, { upsert: true })
-  }
+export const installCatalog = async function () {
+  await insertCatalog(catalog)
 }

@@ -36,15 +36,6 @@ app.get('/', (req, res) => {
   res.sendFile('/../../public/index.html')
 })
 
-app.post('/app/config', (req, res) => {
-  core.appConfig
-    .setApiBaseUrl(`http://${core.apiConfig.server.host}:${core.apiConfig.server.port}`)
-    .setSocketPlayProcessUrl(`http://${core.apiConfig.socket.host}:${core.apiConfig.socket.port}/play-process`)
-    .setUser(core.getUserSession(req))
-
-  res.json(core.appConfig)
-})
-
 for (const route of routes) {
   const method = route.method.toLowerCase()
   if (method === 'post') {

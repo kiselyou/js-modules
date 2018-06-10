@@ -19,7 +19,13 @@ class Player extends Particle {
     this.socketId = null
 
     /**
-     * This is id of current ship
+     *
+     * @type {string|?}
+     */
+    this.userId = null
+
+    /**
+     * This is id of current (selected) ship
      *
      * @type {string|?}
      */
@@ -33,15 +39,19 @@ class Player extends Particle {
 
     /**
      *
-     * @type {string}
-     */
-    this.modelKey = CONST.KEY_SPACESHIP_3
-
-    /**
-     *
      * @type {string|?}
      */
     this.raceId = null
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Player}
+   */
+  setUserId(id) {
+    this.userId = id
+    return this
   }
 
   /**
@@ -129,7 +139,7 @@ class Player extends Particle {
    */
   getSwapInfo() {
     const data = {}
-    const properties = ['id', 'position', 'sectorId', 'raceId', 'socketId', 'modelKey']
+    const properties = ['id', 'position', 'sectorId', 'raceId', 'socketId']
     for (const property of properties) {
       switch (property) {
         default:

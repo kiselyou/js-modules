@@ -1,5 +1,6 @@
 import { Object3D, Math as TMath } from 'three'
 import Engine from '@entity/particles-spaceship/Engine'
+import Spaceship from "@entity/particles-spaceship/Spaceship";
 
 export const FORWARD = 'forward'
 export const BACKWARD = 'backward'
@@ -9,52 +10,6 @@ export const SLOWDOWN = 'slowdown'
 
 class MoveControls {
   constructor() {
-    /**
-     * This is a current speed of shit
-     *
-     * @type {number}
-     */
-    this.speed = 0
-
-    /**
-     * This is a max speed of shop. This speed depend on "angularSpeed"
-     *
-     * @type {number}
-     */
-    this.maxSpeed = 350
-
-    /**
-     * This is a max speed of shop. This speed depend on "angularSpeed"
-     *
-     * @type {number}
-     */
-    this.maxReverseSpeed = - 15
-
-    /**
-     * Speed of rotation on axis "Y"
-     *
-     * @type {number}
-     */
-    this.angularSpeed = 3.5
-
-    /**
-     * This is a current angle of ship
-     *
-     * @type {number}
-     */
-    this.bodyOrientation = 0
-
-    /**
-     *
-     * @type {number}
-     */
-    this.acceleration = 400
-
-    /**
-     *
-     * @type {number}
-     */
-    this.deceleration = 400
 
     /**
      *
@@ -64,9 +19,15 @@ class MoveControls {
 
     /**
      *
-     * @type {Engine}
+     * @type {Spaceship}
      */
-    this.engine = new Engine()
+    this.spaceship = new Spaceship()
+
+    /**
+     *
+     * @type {Engine|?}
+     */
+    this.engine = null
 
     /**
      *
@@ -97,6 +58,14 @@ class MoveControls {
      * @type {Array.<moveActionCallback>}
      */
     this.moveEvents = []
+  }
+
+  /**
+   *
+   * @returns {void}
+   */
+  async beforeStart() {
+    this.engine = this.spaceship.getEngine()
   }
 
   /**
@@ -203,43 +172,43 @@ class MoveControls {
     const isBackward = this.moveActions[BACKWARD]
 
     if (isLeft) {
-      if (isBackward && this.speed < 0) {
-        this.bodyOrientation -= delta * this.angularSpeed
+      if (isBackward && this.engine.speed < 0) {
+        this.engine.bodyOrientation -= delta * this.engine.angularSpeed
       } else if (!isBackward) {
-        this.bodyOrientation += delta * this.angularSpeed
+        this.engine.bodyOrientation += delta * this.engine.angularSpeed
       }
     }
 
     if (isRight) {
-      if (isBackward && this.speed < 0) {
-        this.bodyOrientation += delta * this.angularSpeed
+      if (isBackward && this.engine.speed < 0) {
+        this.engine.bodyOrientation += delta * this.engine.angularSpeed
       } else if (!isBackward) {
-        this.bodyOrientation -= delta * this.angularSpeed
+        this.engine.bodyOrientation -= delta * this.engine.angularSpeed
       }
     }
 
     if (isForward) {
-      this.speed = TMath.clamp(this.speed + delta * this.acceleration, this.maxReverseSpeed, this.maxSpeed)
+      this.engine.speed = TMath.clamp(this.engine.speed + delta * this.engine.acceleration, this.engine.maxReverseSpeed, this.engine.maxSpeed)
     }
 
     if (isBackward) {
-      this.speed = TMath.clamp(this.speed - delta * this.deceleration, this.maxReverseSpeed, this.maxSpeed)
+      this.engine.speed = TMath.clamp(this.engine.speed - delta * this.engine.deceleration, this.engine.maxReverseSpeed, this.engine.maxSpeed)
     }
 
     if (this.moveActions[SLOWDOWN]) {
-      if ( this.speed > 0 ) {
-        const k = this.exponentialEaseOut(this.speed / this.maxSpeed)
-        this.speed = TMath.clamp(this.speed - k * delta * this.deceleration, 0, this.maxSpeed)
+      if ( this.engine.speed > 0 ) {
+        const k = this.exponentialEaseOut(this.engine.speed / this.engine.maxSpeed)
+        this.engine.speed = TMath.clamp(this.engine.speed - k * delta * this.engine.deceleration, 0, this.engine.maxSpeed)
       } else {
-        const k = this.exponentialEaseOut(this.speed / this.maxReverseSpeed)
-        this.speed = TMath.clamp(this.speed + k * delta * this.deceleration, this.maxReverseSpeed, 0)
+        const k = this.exponentialEaseOut(this.engine.speed / this.engine.maxReverseSpeed)
+        this.engine.speed = TMath.clamp(this.engine.speed + k * delta * this.engine.deceleration, this.engine.maxReverseSpeed, 0)
       }
     }
 
-    let forwardDelta = this.speed * delta
-    this.mesh.position.x += Math.sin(this.bodyOrientation) * forwardDelta
-    this.mesh.position.z += Math.cos(this.bodyOrientation) * forwardDelta
-    this.mesh.rotation.y = this.bodyOrientation
+    let forwardDelta = this.engine.speed * delta
+    this.mesh.position.x += Math.sin(this.engine.bodyOrientation) * forwardDelta
+    this.mesh.position.z += Math.cos(this.engine.bodyOrientation) * forwardDelta
+    this.mesh.rotation.y = this.engine.bodyOrientation
   }
 
   /**
@@ -261,6 +230,15 @@ class MoveControls {
       if (data.hasOwnProperty(property)) {
         switch (property) {
           case 'moveActions':
+            const moveActions = data[property]
+            this.enableLeft(moveActions[LEFT])
+            this.enableRight(moveActions[RIGHT])
+            this.enableForward(moveActions[FORWARD])
+            this.enableBackward(moveActions[BACKWARD])
+            this.enableSlowdown(moveActions[SLOWDOWN])
+            break
+          case 'engine':
+            this.engine.setSwapInfo(data[property])
             break
           case 'position':
           case 'rotation':
@@ -272,12 +250,6 @@ class MoveControls {
         }
       }
     }
-    const moveActions = data['moveActions']
-    this.enableLeft(moveActions[LEFT])
-    this.enableRight(moveActions[RIGHT])
-    this.enableForward(moveActions[FORWARD])
-    this.enableBackward(moveActions[BACKWARD])
-    this.enableSlowdown(moveActions[SLOWDOWN])
     return this
   }
 
@@ -288,15 +260,9 @@ class MoveControls {
   getMoveSwapInfo() {
     const data = {}
     const properties = [
-      'deceleration',
-      'acceleration',
-      'bodyOrientation',
-      'angularSpeed',
-      'maxReverseSpeed',
-      'maxSpeed',
-      'speed',
       'moveActions',
       'prevMoveActions',
+      'engine',
       'mesh'
     ]
     for (const property of properties) {
@@ -304,6 +270,9 @@ class MoveControls {
         case 'mesh':
           data['position'] = this[property]['position']
           data['rotation'] = this[property]['rotation']
+          break
+        case 'engine':
+          data['engine'] = this.engine.getSwapInfo()
           break
         default:
           data[property] = this[property]

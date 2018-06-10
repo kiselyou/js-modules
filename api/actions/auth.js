@@ -1,5 +1,7 @@
 import * as core from './../core'
 import User from './../../entity/User'
+import { createAndInsertPlayer } from './../repository/RepositoryPlayer'
+import { getUserByEmail, insertUser } from './../repository/RepositoryUser'
 
 const errorMsg = `Something went wrong. Try again some late.`
 
@@ -18,7 +20,7 @@ export async function userAuthorization(req, res) {
     return
   }
 
-  const validator = core.validate('user-authorization', user)
+  const validator = core.validate('auth-authorization', user)
   if (validator.length > 0) {
     core.responseJSON(res, { status: 0, msg: validator[0].message })
     return
@@ -61,15 +63,14 @@ export async function userRegistration(req, res) {
     return
   }
 
-  const validator = core.validate('user-registration', user)
+  const params = { email: req.body.email, spaceshipId: req.body.spaceshipId }
+  const validator = core.validate('auth-registration', params)
   if (validator.length > 0) {
     core.responseJSON(res, { status: 0, msg: validator[0].message })
     return
   }
 
-  const db = await core.mgDBAsync()
-  const collection = db.collection('User')
-  const userData = await collection.findOne({ email: user.email })
+  const userData = await getUserByEmail(user.email)
 
   if (userData) {
     core.responseJSON(res, { status: 0, msg: `User "${user.email}" has already exists.` })
@@ -86,10 +87,10 @@ export async function userRegistration(req, res) {
   `
 
   core.sendMailHtml(user.email, subject, html)
-    .then(() => {
-      collection.insertOne(user)
-        .then(() => core.responseJSON(res, { status: 1, msg: 'Check your email to get access to Iron War.' }))
-        .catch(() => core.responseJSON(res, { status: 0, msg: errorMsg }))
+    .then(async () => {
+      await insertUser(user)
+      await createAndInsertPlayer(user, req.body.spaceshipId)
+      core.responseJSON(res, { status: 1, msg: 'Check your email to get access to Iron War.' })
     })
     .catch(() => core.responseJSON(res, { status: 0, msg: errorMsg }))
 }
@@ -109,7 +110,7 @@ export async function userRestore(req, res) {
     return
   }
 
-  const validator = core.validate('user-restore', user)
+  const validator = core.validate('auth-restore', user)
   if (validator.length > 0) {
     core.responseJSON(res, { status: 0, msg: validator[0].message })
     return

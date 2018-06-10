@@ -25,6 +25,12 @@ registration:
       minLength: 5
       invalidMessage: 'Invalid email'
       requiredMessage: 'Email is required'
+    spaceshipId:
+      type: 'string'
+      requiredMessage: 'Model is required'
+  required:
+    - 'email'
+    - 'spaceshipId'
 
 restore:
   type: 'object'
@@ -35,3 +41,5 @@ restore:
       minLength: 5
       invalidMessage: 'Invalid email'
       requiredMessage: 'Email is required'
+  required:
+    - 'email'

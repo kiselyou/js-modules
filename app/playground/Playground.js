@@ -153,97 +153,96 @@ class Playground {
     this.scene.add(this.axesHelper)
 
     const panel = new DebugPanel()
-      .addFolder('Renderer controls')
-      .listenFields(true)
-      .add(this.renderer.shadowMap, 'enabled', 'Shadow map')
-      .add(this.renderer, 'gammaInput', 'Gamma input')
-      .add(this.renderer, 'gammaOutput', 'Gamma output')
-      .listenFields(false)
-      .addEventOnChange((value, name) => {
-        switch (name) {
-          case 'enabled':
-          case 'gammaInput':
-          case 'gammaOutput':
-            this.renderer.dispose()
-        }
-      })
-
-      .addFolder('Point light controls')
-      .listenFields(true)
-      .add(this.lightControls, 'pointLightMoveWithModel', 'Move with model')
-      .add(this.lightControls.pointLight, 'castShadow', 'Cast Shadow')
-      .listenFields(false)
-      .add(this.lightControls.pointLight, 'decay', 'Decay', 0, 5)
-      .add(this.lightControls.pointLight, 'distance', 'Distance', 0, 8000)
-      .add(this.lightControls.pointLight, 'power', 'Power', 0, 1000)
-      .add(this.lightControls.pointLight, 'color', 'Color', null, null, true)
-      .add(this.lightControls.pointLight, 'intensity', 'Intensity', 0, 100)
-      .add(this.lightControls.pointLight.position, 'x', 'X', -2000, 2000)
-      .add(this.lightControls.pointLight.position, 'y', 'Y', -2000, 2000)
-      .add(this.lightControls.pointLight.position, 'z', 'Z', -2000, 2000)
-
-      .addFolder('Hemisphere light controls')
-      .listenFields(true)
-      .add(this.lightControls, 'hemisphereLightMoveWithModel', 'Move with model')
-      .listenFields(false)
-      .add(this.lightControls.hemisphereLight, 'color', 'Sky Color', null, null, true)
-      .add(this.lightControls.hemisphereLight, 'groundColor', 'Ground Color', null, null, true)
-      .add(this.lightControls.hemisphereLight, 'intensity', 'Intensity', 0, 100)
-      .add(this.lightControls.hemisphereLight.position, 'x', 'X', -2000, 2000)
-      .add(this.lightControls.hemisphereLight.position, 'y', 'Y', -2000, 2000)
-      .add(this.lightControls.hemisphereLight.position, 'z', 'Z', -2000, 2000)
-
-      .addFolder('Ambient light controls')
-      .listenFields(true)
-      .add(this.lightControls, 'ambientLightMoveWithModel', 'Move with model')
-      .listenFields(false)
-      .add(this.lightControls.ambientLight, 'color', 'Color', null, null, true)
-      .add(this.lightControls.ambientLight, 'intensity', 'Intensity', 0, 2)
-      .add(this.lightControls.ambientLight.position, 'x', 'X', -2000, 2000)
-      .add(this.lightControls.ambientLight.position, 'y', 'Y', -2000, 2000)
-      .add(this.lightControls.ambientLight.position, 'z', 'Z', -2000, 2000)
-
-      .addFolder('Camera')
-      .add(this.camera, 'fov', 'Fov', 0, 100)
-      .add(this.camera, 'far', 'Far', 500, 15000)
-      .add(this.camera, 'zoom', 'Zoom', 0.1, 100)
-      .addEventOnChange((value, name) => {
-        switch (name) {
-          case 'fov':
-          case 'far':
-          case 'zoom':
-            this.camera.updateProjectionMatrix()
-        }
-      })
-      .addFolder('CameraControls')
-      .listenFields(true)
-      .add(this.cameraControls, 'enableKeys', 'EnableKeys')
-      .add(this.cameraControls, 'enablePan', 'EnablePan')
-      .listenFields(false)
-      .add(this.cameraControls, 'minDistance', 'MinDistance', 0, 100)
-      .add(this.cameraControls, 'maxDistance', 'MaxDistance', 101, 2000)
-      .add(this.cameraControls, 'maxPolarAngle', 'MaxPolarAngle', 0, Math.PI)
-
-      .addFolder('Ship Controls')
-      .listenFields(true)
-      .add(this.characterControls, 'enabled', 'Controls enabled')
-      .listenFields(false)
-      .addFolder('Ship Info')
-      .listenFields(true)
-      .add(this.characterControls, 'speed', 'Ship Speed')
-      .add(this.characterControls.mesh.position, 'x', 'Ship X')
-      .add(this.characterControls.mesh.position, 'y', 'Ship Y')
-      .add(this.characterControls.mesh.position, 'z', 'Ship Z')
-      .listenFields(false)
-      .addFolder('Ship speed')
-      .add(this.characterControls, 'maxSpeed', 'Max', 10, 400)
-      .add(this.characterControls, 'maxReverseSpeed', 'Max Reverse', -200, 0)
-      .add(this.characterControls, 'angularSpeed', 'Angular Speed', 0.01, 5)
-      .add(this.characterControls, 'acceleration', 'Acceleration', 10, 500)
-      .add(this.characterControls, 'deceleration', 'Deceleration', 10, 500)
-
     setTimeout(() => {
       panel
+        .addFolder('Renderer controls')
+        .listenFields(true)
+        .add(this.renderer.shadowMap, 'enabled', 'Shadow map')
+        .add(this.renderer, 'gammaInput', 'Gamma input')
+        .add(this.renderer, 'gammaOutput', 'Gamma output')
+        .listenFields(false)
+        .addEventOnChange((value, name) => {
+          switch (name) {
+            case 'enabled':
+            case 'gammaInput':
+            case 'gammaOutput':
+              this.renderer.dispose()
+          }
+        })
+
+        .addFolder('Point light controls')
+        .listenFields(true)
+        .add(this.lightControls, 'pointLightMoveWithModel', 'Move with model')
+        .add(this.lightControls.pointLight, 'castShadow', 'Cast Shadow')
+        .listenFields(false)
+        .add(this.lightControls.pointLight, 'decay', 'Decay', 0, 5)
+        .add(this.lightControls.pointLight, 'distance', 'Distance', 0, 8000)
+        .add(this.lightControls.pointLight, 'power', 'Power', 0, 1000)
+        .add(this.lightControls.pointLight, 'color', 'Color', null, null, true)
+        .add(this.lightControls.pointLight, 'intensity', 'Intensity', 0, 100)
+        .add(this.lightControls.pointLight.position, 'x', 'X', -2000, 2000)
+        .add(this.lightControls.pointLight.position, 'y', 'Y', -2000, 2000)
+        .add(this.lightControls.pointLight.position, 'z', 'Z', -2000, 2000)
+
+        .addFolder('Hemisphere light controls')
+        .listenFields(true)
+        .add(this.lightControls, 'hemisphereLightMoveWithModel', 'Move with model')
+        .listenFields(false)
+        .add(this.lightControls.hemisphereLight, 'color', 'Sky Color', null, null, true)
+        .add(this.lightControls.hemisphereLight, 'groundColor', 'Ground Color', null, null, true)
+        .add(this.lightControls.hemisphereLight, 'intensity', 'Intensity', 0, 100)
+        .add(this.lightControls.hemisphereLight.position, 'x', 'X', -2000, 2000)
+        .add(this.lightControls.hemisphereLight.position, 'y', 'Y', -2000, 2000)
+        .add(this.lightControls.hemisphereLight.position, 'z', 'Z', -2000, 2000)
+
+        .addFolder('Ambient light controls')
+        .listenFields(true)
+        .add(this.lightControls, 'ambientLightMoveWithModel', 'Move with model')
+        .listenFields(false)
+        .add(this.lightControls.ambientLight, 'color', 'Color', null, null, true)
+        .add(this.lightControls.ambientLight, 'intensity', 'Intensity', 0, 2)
+        .add(this.lightControls.ambientLight.position, 'x', 'X', -2000, 2000)
+        .add(this.lightControls.ambientLight.position, 'y', 'Y', -2000, 2000)
+        .add(this.lightControls.ambientLight.position, 'z', 'Z', -2000, 2000)
+
+        .addFolder('Camera')
+        .add(this.camera, 'fov', 'Fov', 0, 100)
+        .add(this.camera, 'far', 'Far', 500, 15000)
+        .add(this.camera, 'zoom', 'Zoom', 0.1, 100)
+        .addEventOnChange((value, name) => {
+          switch (name) {
+            case 'fov':
+            case 'far':
+            case 'zoom':
+              this.camera.updateProjectionMatrix()
+          }
+        })
+        .addFolder('CameraControls')
+        .listenFields(true)
+        .add(this.cameraControls, 'enableKeys', 'EnableKeys')
+        .add(this.cameraControls, 'enablePan', 'EnablePan')
+        .listenFields(false)
+        .add(this.cameraControls, 'minDistance', 'MinDistance', 0, 100)
+        .add(this.cameraControls, 'maxDistance', 'MaxDistance', 101, 2000)
+        .add(this.cameraControls, 'maxPolarAngle', 'MaxPolarAngle', 0, Math.PI)
+
+        .addFolder('Ship Controls')
+        .listenFields(true)
+        .add(this.characterControls, 'enabled', 'Controls enabled')
+        .listenFields(false)
+        .addFolder('Ship Info')
+        .listenFields(true)
+        .add(this.characterControls.engine, 'speed', 'Ship Speed')
+        .add(this.characterControls.mesh.position, 'x', 'Ship X')
+        .add(this.characterControls.mesh.position, 'y', 'Ship Y')
+        .add(this.characterControls.mesh.position, 'z', 'Ship Z')
+        .listenFields(false)
+        .addFolder('Ship speed')
+        .add(this.characterControls.engine, 'maxSpeed', 'Max', 10, 400)
+        .add(this.characterControls.engine, 'maxReverseSpeed', 'Max Reverse', -200, 0)
+        .add(this.characterControls.engine, 'angularSpeed', 'Angular Speed', 0.01, 5)
+        .add(this.characterControls.engine, 'acceleration', 'Acceleration', 10, 500)
+        .add(this.characterControls.engine, 'deceleration', 'Deceleration', 10, 500)
         .addFolder('Ship Scale')
         .add(this.characterControls.mesh.children[1].scale, 'x', 'Scale X', 0, 5)
         .add(this.characterControls.mesh.children[1].scale, 'y', 'Scale Y', 0, 5)

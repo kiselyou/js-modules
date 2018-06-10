@@ -12,9 +12,7 @@ import io from 'socket.io-client'
  * @returns {Promise<void>}
  */
 export default async function startPlay(appConfig) {
-  // console.log(appConfig)
-
-  const playGroundJson = await Ajax.post('/user/data/1', { id: '09839694-28d3-4504-9dc9-1cd3b6a539d7' })
+  const playGroundJson = await Ajax.post('/user/data/1', { id: appConfig.user.id })
   const particlePlayGround = new ParticlePlayGround().jsonToObject(playGroundJson)
 
   const loader = new Loader()

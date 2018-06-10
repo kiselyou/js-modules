@@ -65,7 +65,7 @@ class Spaceship extends Particle {
             break
           case 'slot':
             for (const slotData of data[property]) {
-              this.slot.push(new Slot().copy(slotData, ['id']))
+              this.slot.push(new Slot().copy(slotData))
             }
             break
           default:
@@ -75,6 +75,19 @@ class Spaceship extends Particle {
       }
     }
     return this
+  }
+
+  /**
+   *
+   * @returns {Engine|?}
+   */
+  getEngine() {
+    for (const slot of this.slot) {
+      if (slot.type === Slot.TYPE_ENGINE) {
+        return slot.particle
+      }
+    }
+    return null
   }
 }
 

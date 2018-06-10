@@ -32,7 +32,7 @@ export const station = [
  */
 export async function installStation(db, catalog, sectorId) {
   for (let entity of station) {
-    const particle = new Station().copy(entity, ['id'])
+    const particle = new Station().copy(entity).rebuildId()
     const data = new SectorHasParticle().setSectorId(sectorId).setParticle(particle)
     await createOrUpdate(db, data)
   }

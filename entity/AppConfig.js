@@ -1,4 +1,7 @@
 import User from './User'
+import Spaceship from './particles-spaceship/Spaceship'
+import Sector from './particles-sector/Sector'
+import Race from './particles-sector/Race'
 
 class AppConfig {
   constructor() {
@@ -25,6 +28,109 @@ class AppConfig {
      * @type {string}
      */
     this.version = '0.0.0'
+
+    /**
+     *
+     * @type {Array.<Spaceship>}
+     */
+    this.defaultModels = []
+
+    /**
+     *
+     * @type {Array.<string>}
+     */
+    this.defaultModelIds = []
+
+    /**
+     *
+     * @type {Array.<Sector>}
+     */
+    this.defaultSector = []
+
+    /**
+     *
+     * @type {Array.<Race>}
+     */
+    this.defaultRace = []
+  }
+
+  /**
+   *
+   * @param {string} key
+   * @returns {AppConfig}
+   */
+  addDefaultModelIds(key) {
+    this.defaultModelIds.push(key)
+    return this
+  }
+
+  /**
+   *
+   * @param {Array.<Spaceship|Object>} items
+   * @returns {AppConfig}
+   */
+  setDefaultModels(items) {
+    for (const item of items) {
+      this.addDefaultModel(item)
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {Spaceship|Object} value
+   * @returns {AppConfig}
+   */
+  addDefaultModel(value) {
+    const model = value instanceof Spaceship ? value : new Spaceship().copy(value)
+    this.defaultModels.push(model)
+    return this
+  }
+
+  /**
+   *
+   * @param {Sector|Object} value
+   * @returns {AppConfig}
+   */
+  addDefaultSector(value) {
+    const sector = value instanceof Sector ? value : new Sector().copy(value)
+    this.defaultSector.push(sector)
+    return this
+  }
+
+  /**
+   *
+   * @param {Array.<Sector|Object>} items
+   * @returns {AppConfig}
+   */
+  setDefaultSectors(items) {
+    for (const item of items) {
+      this.addDefaultSector(item)
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {Race|Object} value
+   * @returns {AppConfig}
+   */
+  addDefaultRace(value) {
+    const race = value instanceof Race ? value : new Race().copy(value)
+    this.defaultSector.push(race)
+    return this
+  }
+
+  /**
+   *
+   * @param {Array.<Race|Object>} items
+   * @returns {AppConfig}
+   */
+  setDefaultRaces(items) {
+    for (const item of items) {
+      this.addDefaultRace(item)
+    }
+    return this
   }
 
   /**
@@ -86,6 +192,9 @@ class AppConfig {
       if (data.hasOwnProperty(property)) {
         switch (property) {
           case 'entity':
+            break
+          case 'defaultModels':
+            this.setDefaultModels(data[property])
             break
           case 'user':
             this.user.copy(data[property])

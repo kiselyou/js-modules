@@ -94,7 +94,7 @@ class Engine extends Particle {
    * @returns {Engine}
    */
   setMaxReverseSpeed(value) {
-    this.maxReverseSpeed = value;
+    this.maxReverseSpeed = value < 0 ? value : - value;
     return this
   }
 
@@ -147,6 +147,18 @@ class Engine extends Particle {
   copy(data, except = []) {
     super.copy(data, except)
     return this
+  }
+
+  get swapProperties() {
+    return [
+      'deceleration',
+      'acceleration',
+      'bodyOrientation',
+      'angularSpeed',
+      'maxReverseSpeed',
+      'maxSpeed',
+      'speed',
+    ]
   }
 }
 

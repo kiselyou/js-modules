@@ -58,7 +58,7 @@ export const starlight = [
  */
 export async function installStarlight(db, catalog, sectorId) {
   for (let entity of starlight) {
-    const particle = new StarLight().copy(entity, ['id'])
+    const particle = new StarLight().copy(entity).rebuildId()
     const data = new SectorHasParticle().setSectorId(sectorId).setParticle(particle)
     await createOrUpdate(db, data)
   }

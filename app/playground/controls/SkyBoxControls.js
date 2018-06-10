@@ -1,6 +1,7 @@
 import { Mesh, Vector3, MeshStandardMaterial, SphereGeometry, BackSide, AdditiveBlending, RepeatWrapping } from 'three'
 import * as CONST from './../../constants'
 import StarControls from './StarControls'
+import DebugPanel from '@app/debug/DebugPanel'
 
 class SkyBoxControls {
   /**
@@ -52,6 +53,7 @@ class SkyBoxControls {
      * @type {StarControls}
      */
     this.starControls = new StarControls(this.sky)
+
   }
 
   /**
@@ -73,8 +75,15 @@ class SkyBoxControls {
       side: BackSide,
       depthWrite: false,
       roughness: 1,
-      metalness: 0
+      metalness: -0.3
     })
+
+    const panel = new DebugPanel()
+      .addFolder('Sky Box Star')
+      .add(starsMaterial, 'transparent', 'transparent')
+      .add(starsMaterial, 'depthWrite', 'depthWrite')
+      .add(starsMaterial, 'roughness', 'roughness', -1, 1)
+      .add(starsMaterial, 'metalness', 'metalness', -1, 1)
 
     const starsGeometry = new SphereGeometry(this._size * 1.2, this.segments, this.segments)
     const starsMesh = new Mesh(starsGeometry, starsMaterial)
@@ -87,6 +96,13 @@ class SkyBoxControls {
       roughness: 1,
       metalness: 0
     })
+
+    panel
+      .addFolder('Sky Box Space')
+      .add(starsMaterial, 'transparent', 'transparent')
+      .add(starsMaterial, 'depthWrite', 'depthWrite')
+      .add(starsMaterial, 'roughness', 'roughness', -1, 1)
+      .add(starsMaterial, 'metalness', 'metalness', -1, 1)
 
     this.sky.geometry = new SphereGeometry(this._size, this.segments, this.segments)
     this.sky.renderOrder = -100000

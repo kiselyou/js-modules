@@ -4,12 +4,31 @@ import Gun from './particles-spaceship/Gun'
 
 class Catalog {
   constructor() {
+    /**
+     *
+     * @type {boolean}
+     */
+    this.isLoaded =false
+
+    /**
+     *
+     * @type {Array.<Particle>}
+     */
     this.items = []
   }
 
   /**
    *
-   * @param {Object} value
+   * @returns {Catalog}
+   */
+  final() {
+    this.isLoaded = true
+    return this
+  }
+
+  /**
+   *
+   * @param {Particle|Object} value
    * @returns {Catalog}
    */
   addItem(value) {
@@ -19,7 +38,7 @@ class Catalog {
 
   /**
    *
-   * @param {Array} items
+   * @param {Array.<Particle|Object>} items
    * @returns {Catalog}
    */
   copy(items) {
@@ -34,7 +53,7 @@ class Catalog {
    */
   getSpaceShipById(id) {
     const value = this.findEntityById('Spaceship', id)
-    return value ? new Spaceship().copy(value, ['id']) : null
+    return value ? new Spaceship().copy(value).rebuildId() : null
   }
 
   /**
@@ -44,7 +63,7 @@ class Catalog {
    */
   getEngineById(id) {
     const value = this.findEntityById('Engine', id)
-    return value ? new Engine().copy(value, ['id']) : null
+    return value ? new Engine().copy(value).rebuildId() : null
   }
 
   /**
@@ -54,14 +73,14 @@ class Catalog {
    */
   getGunById(id) {
     const value = this.findEntityById('Gun', id)
-    return value ? new Gun().copy(value, ['id']) : null
+    return value ? new Gun().copy(value).rebuildId() : null
   }
 
   /**
    *
    * @param {string} entityName
    * @param {string} id
-   * @returns {T | null}
+   * @returns {Particle|?}
    */
   findEntityById(entityName, id) {
     const value = this.items.find((item) => {

@@ -7,16 +7,16 @@ import ParticlePlayGround from './../../entity/ParticlePlayGround'
  * @param {object} res
  */
 export async function playGroundData(req, res) {
-  const playerId = req.body['id']
+  const userId = req.body['id']
   const db = await core.mgDBAsync()
   const particlePlayGround = new ParticlePlayGround()
 
-  const player = await getPlayer(db, playerId)
+  const player = await getPlayerByUserId(db, userId)
 
   if (player) {
     const universe = await getUniverse(db, 1)
     const sector = await getSector(db, player.sectorId)
-    const playerParticle = await getPlayerParticle(db, playerId)
+    const playerParticle = await getPlayerParticle(db, player.id)
     const sectorParticle = await getSectorParticle(db, player.sectorId)
 
     particlePlayGround
@@ -33,11 +33,11 @@ export async function playGroundData(req, res) {
 /**
  *
  * @param {Db} db
- * @param {string} id
+ * @param {string} userId
  * @returns {Promise<Object>}
  */
-async  function getPlayer(db, id) {
-  return findOne(db, 'Player', { id } )
+async  function getPlayerByUserId(db, userId) {
+  return findOne(db, 'Player', { userId } )
 }
 
 /**

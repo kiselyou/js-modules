@@ -1,7 +1,13 @@
+import { configuration } from './actions/app'
 import { playGroundData } from './actions/playground'
 import { userAuthorization, userRegistration, userRestore, logout } from './actions/auth'
 
 const routes = [
+  {
+    method: 'post',
+    path: '/app/config',
+    action: configuration
+  },
   {
     method: 'post',
     path: '/user/data/:id',

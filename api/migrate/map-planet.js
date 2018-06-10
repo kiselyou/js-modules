@@ -162,7 +162,7 @@ export async function installPlanet(db, catalog, sectorId) {
   const rememberParticleId = {}
   const sectorHasPlanet = []
   for (let entity of planet) {
-    const particle = new Planet().copy(entity, ['id'])
+    const particle = new Planet().copy(entity).rebuildId()
     rememberParticleId[entity.id] = particle.id
     sectorHasPlanet.push(
       new SectorHasParticle().setSectorId(sectorId).setParticle(particle)

@@ -4,6 +4,7 @@ import Player from './particles-sector/Player'
 import Sector from './particles-sector/Sector'
 
 import Star from './particles-sector/Star'
+import Slot from './particles-spaceship/Slot'
 import Planet from './particles-sector/Planet'
 import Station from './particles-sector/Station'
 import Asteroid from './particles-sector/Asteroid'
@@ -48,13 +49,13 @@ class ParticlePlayGround {
      *
      * @type {Array.<Player|Particle>}
      */
-    this.players = [this.player]//TODO: mast be clean array.
+    this.players = [this.player]//TODO: socket test the same ship
 
     /**
      *
      * @type {Array.<Sector|Particle>}
      */
-    this.sectors = [this.sector]//TODO: mast be clean array.
+    this.sectors = [this.sector]//TODO: socket test the same ship
 
     /**
      *
@@ -125,13 +126,35 @@ class ParticlePlayGround {
 
   /**
    *
+   * @param {string} slotId
+   * @returns {Particle|?}
+   */
+  getPlayerParticleBySlotId(slotId) {
+    if ( ! slotId) {
+      return null
+    }
+    for (const item of this.playerHasParticle) {
+      if (item.slotId === slotId) {
+        return item.particle
+      }
+    }
+    return null
+  }
+
+  /**
+   * Give copy of object
+   *
    * @param {string} id
    * @returns {Spaceship|?}
    */
   getSpaceshipById(id) {
     for (const item of this.playerHasParticle) {
-      if (item.particle.id === id) {
-        return new Spaceship().copy(item.particle)
+      if (item.particle.id === id && item.particle.entity === 'Spaceship') {
+        const spaceship = new Spaceship().copy(item.particle)
+        for (const slot of spaceship.slot) {
+          slot.copyParticle(this.getPlayerParticleBySlotId(slot.id))
+        }
+        return spaceship
       }
     }
     return null

@@ -15,6 +15,7 @@ import Inline from './Inline'
 import BodyWrapper from './BodyWrapper'
 import Informer from './Informer'
 import InputText from './InputText'
+import InputRadio from './InputRadio'
 import Ajax from '@helper/ajax/Ajax'
 import objectPath from 'object-path'
 import AsyncLoader from "@app/react/components/AsyncLoader";
@@ -264,6 +265,15 @@ class App extends React.Component {
   }
 
   render() {
+
+    const models = this.props.defaultModels.map((item, i) => {
+      return {
+        value: item.id,
+        label: item.name,
+        checked: i === 0
+      }
+    })
+
     return (
       <div>
 
@@ -373,7 +383,16 @@ class App extends React.Component {
 
             <BodyWrapper margin={BodyWrapper.MD}>
               <form id={'form-registration'}>
-                <InputText name={'email'} label={'Email address'}/>
+                <BodyWrapper margin={BodyWrapper.SM}>
+                  <InputText name={'email'} label={'Email address'}/>
+                </BodyWrapper>
+
+                <BodyWrapper margin={BodyWrapper.SM}>
+                  <InputRadio
+                    name={'spaceshipId'}
+                    label={'Select base ship'}
+                    items={models}/>
+                </BodyWrapper>
               </form>
             </BodyWrapper>
 
@@ -438,7 +457,8 @@ class App extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    user: state.user
+    user: state.user,
+    defaultModels: state.defaultModels
   }
 }
 
