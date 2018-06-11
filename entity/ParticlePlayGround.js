@@ -49,13 +49,13 @@ class ParticlePlayGround {
      *
      * @type {Array.<Player|Particle>}
      */
-    this.players = [this.player]//TODO: socket test the same ship
+    this.players = []
 
     /**
      *
      * @type {Array.<Sector|Particle>}
      */
-    this.sectors = [this.sector]//TODO: socket test the same ship
+    this.sectors = []
 
     /**
      *
@@ -94,11 +94,12 @@ class ParticlePlayGround {
 
   /**
    *
-   * @param {Object} data
+   * @param {ParticlePlayer|Object} data
    * @returns {ParticlePlayGround}
    */
-  addPlayer(data) {
-    this.players.push(new Player().copy(data))
+  addParticlePlayer(data) {
+    this.players.push(new Player().copy(data.player))
+    this.setPlayerHasParticle(data.playerHasParticle)
     return this
   }
 
@@ -126,14 +127,18 @@ class ParticlePlayGround {
 
   /**
    *
+   * @param {string} playerId
    * @param {string} slotId
    * @returns {Particle|?}
    */
-  getPlayerParticleBySlotId(slotId) {
+  getPlayerParticleBySlotId(playerId, slotId) {
     if ( ! slotId) {
       return null
     }
     for (const item of this.playerHasParticle) {
+      if (item.playerId !== playerId) {
+        continue
+      }
       if (item.slotId === slotId) {
         return item.particle
       }
@@ -144,15 +149,18 @@ class ParticlePlayGround {
   /**
    * Give copy of object
    *
-   * @param {string} id
+   * @param {Player} player
    * @returns {Spaceship|?}
    */
-  getSpaceshipById(id) {
+  getPlayerSpaceship(player) {
     for (const item of this.playerHasParticle) {
-      if (item.particle.id === id && item.particle.entity === 'Spaceship') {
+      if (item.playerId !== player.id) {
+        continue
+      }
+      if (item.particle.id === player.spaceshipId && item.particle.entity === 'Spaceship') {
         const spaceship = new Spaceship().copy(item.particle)
         for (const slot of spaceship.slot) {
-          slot.copyParticle(this.getPlayerParticleBySlotId(slot.id))
+          slot.copyParticle(this.getPlayerParticleBySlotId(player.id, slot.id))
         }
         return spaceship
       }

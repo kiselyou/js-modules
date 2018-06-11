@@ -1,6 +1,8 @@
 import RaceControls from './RaceControls'
 import ModelSpaceship from './models/spaceship/ModelSpaceship'
 import ParticlePlayGround from '@entity/ParticlePlayGround'
+import Player from '@entity/particles-sector/Player'
+import ShotControls from './ShotControls'
 
 class CharacterControls extends ModelSpaceship {
   /**
@@ -19,6 +21,18 @@ class CharacterControls extends ModelSpaceship {
 
     /**
      *
+     * @type {ShotControls}
+     */
+    this.shotCcntrols = new ShotControls()
+
+    /**
+     *
+     * @type {Player}
+     */
+    this.player = new Player()
+
+    /**
+     *
      * @type {boolean}
      */
     this.enabled = false
@@ -29,18 +43,30 @@ class CharacterControls extends ModelSpaceship {
    */
   async beforeStart() {
     await super.beforeStart()
-    this.enabled = true
     await this.raceControls.beforeStart()
+    this.mesh.position.copy(this.player.position)
+    this.enabled = true
   }
 
   /**
    *
-   * @param {Player} player
+   * @param {Player|Object} data
+   * @returns {CharacterControls}
+   */
+  copyPlayer(data) {
+    this.player.copy(data)
+    return this
+  }
+
+  /**
+   * Before call this method - Player must be set
+   *
    * @param {ParticlePlayGround} data
    * @returns {ModelSpaceship}
    */
-  copy(player, data) {
-    super.copy(player, data)
+  copy(data) {
+    super.copy(data)
+    this.spaceship.copy(data.getPlayerSpaceship(this.player))
     return this
   }
 
@@ -52,6 +78,7 @@ class CharacterControls extends ModelSpaceship {
   update(delta) {
     if (this.enabled) {
       super.update(delta)
+      this.player.position.copy(this.mesh.position)
     }
   }
 

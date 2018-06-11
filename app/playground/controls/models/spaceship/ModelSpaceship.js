@@ -1,5 +1,4 @@
 import Player from '@entity/particles-sector/Player'
-import Spaceship from '@entity/particles-spaceship/Spaceship'
 import MoveControls from './../../MoveControls'
 
 class ModelSpaceship extends MoveControls {
@@ -24,12 +23,6 @@ class ModelSpaceship extends MoveControls {
 
     /**
      *
-     * @type {Player}
-     */
-    this.player = new Player()
-
-    /**
-     *
      * @type {null|Group}
      */
     this.model = null
@@ -41,7 +34,6 @@ class ModelSpaceship extends MoveControls {
   async beforeStart() {
     this.buildModel()
     await super.beforeStart()
-    this.mesh.position.copy(this.player.position)
   }
 
   /**
@@ -68,13 +60,11 @@ class ModelSpaceship extends MoveControls {
 
   /**
    *
-   * @param {Player} player
    * @param {ParticlePlayGround} data
    * @returns {ModelSpaceship}
    */
-  copy(player, data) {
-    this.player.copy(player)
-    this.spaceship.copy(data.getSpaceshipById(this.player.spaceshipId))
+  copy(data) {
+
     return this
   }
 
@@ -85,7 +75,6 @@ class ModelSpaceship extends MoveControls {
    */
   update(delta) {
     super.update(delta)
-    this.player.position.copy(this.mesh.position)
   }
 }
 

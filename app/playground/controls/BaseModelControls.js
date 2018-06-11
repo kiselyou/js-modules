@@ -135,7 +135,7 @@ class BaseModelControls {
 
       const eventName = `update.tooltip.${element.id}`
       if (isIntersect) {
-        this.eventControls.ifNotActive(eventName, () => {
+        this.eventControls.once(eventName, () => {
           const maxSize = DetectObject3D.maxSize(element.model)
           this.scene.add(
             this.tooltip
@@ -149,7 +149,7 @@ class BaseModelControls {
           )
         })
       } else {
-        this.eventControls.ifActive(eventName, () => {
+        this.eventControls.resetOnce(eventName, () => {
           this.scene.remove(this.tooltip.getSprite())
         })
       }
@@ -185,7 +185,7 @@ class BaseModelControls {
    * @param {string} folderName
    */
   prepareDebugPanel(element, folderName) {
-    this.eventControls.ifNotActive(folderName, () => {
+    this.eventControls.once(folderName, () => {
       this.debugPanel
         .addFolder(folderName)
         .add(element.model.scale, 'x', 'Scale X', 0.01, 100)

@@ -12,26 +12,28 @@ class EventControls {
    *
    * @param {string} eventName
    * @param {Function} callback
-   * @returns {void}
+   * @returns {EventControls}
    */
-  ifActive(eventName, callback) {
-    if (this.events[eventName]) {
-      this.events[eventName] = false
+  once(eventName, callback) {
+    if ( ! this.events[eventName]) {
+      this.events[eventName] = true
       callback()
     }
+    return this
   }
 
   /**
    *
    * @param {string} eventName
    * @param {Function} callback
-   * @returns {void}
+   * @returns {EventControls}
    */
-  ifNotActive(eventName, callback) {
-    if (!this.events[eventName]) {
-      this.events[eventName] = true
+  resetOnce(eventName, callback) {
+    if (this.events[eventName]) {
+      this.events[eventName] = false
       callback()
     }
+    return this
   }
 }
 

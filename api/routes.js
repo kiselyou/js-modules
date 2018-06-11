@@ -1,4 +1,5 @@
 import { configuration } from './actions/app'
+import { playerDataAdd } from './actions/player'
 import { playGroundData } from './actions/playground'
 import { userAuthorization, userRegistration, userRestore, logout } from './actions/auth'
 
@@ -10,7 +11,7 @@ const routes = [
   },
   {
     method: 'post',
-    path: '/user/data/:id',
+    path: '/playground/data',
     action: playGroundData
   },
   {
@@ -32,7 +33,12 @@ const routes = [
     method: 'get',
     path: '/user/logout',
     action: logout
-  }
+  },
+  {
+    method: 'post',
+    path: '/player/data/add',
+    action: playerDataAdd
+  },
 ]
 
 export default routes

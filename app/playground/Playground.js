@@ -21,7 +21,10 @@ import Gyroscope from '@app/three-dependense/Gyroscope'
 import OrbitControls from '@app/three-dependense/OrbitControls'
 import DebugPanel from '@app/debug/DebugPanel'
 import LightControls from '@app/playground/controls/LightControls'
-import ParticlePlayGround from "@entity/ParticlePlayGround";
+import ParticlePlayGround from '@entity/ParticlePlayGround'
+import ParticlePlayer from '@entity/ParticlePlayer'
+import EventControls from './controls/EventControls'
+import Ajax from '@helper/ajax/Ajax'
 
 const stats = new Stats()
 // stats.setMode(1)
@@ -105,6 +108,12 @@ class Playground {
      * @type {CharacterControls}
      */
     this.characterControls = new CharacterControls(this.scene, this.loader)
+
+    /**
+     *
+     * @type {EventControls}
+     */
+    this.eventControls = new EventControls()
 
     /**
      *
@@ -297,23 +306,35 @@ class Playground {
    */
   copy(data) {
     this.sectorControls.copy(data)
-    this.characterControls.copy(data.getCurrentPlayer(), data)
+    this.characterControls
+      .copyPlayer(data.getCurrentPlayer())
+      .copy(data)
     return this
   }
 
   /**
    *
-   * @param {Object} data
+   * @param {Object} playerData
    * @return {Playground}
    */
-  addPlayer(data) {
-    const player = this.particlePlayGround.getPlayerById(data.id)
-    const playerControls = new CharacterControls(this.scene, this.loader)
-    playerControls.copy(player, this.particlePlayGround)
-    playerControls.beforeStart()
-    this.playersControls.push(playerControls)
-    this.scene.add(playerControls.mesh)
-    return this
+  addPlayer(playerData) {
+    const playerId = playerData.id
+    Ajax.post('/player/data/add', { id: playerId })
+      .then((particlePlayerJson) => {
+        const particlePlayer = new ParticlePlayer().jsonToObject(particlePlayerJson)
+        this.particlePlayGround.addParticlePlayer(particlePlayer)
+
+        const player = this.particlePlayGround.getPlayerById(playerId)
+        const playerControls = new CharacterControls(this.scene, this.loader)
+        playerControls
+          .copyPlayer(player)
+          .copy(this.particlePlayGround)
+
+        playerControls.beforeStart()
+        this.playersControls.push(playerControls)
+        this.scene.add(playerControls.mesh)
+      })
+      .catch((error) => console.log(error, 'Something went wrong. Cannot add new player to scene.'))
   }
 
   /**
