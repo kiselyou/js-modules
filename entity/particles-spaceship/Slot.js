@@ -50,6 +50,16 @@ class Slot extends Particle {
 
   /**
    *
+   * @param {Vector3} v
+   * @returns {Slot}
+   */
+  setPosition(v) {
+    this.position.copy(v)
+    return this
+  }
+
+  /**
+   *
    * @param {number} value - constants of current class
    * @returns {Slot}
    */

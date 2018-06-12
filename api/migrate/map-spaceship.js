@@ -1,3 +1,4 @@
+import { Vector3 } from 'three'
 import * as CONST from './../../app/constants'
 import Slot from './../../entity/particles-spaceship/Slot'
 import Spaceship from './../../entity/particles-spaceship/Spaceship'
@@ -36,11 +37,13 @@ export const spaceship = [
     .addSlot(
       new Slot()
         .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
+        .setPosition(new Vector3( - 5, 0, 0))
         .setType(Slot.TYPE_GUN)
     )
     .addSlot(
       new Slot()
         .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
+        .setPosition(new Vector3(5, 0, 0))
         .setType(Slot.TYPE_GUN)
     )
     .addSlot(

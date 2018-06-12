@@ -3,6 +3,7 @@ import ModelSpaceship from './models/spaceship/ModelSpaceship'
 import ParticlePlayGround from '@entity/ParticlePlayGround'
 import Player from '@entity/particles-sector/Player'
 import ShotControls from './ShotControls'
+import Calculate from './../lib/Calculate'
 
 class CharacterControls extends ModelSpaceship {
   /**
@@ -23,7 +24,13 @@ class CharacterControls extends ModelSpaceship {
      *
      * @type {ShotControls}
      */
-    this.shotCcntrols = new ShotControls()
+    this.shotCcntrols = new ShotControls(this)
+
+    /**
+     *
+     * @type {Calculate}
+     */
+    this.calculate = new Calculate()
 
     /**
      *
@@ -39,12 +46,21 @@ class CharacterControls extends ModelSpaceship {
   }
 
   /**
+   *
+   * @returns {Vector3}
+   */
+  getTargetPosition() {
+    return this.calculate.getNextPosition(this, this.aim.position.z)
+  }
+
+  /**
    * @returns {void}
    */
   async beforeStart() {
     await super.beforeStart()
     await this.raceControls.beforeStart()
-    this.mesh.position.copy(this.player.position)
+    this.shotCcntrols.setSlots(this.spaceship)
+    this.position.copy(this.player.position)
     this.enabled = true
   }
 
@@ -78,7 +94,8 @@ class CharacterControls extends ModelSpaceship {
   update(delta) {
     if (this.enabled) {
       super.update(delta)
-      this.player.position.copy(this.mesh.position)
+      this.shotCcntrols.update(delta)
+      this.player.position.copy(this.position)
     }
   }
 
@@ -90,6 +107,18 @@ class CharacterControls extends ModelSpaceship {
    */
   updateTooltip(intersect, mouseEvent) {
 
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  onMouseClick(intersect, mouseEvent) {
+    const target = this.getTargetPosition()
+    this.shotCcntrols.shot('9a1e06f2-898d-4ac9-b57d-67b4a40f3cb3', target)
+    this.shotCcntrols.shot('dbaf5798-4507-49af-888e-5f852e7e8e96', target)
   }
 }
 

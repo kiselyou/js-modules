@@ -134,7 +134,7 @@ class Playground {
      * @type {OrbitControls}
      */
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.cameraControls.target.copy(this.characterControls.mesh.position)
+    this.cameraControls.target.copy(this.characterControls.position)
     this.cameraControls.enableKeys = false
     this.cameraControls.enablePan = false
     this.cameraControls.mouseButtons = { ORBIT: MOUSE.RIGHT, ZOOM: MOUSE.MIDDLE, PAN: MOUSE.LEFT };
@@ -149,8 +149,8 @@ class Playground {
      */
     this.gyroscope = new Gyroscope()
     this.gyroscope.add(this.camera);
-    this.characterControls.mesh.add(this.gyroscope)
-    this.scene.add(this.characterControls.mesh)
+    this.characterControls.add(this.gyroscope)
+    this.scene.add(this.characterControls)
 
     /**
      *
@@ -242,9 +242,9 @@ class Playground {
         .addFolder('Ship Info')
         .listenFields(true)
         .add(this.characterControls.engine, 'speed', 'Ship Speed')
-        .add(this.characterControls.mesh.position, 'x', 'Ship X')
-        .add(this.characterControls.mesh.position, 'y', 'Ship Y')
-        .add(this.characterControls.mesh.position, 'z', 'Ship Z')
+        .add(this.characterControls.position, 'x', 'Ship X')
+        .add(this.characterControls.position, 'y', 'Ship Y')
+        .add(this.characterControls.position, 'z', 'Ship Z')
         .listenFields(false)
         .addFolder('Ship speed')
         .add(this.characterControls.engine, 'maxSpeed', 'Max', 10, 400)
@@ -253,9 +253,9 @@ class Playground {
         .add(this.characterControls.engine, 'acceleration', 'Acceleration', 10, 500)
         .add(this.characterControls.engine, 'deceleration', 'Deceleration', 10, 500)
         .addFolder('Ship Scale')
-        .add(this.characterControls.mesh.children[1].scale, 'x', 'Scale X', 0, 5)
-        .add(this.characterControls.mesh.children[1].scale, 'y', 'Scale Y', 0, 5)
-        .add(this.characterControls.mesh.children[1].scale, 'z', 'Scale Z', 0, 5)
+        .add(this.characterControls.scale, 'x', 'Scale X', 0, 5)
+        .add(this.characterControls.scale, 'y', 'Scale Y', 0, 5)
+        .add(this.characterControls.scale, 'z', 'Scale Z', 0, 5)
     }, 5000)
 
     /**
@@ -284,6 +284,7 @@ class Playground {
     this.copy(this.particlePlayGround)
     await this.sectorControls.beforeStart()
     await this.characterControls.beforeStart()
+    this.characterControls.buildAim()
 
     this.animateStart()
     return this
@@ -380,7 +381,7 @@ class Playground {
       player.update(this.delta)
     }
 
-    const position = this.characterControls.mesh.position
+    const position = this.characterControls.position
     this.sectorControls.update(this.delta, position)
     this.lightControls.update(this.delta, position)
     this.renderer.render(this.scene, this.camera)
@@ -439,6 +440,7 @@ class Playground {
   onMouseClick(e) {
     this.intersect.updateMouse(e)
     this.sectorControls.onClick(this.intersect, e)
+    this.characterControls.onMouseClick(this.intersect, e)
   }
 
   /**

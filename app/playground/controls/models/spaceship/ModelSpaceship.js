@@ -1,4 +1,4 @@
-import Player from '@entity/particles-sector/Player'
+import Aim from './../../../decoration/Aim'
 import MoveControls from './../../MoveControls'
 
 class ModelSpaceship extends MoveControls {
@@ -23,9 +23,11 @@ class ModelSpaceship extends MoveControls {
 
     /**
      *
-     * @type {null|Group}
+     * @type {Aim}
      */
-    this.model = null
+    this.aim = new Aim()
+    this.aim.position.z = 800
+    this.aim.scale.set(0.15, 0.15, 0.15)
   }
 
   /**
@@ -40,10 +42,19 @@ class ModelSpaceship extends MoveControls {
    *
    * @returns {ModelSpaceship}
    */
+  buildAim() {
+    this.aim.build()
+    this.add(this.aim)
+    return this
+  }
+
+  /**
+   *
+   * @returns {ModelSpaceship}
+   */
   buildModel() {
-    this.removeModel()
-    this.model = this.loader.getModel(this.spaceship.modelKey)
-    this.mesh.add(this.model)
+    const model = this.loader.getModel(this.spaceship.modelKey)
+    this.add(model)
     return this
   }
 
@@ -52,9 +63,9 @@ class ModelSpaceship extends MoveControls {
    * @returns {ModelSpaceship}
    */
   removeModel() {
-    if (this.model) {
-      this.mesh.remove(this.model)
-    }
+    // for (const element of this.mesh.children) {
+    //   this.mesh.remove(element)
+    // }
     return this
   }
 

@@ -1,4 +1,4 @@
-import { Object3D, Math as TMath } from 'three'
+import { Object3D, Mesh, Math as TMath } from 'three'
 import Engine from '@entity/particles-spaceship/Engine'
 import Spaceship from "@entity/particles-spaceship/Spaceship";
 
@@ -8,14 +8,9 @@ export const LEFT = 'left'
 export const RIGHT = 'right'
 export const SLOWDOWN = 'slowdown'
 
-class MoveControls {
+class MoveControls extends Object3D {
   constructor() {
-
-    /**
-     *
-     * @type {Object3D}
-     */
-    this.mesh = new Object3D()
+    super()
 
     /**
      *
@@ -206,9 +201,9 @@ class MoveControls {
     }
 
     let forwardDelta = this.engine.speed * delta
-    this.mesh.position.x += Math.sin(this.engine.bodyOrientation) * forwardDelta
-    this.mesh.position.z += Math.cos(this.engine.bodyOrientation) * forwardDelta
-    this.mesh.rotation.y = this.engine.bodyOrientation
+    this.position.x += Math.sin(this.engine.bodyOrientation) * forwardDelta
+    this.position.z += Math.cos(this.engine.bodyOrientation) * forwardDelta
+    this.rotation.y = this.engine.bodyOrientation
   }
 
   /**
@@ -242,7 +237,7 @@ class MoveControls {
             break
           case 'position':
           case 'rotation':
-            this['mesh'][property].copy(data[property])
+            this[property].copy(data[property])
             break
           default:
             this[property] = data[property]
@@ -263,14 +258,11 @@ class MoveControls {
       'moveActions',
       'prevMoveActions',
       'engine',
-      'mesh'
+      'position',
+      'rotation'
     ]
     for (const property of properties) {
       switch (property) {
-        case 'mesh':
-          data['position'] = this[property]['position']
-          data['rotation'] = this[property]['rotation']
-          break
         case 'engine':
           data['engine'] = this.engine.getSwapInfo()
           break
