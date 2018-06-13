@@ -1,4 +1,4 @@
-import { Vector3 } from 'three'
+import { Vector3, Mesh } from 'three'
 
 class Calculate {
   constructor() {
@@ -7,6 +7,12 @@ class Calculate {
      * @type {Vector3}
      */
     this.tmp = new Vector3(0, 0, 0)
+
+    /**
+     *
+     * @type {Mesh}
+     */
+    this.mesh = new Mesh()
   }
 
   /**
@@ -40,6 +46,19 @@ class Calculate {
   getChildPositionInWorld(parent, child) {
     parent.updateMatrixWorld()
     return this.tmp.setFromMatrixPosition(child.matrixWorld).clone()
+  }
+
+  /**
+   *
+   * @param {Object3D} parent
+   * @param {Object3D} element
+   * @returns {Vector3}
+   */
+  getPositionInWorld(parent, element) {
+    parent.add(element)
+    const startPosition = this.getChildPositionInWorld(parent, element)
+    parent.remove(element)
+    return startPosition
   }
 }
 

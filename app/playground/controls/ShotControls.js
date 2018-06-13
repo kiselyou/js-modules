@@ -1,7 +1,7 @@
 import ModelCharge from './models/charge/ModelCharge'
 import Slot from '@entity/particles-spaceship/Slot'
 import Gun from '@entity/particles-spaceship/Gun'
-import { Vector3, Mesh, MeshBasicMaterial, SphereGeometry } from 'three'
+import { Vector3, Mesh, MeshBasicMaterial, BoxGeometry } from 'three'
 
 class ShotControls {
   /**
@@ -39,6 +39,16 @@ class ShotControls {
 
   /**
    *
+   * @param {string} slotId
+   * @returns {Charge}
+   */
+  getChargeBySlotId(slotId) {
+    const slot = this.getSlot(slotId)
+    return slot ? slot.particle.charge : null
+  }
+
+  /**
+   *
    * @param {Slot} slot
    * @returns {ShotControls}
    */
@@ -58,26 +68,39 @@ class ShotControls {
         this.addSlot(slot)
       }
     }
-    console.log(spaceship, this.slots)
     return this
   }
 
   /**
    *
    * @param {string} slotId
-   * @param {Vector3} target
+   * @param {Vector3|?} [target]
    */
   shot(slotId, target) {
     const slot = this.getSlot(slotId)
+
     if ( ! slot) {
       return this
     }
 
-    const charge = new ModelCharge()
+    // Mesh, MeshBasicMaterial, BoxGeometry
+    const m = new MeshBasicMaterial({color: 0xFF0000})
+    const g = new BoxGeometry(10, 10, 10)
+    const mesh = new Mesh(g, m)
+    mesh.position.set(this.character.position.x, this.character.position.y, this.character.position.z + 600)
+    this.character.scene.add(mesh)
+
+    const direction = this.character.getDirection()
+    const modelCharge = new ModelCharge(mesh)
+      .copyCharge(slot.particle.charge)
+      .copyPosition(slot.position)
+      .setDirection(direction)
       .setTarget(target)
       .buildMesh()
-    charge.position.copy(slot.position)
-    this.addCharge(charge)
+      .onRemove(() => this.removeCharge(modelCharge))
+
+
+    this.addCharge(modelCharge)
   }
 
   /**
@@ -86,15 +109,11 @@ class ShotControls {
    * @return {ShotControls}
    */
   addCharge(charge) {
-    const ship = this.character
-    const calc = this.character.calculate
+    const startPosition = this.character.calculate.getPositionInWorld(this.character, charge)
+    charge.copyPosition(startPosition).enable(true)
 
-    ship.add(charge)
-    charge.position.copy(calc.getChildPositionInWorld(ship, charge))
-    ship.remove(charge)
-    ship.scene.add(charge)
+    this.character.scene.add(charge)
     this.charges.push(charge)
-    charge.enable(true)
     return this
   }
 
@@ -107,12 +126,17 @@ class ShotControls {
     this.character.scene.remove(charge)
     for (let i = 0; i < this.charges.length; i++) {
       if (this.charges[i]['id'] === charge['id']) {
+        this.character.scene.remove(charge)
         this.charges.splice(i, 1)
         break
       }
     }
   }
 
+  /**
+   *
+   * @param {number} delta
+   */
   update(delta) {
     for (const charge of this.charges) {
       if (charge.enabled) {

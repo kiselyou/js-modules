@@ -46,11 +46,21 @@ class CharacterControls extends ModelSpaceship {
   }
 
   /**
+   * Get position of aim in world
    *
    * @returns {Vector3}
    */
   getTargetPosition() {
     return this.calculate.getNextPosition(this, this.aim.position.z)
+  }
+
+  /**
+   * Get ships direction
+   *
+   * @returns {Vector3}
+   */
+  getDirection() {
+    return this.calculate.getDirection(this)
   }
 
   /**
@@ -117,8 +127,8 @@ class CharacterControls extends ModelSpaceship {
    */
   onMouseClick(intersect, mouseEvent) {
     const target = this.getTargetPosition()
-    this.shotCcntrols.shot('9a1e06f2-898d-4ac9-b57d-67b4a40f3cb3', target)
-    this.shotCcntrols.shot('dbaf5798-4507-49af-888e-5f852e7e8e96', target)
+    this.shotCcntrols.shot('9a5d42f7-277c-43de-b219-9bde8b91e6f8', target)
+    this.shotCcntrols.shot('df3f312c-350c-4dc7-a3a5-4912e1532780', target)
   }
 }
 
