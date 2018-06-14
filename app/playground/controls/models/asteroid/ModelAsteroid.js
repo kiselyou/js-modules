@@ -1,5 +1,6 @@
 import Asteroid from '@entity/particles-sector/Asteroid'
-import {BoxGeometry, Mesh, MeshPhongMaterial} from 'three'
+import {BoxGeometry, MeshPhongMaterial} from 'three'
+import Model from './../Model'
 
 class ModelAsteroid extends Asteroid {
   /**
@@ -23,9 +24,9 @@ class ModelAsteroid extends Asteroid {
 
     /**
      *
-     * @type {Mesh}
+     * @type {Model}
      */
-    this.model = new Mesh()
+    this.model = new Model()
   }
 
   /**

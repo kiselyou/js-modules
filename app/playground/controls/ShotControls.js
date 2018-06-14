@@ -1,7 +1,9 @@
 import ModelCharge from './models/charge/ModelCharge'
 import Slot from '@entity/particles-spaceship/Slot'
 import Gun from '@entity/particles-spaceship/Gun'
-import { Vector3, Mesh, MeshBasicMaterial, BoxGeometry } from 'three'
+import Model from './models/Model'
+import { Vector3 } from 'three'
+import ModelSpaceship from "@app/playground/controls/models/spaceship/ModelSpaceship";
 
 class ShotControls {
   /**
@@ -29,22 +31,25 @@ class ShotControls {
 
   /**
    *
+   * @returns {Array.<Model>}
+   */
+  getModelsFromScene() {
+    return this.character.scene.children.filter((element) => {
+      if (element instanceof ModelSpaceship && element !== this.character) {
+        return true
+      }
+      return element instanceof Model && element.enableIntersect
+    })
+  }
+
+  /**
+   *
    * @param {string} id
    * @returns {Slot|?}
    */
   getSlot(id) {
     const slot = this.slots.find((slot) => slot.id === id)
     return slot || null
-  }
-
-  /**
-   *
-   * @param {string} slotId
-   * @returns {Charge}
-   */
-  getChargeBySlotId(slotId) {
-    const slot = this.getSlot(slotId)
-    return slot ? slot.particle.charge : null
   }
 
   /**
@@ -83,22 +88,19 @@ class ShotControls {
       return this
     }
 
-    // Mesh, MeshBasicMaterial, BoxGeometry
-    const m = new MeshBasicMaterial({color: 0xFF0000})
-    const g = new BoxGeometry(10, 10, 10)
-    const mesh = new Mesh(g, m)
-    mesh.position.set(this.character.position.x, this.character.position.y, this.character.position.z + 600)
-    this.character.scene.add(mesh)
-
+    const objects = this.getModelsFromScene()
+    console.log(objects)
     const direction = this.character.getDirection()
-    const modelCharge = new ModelCharge(mesh)
+    const modelCharge = new ModelCharge()
       .copyCharge(slot.particle.charge)
       .copyPosition(slot.position)
       .setDirection(direction)
       .setTarget(target)
       .buildMesh()
       .onRemove(() => this.removeCharge(modelCharge))
-
+      .setIntersectObjects(objects, (intersect) => {
+        console.log(intersect, '+++')
+      })
 
     this.addCharge(modelCharge)
   }
@@ -111,7 +113,6 @@ class ShotControls {
   addCharge(charge) {
     const startPosition = this.character.calculate.getPositionInWorld(this.character, charge)
     charge.copyPosition(startPosition).enable(true)
-
     this.character.scene.add(charge)
     this.charges.push(charge)
     return this

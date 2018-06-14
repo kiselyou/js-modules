@@ -1,8 +1,8 @@
 import Charge from '@entity/particles-spaceship/Charge'
-import { Object3D, Vector3, Mesh, MeshBasicMaterial, SphereGeometry, Ray, Box3, Raycaster } from 'three'
+import { Object3D, Vector3, Mesh, MeshBasicMaterial, SphereGeometry, Raycaster } from 'three'
 
 class ModelCharge extends Object3D {
-  constructor(mesh) {
+  constructor() {
     super()
 
     /**
@@ -43,13 +43,7 @@ class ModelCharge extends Object3D {
 
     /**
      *
-     * @type {Ray}
-     */
-    this.ray = new Ray()
-
-    /**
-     *
-     * @type {Ray}
+     * @type {Raycaster}
      */
     this.raycaster = new Raycaster()
 
@@ -64,12 +58,43 @@ class ModelCharge extends Object3D {
     this.removeEvent = null
 
     /**
+     * Callback function if found intersected object
+     *
+     * @param {Array.<{distance: number, face: Face3, faceIndex: number, object: Mesh, point: Vector3, uv: Vector2}>} intersect
+     * @callback intersectEvent
+     */
+
+    /**
+     * Callback function if found intersected object
+     *
+     * @type {Array.<intersectEvent>}
+     */
+    this.intersectEvents = []
+
+    /**
+     * Objects to check intersection
+     *
+     * @type {Array.<Model|Mesh>}
+     */
+    this.intersectObjects = []
+
+    /**
      *
      * @type {boolean}
      */
     this.enabled = false
+  }
 
-    this.test = mesh
+  /**
+   *
+   * @param {Array.<Model|Mesh>} objects
+   * @param {intersectEvent} intersectEvent
+   * @returns {ModelCharge}
+   */
+  setIntersectObjects(objects, intersectEvent) {
+    this.intersectObjects = objects
+    this.intersectEvents.push(intersectEvent)
+    return this
   }
 
   /**
@@ -146,62 +171,64 @@ class ModelCharge extends Object3D {
 
   /**
    *
+   * @param {Array.<Mesh>} objects
+   * @param {Vector3} rayStart
+   * @param {Vector3} direction
+   * @param {number|Infinity} [far]
+   * @returns {Array.<{distance: number, face: Face3, faceIndex: number, object: Mesh, point: Vector3, uv: Vector2}>}
+   */
+  isRayIntersect(objects, rayStart, direction, far = Infinity) {
+    this.raycaster.ray.origin.copy(rayStart)
+    this.raycaster.ray.direction.copy(direction)
+    this.raycaster.near = 0
+    this.raycaster.far = far
+    return this.raycaster.intersectObjects(objects, true)
+  }
+
+  /**
+   *
+   * @private
+   * @returns {Array<{distance: number, face: Face3, faceIndex: number, object: Mesh, point: Vector3, uv: Vector2}>}
+   */
+  _findIntersection() {
+    const far = this.prev.distanceTo(this.position)
+    return this.isRayIntersect(this.intersectObjects, this.prev, this.direction, far)
+  }
+
+  /**
+   *
+   * @private
+   * @returns {void}
+   */
+  _remove() {
+    this.enable(false)
+    if (this.removeEvent) {
+      this.removeEvent()
+    }
+  }
+
+  /**
+   *
    * @param {number} delta
    * @returns {void}
    */
   update(delta) {
     if (this.enabled) {
       this.prev.copy(this.position)
-      // this.position.addScaledVector(this.direction, this.charge.speed * delta)
-      this.position.addScaledVector(this.direction, 5000 * delta)
+      this.position.addScaledVector(this.direction, this.charge.speed * delta)
 
-
-
-
-
-
-
-
-      // this.ray.origin.copy(this.prev)
-      // this.ray.direction.copy(this.direction)
-      // const d = this.prev.distanceTo(this.position)
-      //
-      // this.ray.recast(d)
-      // const box = new Box3()
-      // box.setFromObject(this.test)
-      // const s = this.ray.intersectsBox(box)
-      // console.log(s/*, this.prev, this.position*/)
-
-      this.raycaster.ray.origin.copy(this.prev)
-      this.raycaster.ray.direction.copy(this.direction)
-      this.raycaster.near = 0
-      this.raycaster.far = this.prev.distanceTo(this.position)
-
-      // const box = new Box3()
-      // box.setFromObject(this.test)
-      const s = this.raycaster.intersectObject(this.test)
-      if (s.length > 0) {
-        console.log(s/*, this.prev, this.position*/)
+      const intersects = this._findIntersection()
+      if (intersects.length > 0) {
+        this._remove()
+        for (const callback of this.intersectEvents) {
+          callback(intersects)
+        }
+        return
       }
-
-
-
-
-
-
-
-
-
-
-
-
 
       const distance = this.start.distanceTo(this.position)
       if (distance >= this.charge.maxDistance) {
-        this.enable(false)
-        if (this.removeEvent) {
-          this.removeEvent()
-        }
+        this._remove()
       }
     }
   }

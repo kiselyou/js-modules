@@ -25,6 +25,7 @@ import ParticlePlayGround from '@entity/ParticlePlayGround'
 import ParticlePlayer from '@entity/ParticlePlayer'
 import EventControls from './controls/EventControls'
 import Ajax from '@helper/ajax/Ajax'
+import Model from '@app/playground/controls/models/Model'
 
 const stats = new Stats()
 // stats.setMode(1)
@@ -333,7 +334,7 @@ class Playground {
 
         playerControls.beforeStart()
         this.playersControls.push(playerControls)
-        this.scene.add(playerControls.mesh)
+        this.scene.add(playerControls)
       })
       .catch((error) => console.log(error, 'Something went wrong. Cannot add new player to scene.'))
   }
@@ -347,7 +348,7 @@ class Playground {
     for (let i = 0; i < this.playersControls.length; i++) {
       const playerControls = this.playersControls[i]
       if (playerControls.player.id === playerId) {
-        this.scene.remove(playerControls.mesh)
+        this.scene.remove(playerControls)
         this.playersControls.splice(i, 1)
         break;
       }

@@ -1,6 +1,7 @@
 import Aim from './../../../decoration/Aim'
 import MoveControls from './../../MoveControls'
 
+
 class ModelSpaceship extends MoveControls {
   /**
    *

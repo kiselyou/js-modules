@@ -1,7 +1,8 @@
-import { Mesh, MeshBasicMaterial, SphereGeometry } from 'three'
+import { MeshBasicMaterial, SphereGeometry } from 'three'
 import Station from '@entity/particles-sector/Station'
 import DetectObject3D from '@helper/DetectObject3D'
 import * as CONST from '@app/constants'
+import Model from './../Model'
 
 class ModelStation extends Station {
   /**
@@ -25,9 +26,9 @@ class ModelStation extends Station {
 
     /**
      *
-     * @type {Mesh}
+     * @type {Model}
      */
-    this.model = new Mesh()
+    this.model = new Model()
   }
 
   /**
