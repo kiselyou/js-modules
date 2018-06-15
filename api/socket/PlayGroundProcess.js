@@ -52,6 +52,10 @@ class PlayGroundProcess extends Server {
           socket.broadcast.emit('swap-player-action-move', data);
         });
 
+        socket.on('swap-player-action-shot', (characterId, action, options) => {
+          // TODO: нужно как то фильтровать по сектор ID
+          socket.broadcast.emit('swap-player-action-shot', characterId, action, options);
+        });
 
         const eachMinuteEmit = () => {
           if (playerInfo.sectorId) {

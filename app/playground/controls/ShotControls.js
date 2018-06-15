@@ -1,6 +1,4 @@
 import ModelCharge from './models/charge/ModelCharge'
-import Slot from '@entity/particles-spaceship/Slot'
-import Gun from '@entity/particles-spaceship/Gun'
 import Model from './models/Model'
 import { Vector3 } from 'three'
 import ModelSpaceship from "@app/playground/controls/models/spaceship/ModelSpaceship";
@@ -18,15 +16,106 @@ class ShotControls {
 
     /**
      *
-     * @type {Array.<Slot>}
-     */
-    this.slots = []
-
-    /**
-     *
      * @type {Array.<ModelCharge>}
      */
     this.charges = []
+
+    /**
+     * @param {number} action
+     * @param {Object} swapInfo
+     * @callback shotEventListener
+     */
+
+    /**
+     *
+     * @type {Array.<shotEventListener>}
+     */
+    this.shotListener = []
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get EVENT_CHARGE_ADD() {
+    return 1
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get EVENT_CHARGE_UPDATE() {
+    return 2
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get EVENT_CHARGE_DELETE() {
+    return 3
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get EVENT_CHARGE_INTERSECT() {
+    return 4
+  }
+
+  /**
+   * Call this method to get shot swap info
+   *
+   * @param {shotEventListener} callback
+   * @returns {ShotControls}
+   */
+  addShotEventListener(callback) {
+    this.shotListener.push(callback)
+    return this
+  }
+
+  /**
+   *
+   * @param {number} action
+   * @param {Object} swapInfo
+   * @returns {ShotControls}
+   */
+  callShotEvent(action, swapInfo) {
+    for (const callback of this.shotListener) {
+      callback(action, swapInfo)
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {number} action - This is value of constants of current class.
+   * @param {Object} data - This is value from second argument of callback function "shotEventListener"
+   */
+  setShotSwapInfo(action, data) {
+    let charge
+    switch (action) {
+      case ShotControls.EVENT_CHARGE_ADD:
+        // Добавляем снаряд игроку B
+        const modelCharge = new ModelCharge().setModelChargeSwapInfo(data).buildMesh()
+        this.addCharge(modelCharge)
+        break
+      case ShotControls.EVENT_CHARGE_UPDATE:
+        // TODO Корректировка позиции снаряда у игрока "B" возможно нет необходимости
+        break
+      case ShotControls.EVENT_CHARGE_DELETE:
+        // Удаляем снаряд у игрока B
+        charge = this.findChargeByName(data.name)
+        this.removeCharge(charge)
+        break
+      case ShotControls.EVENT_CHARGE_INTERSECT:
+        // Снаряд пересекся с объектом. Изменяем информацию у игрока B
+        charge = this.findChargeByName(data.name)
+        this.removeCharge(charge)
+        break
+    }
   }
 
   /**
@@ -44,36 +133,10 @@ class ShotControls {
 
   /**
    *
-   * @param {string} id
-   * @returns {Slot|?}
+   * @returns {Spaceship}
    */
-  getSlot(id) {
-    const slot = this.slots.find((slot) => slot.id === id)
-    return slot || null
-  }
-
-  /**
-   *
-   * @param {Slot} slot
-   * @returns {ShotControls}
-   */
-  addSlot(slot) {
-    this.slots.push(slot)
-    return this
-  }
-
-  /**
-   *
-   * @param {Spaceship} spaceship
-   * @returns {ShotControls}
-   */
-  setSlots(spaceship) {
-    for (const slot of spaceship.slot) {
-      if (slot.particle instanceof Gun) {
-        this.addSlot(slot)
-      }
-    }
-    return this
+  get spaceship() {
+    return this.character.spaceship
   }
 
   /**
@@ -82,27 +145,36 @@ class ShotControls {
    * @param {Vector3|?} [target]
    */
   shot(slotId, target) {
-    const slot = this.getSlot(slotId)
-
+    const slot = this.spaceship.getSlotById(slotId)
     if ( ! slot) {
       return this
     }
 
     const objects = this.getModelsFromScene()
-    console.log(objects)
     const direction = this.character.getDirection()
     const modelCharge = new ModelCharge()
       .copyCharge(slot.particle.charge)
-      .copyPosition(slot.position)
+      // Set slot position for ModelCharge. This value will be change bellow.
+      // It need to calculate world position
+      .setPosition(slot.position)
       .setDirection(direction)
       .setTarget(target)
       .buildMesh()
-      .onRemove(() => this.removeCharge(modelCharge))
+      .onRemove(() => {
+        this.removeCharge(modelCharge)
+        this.callShotEvent(ShotControls.EVENT_CHARGE_DELETE, modelCharge.getModelChargeSwapInfo())
+      })
       .setIntersectObjects(objects, (intersect) => {
-        console.log(intersect, '+++')
+        this.callShotEvent(ShotControls.EVENT_CHARGE_INTERSECT, modelCharge.getModelChargeSwapInfo())
       })
 
+    // Calculate world position
+    const worldPosition = this.character.calculate.getPositionInWorld(this.character, modelCharge)
+    // Set world position for ModelCharge
+    modelCharge.setPosition(worldPosition).enable(true)
+
     this.addCharge(modelCharge)
+    this.callShotEvent(ShotControls.EVENT_CHARGE_ADD, modelCharge.getModelChargeSwapInfo())
   }
 
   /**
@@ -111,11 +183,23 @@ class ShotControls {
    * @return {ShotControls}
    */
   addCharge(charge) {
-    const startPosition = this.character.calculate.getPositionInWorld(this.character, charge)
-    charge.copyPosition(startPosition).enable(true)
     this.character.scene.add(charge)
     this.charges.push(charge)
     return this
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {ModelCharge|?}
+   */
+  findChargeByName(name) {
+    for (const charge of this.charges) {
+      if (charge.name === name) {
+        return charge
+      }
+    }
+    return null
   }
 
   /**
@@ -124,6 +208,10 @@ class ShotControls {
    * @return {ShotControls}
    */
   removeCharge(charge) {
+    if (!charge) {
+      return this
+    }
+
     this.character.scene.remove(charge)
     for (let i = 0; i < this.charges.length; i++) {
       if (this.charges[i]['id'] === charge['id']) {
@@ -132,6 +220,7 @@ class ShotControls {
         break
       }
     }
+    return this
   }
 
   /**

@@ -4,6 +4,7 @@ import ParticlePlayGround from '@entity/ParticlePlayGround'
 import Player from '@entity/particles-sector/Player'
 import ShotControls from './ShotControls'
 import Calculate from './../lib/Calculate'
+import Slot from "@entity/particles-spaceship/Slot";
 
 class CharacterControls extends ModelSpaceship {
   /**
@@ -24,7 +25,7 @@ class CharacterControls extends ModelSpaceship {
      *
      * @type {ShotControls}
      */
-    this.shotCcntrols = new ShotControls(this)
+    this.shotControls = new ShotControls(this)
 
     /**
      *
@@ -69,7 +70,6 @@ class CharacterControls extends ModelSpaceship {
   async beforeStart() {
     await super.beforeStart()
     await this.raceControls.beforeStart()
-    this.shotCcntrols.setSlots(this.spaceship)
     this.position.copy(this.player.position)
     this.enabled = true
   }
@@ -104,7 +104,7 @@ class CharacterControls extends ModelSpaceship {
   update(delta) {
     if (this.enabled) {
       super.update(delta)
-      this.shotCcntrols.update(delta)
+      this.shotControls.update(delta)
       this.player.position.copy(this.position)
     }
   }
@@ -127,8 +127,11 @@ class CharacterControls extends ModelSpaceship {
    */
   onMouseClick(intersect, mouseEvent) {
     const target = this.getTargetPosition()
-    this.shotCcntrols.shot('9a5d42f7-277c-43de-b219-9bde8b91e6f8', target)
-    this.shotCcntrols.shot('df3f312c-350c-4dc7-a3a5-4912e1532780', target)
+    //TODO: temp solution
+    const guns = this.spaceship.getSlotsByType(Slot.TYPE_GUN)
+    for (const gun of guns) {
+      this.shotControls.shot(gun.id, target)
+    }
   }
 }
 

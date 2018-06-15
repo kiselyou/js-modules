@@ -77,6 +77,21 @@ export default async function startPlay(appConfig) {
     }
   });
 
+  // Отправляем информацию о выстрелах (от игрока A удаленным игрокам B)
+  playground.characterControls.shotControls.addShotEventListener((action, modelChargeSwapInfo) => {
+    socket.emit('swap-player-action-shot', playground.character.id, action, modelChargeSwapInfo)
+  })
+
+  // Слушаем изменения о выстрелах (игроки B получают информацию от A)
+  socket.on('swap-player-action-shot', (characterId, action, data) => {
+    const playerControls = playground.findPlayerControls(characterId)
+    if (playerControls) {
+      playerControls.shotControls.setShotSwapInfo(action, data)
+    } else {
+      throw new Error('Error PlayerControls: can not find player by id ' + characterId)
+    }
+  });
+
   socket.on('each-minute', (swapInfo) => {
     playground.setSwapInfo(
       new SwapInfo()

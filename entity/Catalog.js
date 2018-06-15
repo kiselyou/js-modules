@@ -1,5 +1,7 @@
 import Spaceship from './particles-spaceship/Spaceship'
 import Engine from './particles-spaceship/Engine'
+import Armor from './particles-spaceship/Armor'
+import Shell from './particles-spaceship/Shell'
 import Gun from './particles-spaceship/Gun'
 
 class Catalog {
@@ -64,6 +66,26 @@ class Catalog {
   getEngineById(id) {
     const value = this.findEntityById('Engine', id)
     return value ? new Engine().copy(value).rebuildId() : null
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Engine|null}
+   */
+  getShellById(id) {
+    const value = this.findEntityById('Shell', id)
+    return value ? new Shell().copy(value).rebuildId() : null
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Engine|null}
+   */
+  getArmorById(id) {
+    const value = this.findEntityById('Armor', id)
+    return value ? new Armor().copy(value).rebuildId() : null
   }
 
   /**

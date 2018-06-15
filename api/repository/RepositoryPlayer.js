@@ -77,6 +77,12 @@ async function insertParticle(db, playerId, slot, catalog) {
     case Slot.TYPE_GUN:
       particle = catalog.getGunById(slot.particleId)
       break
+    case Slot.TYPE_SHELL:
+      particle = catalog.getShellById(slot.particleId)
+      break
+    case Slot.TYPE_ARMOR:
+      particle = catalog.getArmorById(slot.particleId)
+      break
   }
 
   if (particle) {

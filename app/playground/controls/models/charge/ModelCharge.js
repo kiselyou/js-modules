@@ -1,3 +1,4 @@
+import uuid from 'uuid/v4'
 import Charge from '@entity/particles-spaceship/Charge'
 import { Object3D, Vector3, Mesh, MeshBasicMaterial, SphereGeometry, Raycaster } from 'three'
 
@@ -6,10 +7,9 @@ class ModelCharge extends Object3D {
     super()
 
     /**
-     *
-     * @type {number}
+     * @type {string}
      */
-    this.speed = 510
+    this.name = uuid()
 
     /**
      *
@@ -18,24 +18,28 @@ class ModelCharge extends Object3D {
     this.charge = new Charge()
 
     /**
+     * This is start position of model
      *
      * @type {Vector3}
      */
     this.start = new Vector3()
 
     /**
+     * This is target position of model
      *
      * @type {Vector3}
      */
     this.target = new Vector3()
 
     /**
+     * This is previous position of model
      *
      * @type {Vector3}
      */
     this.prev = new Vector3()
 
     /**
+     * This is direction of model
      *
      * @type {Vector3}
      */
@@ -87,6 +91,16 @@ class ModelCharge extends Object3D {
 
   /**
    *
+   * @param {string} value
+   * @returns {ModelCharge}
+   */
+  setName(value) {
+    this.name = value
+    return this
+  }
+
+  /**
+   *
    * @param {Array.<Model|Mesh>} objects
    * @param {intersectEvent} intersectEvent
    * @returns {ModelCharge}
@@ -102,8 +116,8 @@ class ModelCharge extends Object3D {
    * @returns {ModelCharge}
    */
   buildMesh() {
-    const geometry = new SphereGeometry(0.9, 6, 6)
-    const material = new MeshBasicMaterial({ color: 0xFF0000 })
+    const geometry = new SphereGeometry(0.4, 6, 6)
+    const material = new MeshBasicMaterial({ color: 0xCCCCCC })
     this.add(new Mesh(geometry, material))
     return this
   }
@@ -123,7 +137,7 @@ class ModelCharge extends Object3D {
    * @param {Vector3} value
    * @returns {ModelCharge}
    */
-  copyPosition(value) {
+  setPosition(value) {
     this.start.copy(value)
     this.position.copy(value)
     return this
@@ -231,6 +245,62 @@ class ModelCharge extends Object3D {
         this._remove()
       }
     }
+  }
+
+  /**
+   * @returns {Object}
+   */
+  getModelChargeSwapInfo() {
+    const data = {}
+    const properties = [
+      'name',
+      'enabled',
+      'start',
+      'target',
+      'prev',
+      'direction',
+      'position',
+      'charge'
+    ]
+    for (const property of properties) {
+      switch (property) {
+        case 'charge':
+          data['charge'] = this.charge.getChargeSwapInfo()
+          break
+        default:
+          data[property] = this[property]
+          break
+      }
+    }
+    return data
+  }
+
+  /**
+   *
+   * @param {Object} data - this is value from "this.getModelChargeSwapInfo()"
+   * @returns {ModelCharge}
+   */
+  setModelChargeSwapInfo(data) {
+    for (const property in data) {
+      if (data.hasOwnProperty(property)) {
+        switch (property) {
+          case 'charge':
+            this.charge.setChargeSwapInfo(data[property])
+            break
+          case 'start':
+          case 'target':
+          case 'prev':
+          case 'direction':
+          case 'position':
+            this[property].copy(data[property])
+            break
+          default:
+            this[property] = data[property]
+            break
+        }
+      }
+    }
+    return this
   }
 }
 

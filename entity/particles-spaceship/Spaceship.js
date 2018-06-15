@@ -10,32 +10,6 @@ class Spaceship extends Particle {
      * @type {Array.<Slot>}
      */
     this.slot = []
-
-    /**
-     *
-     * @type {string|?}
-     */
-    this.modelKey = null
-  }
-
-  getParticlesBySlotType(type) {
-    const particles = []
-    for (const slot of this.slot) {
-      if (slot.type === type) {
-        particles.push(slot.particle)
-      }
-    }
-    return particles
-  }
-
-  /**
-   *
-   * @param {string} value
-   * @returns {Spaceship}
-   */
-  setModelKey(value) {
-    this.modelKey = value
-    return this
   }
 
   /**
@@ -79,15 +53,111 @@ class Spaceship extends Particle {
 
   /**
    *
-   * @returns {Engine|?}
+   * @param {string} slotId
+   * @returns {Slot|?}
    */
-  getEngine() {
+  getSlotById(slotId) {
     for (const slot of this.slot) {
-      if (slot.type === Slot.TYPE_ENGINE) {
-        return slot.particle
+      if (slot.id === slotId) {
+        return slot
       }
     }
     return null
+  }
+
+  /**
+   *
+   * @param {number} type
+   * @returns {Slot|?}
+   */
+  getSlotByType(type) {
+    for (const slot of this.slot) {
+      if (slot.type === type) {
+        return slot
+      }
+    }
+    return null
+  }
+
+  /**
+   * @param {number} type
+   * @returns {Array.<Slot>}
+   */
+  getSlotsByType(type) {
+    const slots = []
+    for (const slot of this.slot) {
+      if (slot.type === type) {
+        slots.push(slot)
+      }
+    }
+    return slots
+  }
+
+  /**
+   *
+   * @param {number} type - This is "Slot" constants
+   * @returns {Array}
+   */
+  getParticlesByType(type) {
+    const particles = []
+    for (const slot of this.slot) {
+      if (slot.type === type) {
+        particles.push(slot.particle)
+      }
+    }
+    return particles
+  }
+
+  /**
+   *
+   * @param {number} type - This is "Slot" constants
+   * @returns {Particle|?}
+   */
+  getParticleByType(type) {
+    const slot = this.getSlotByType(type)
+    return slot ? slot.particle : null
+  }
+
+  /**
+   *
+   * @returns {Engine|?}
+   */
+  getEngine() {
+    return this.getParticleByType(Slot.TYPE_ENGINE)
+  }
+
+  /**
+   *
+   * @returns {Armor|?}
+   */
+  getArmor() {
+    return this.getParticleByType(Slot.TYPE_ARMOR)
+  }
+
+  /**
+   *
+   * @returns {Shell|?}
+   */
+  getShell() {
+    return this.getParticleByType(Slot.TYPE_SHELL)
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Shell|?}
+   */
+  getGunBySlotId(id) {
+    const slots = this.getSlot(id)
+    return slots ? slots.particle : null
+  }
+
+  /**
+   *
+   * @returns {Array.<Gun>}
+   */
+  getGuns() {
+    return this.getParticlesByType(Slot.TYPE_GUN)
   }
 }
 

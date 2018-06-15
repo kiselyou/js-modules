@@ -54,7 +54,8 @@ class ModelSpaceship extends MoveControls {
    * @returns {ModelSpaceship}
    */
   buildModel() {
-    const model = this.loader.getModel(this.spaceship.modelKey)
+    const shell = this.spaceship.getShell()
+    const model = this.loader.getModel(shell.modelKey)
     this.add(model)
     return this
   }

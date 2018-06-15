@@ -2,6 +2,8 @@ import { Vector3 } from 'three'
 import Particle from './../Particle'
 import Engine from './Engine'
 import Gun from './Gun'
+import Armor from './Armor'
+import Shell from './Shell'
 
 class Slot extends Particle {
   constructor() {
@@ -132,7 +134,6 @@ class Slot extends Particle {
     }
 
     const entity = particle['entity']
-
     if (this.particle && this.particle['entity'] === entity) {
       this.particle.copy(particle)
       return
@@ -144,6 +145,12 @@ class Slot extends Particle {
         break
       case 'Gun':
         this.particle = new Gun().copy(particle)
+        break
+      case 'Armor':
+        this.particle = new Armor().copy(particle)
+        break
+      case 'Shell':
+        this.particle = new Shell().copy(particle)
         break
     }
   }
@@ -170,6 +177,22 @@ class Slot extends Particle {
    */
   static get TYPE_GUN() {
     return 3
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get TYPE_ARMOR() {
+    return 4
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get TYPE_SHELL() {
+    return 5
   }
 }
 
