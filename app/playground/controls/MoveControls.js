@@ -1,7 +1,6 @@
-import { Object3D, Mesh, Math as TMath } from 'three'
+import { Object3D, Math as TMath } from 'three'
 import Engine from '@entity/particles-spaceship/Engine'
 import Spaceship from '@entity/particles-spaceship/Spaceship'
-import Model from './models/Model'
 
 export const FORWARD = 'forward'
 export const BACKWARD = 'backward'

@@ -3,13 +3,12 @@ import {
   Scene,
   WebGLRenderer,
   Clock,
-  Fog,
-  Color,
   MOUSE,
   PCFSoftShadowMap, Math as tMath,
-  AxesHelper, Sprite, TextureLoader, SpriteMaterial,
-  AdditiveBlending
+  AxesHelper,
 } from 'three'
+
+import SpaceParticleControls from './controls/SpaceParticleControls'
 
 import Stats from 'stats-js'
 import Intersect from '@helper/Intersect'
@@ -25,7 +24,6 @@ import ParticlePlayGround from '@entity/ParticlePlayGround'
 import ParticlePlayer from '@entity/ParticlePlayer'
 import EventControls from './controls/EventControls'
 import Ajax from '@helper/ajax/Ajax'
-import Model from '@app/playground/controls/models/Model'
 
 const stats = new Stats()
 // stats.setMode(1)
@@ -53,6 +51,12 @@ class Playground {
      * @type {Clock}
      */
     this.clock = new Clock();
+
+    /**
+     *
+     * @type {number}
+     */
+    this.deltaInterval = this.clock.getDelta()
 
     /**
      *
@@ -108,7 +112,14 @@ class Playground {
      *
      * @type {CharacterControls}
      */
-    this.characterControls = new CharacterControls(this.scene, this.loader)
+    this.character = new CharacterControls(this.scene, this.loader)
+
+    /**
+     *
+     * @type {SpaceParticleControls}
+     */
+    this.spaceParticleControls = new SpaceParticleControls(this.character, this.loader)
+    this.scene.add(this.spaceParticleControls.model)
 
     /**
      *
@@ -135,7 +146,7 @@ class Playground {
      * @type {OrbitControls}
      */
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.cameraControls.target.copy(this.characterControls.position)
+    this.cameraControls.target.copy(this.character.position)
     this.cameraControls.enableKeys = false
     this.cameraControls.enablePan = false
     this.cameraControls.mouseButtons = { ORBIT: MOUSE.RIGHT, ZOOM: MOUSE.MIDDLE, PAN: MOUSE.LEFT };
@@ -150,8 +161,8 @@ class Playground {
      */
     this.gyroscope = new Gyroscope()
     this.gyroscope.add(this.camera);
-    this.characterControls.add(this.gyroscope)
-    this.scene.add(this.characterControls)
+    this.character.add(this.gyroscope)
+    this.scene.add(this.character)
 
     /**
      *
@@ -238,32 +249,26 @@ class Playground {
 
         .addFolder('Ship Controls')
         .listenFields(true)
-        .add(this.characterControls, 'enabled', 'Controls enabled')
+        .add(this.character, 'enabled', 'Controls enabled')
         .listenFields(false)
         .addFolder('Ship Info')
         .listenFields(true)
-        .add(this.characterControls.engine, 'speed', 'Ship Speed')
-        .add(this.characterControls.position, 'x', 'Ship X')
-        .add(this.characterControls.position, 'y', 'Ship Y')
-        .add(this.characterControls.position, 'z', 'Ship Z')
+        .add(this.character.engine, 'speed', 'Ship Speed')
+        .add(this.character.position, 'x', 'Ship X')
+        .add(this.character.position, 'y', 'Ship Y')
+        .add(this.character.position, 'z', 'Ship Z')
         .listenFields(false)
         .addFolder('Ship speed')
-        .add(this.characterControls.engine, 'maxSpeed', 'Max', 10, 400)
-        .add(this.characterControls.engine, 'maxReverseSpeed', 'Max Reverse', -200, 0)
-        .add(this.characterControls.engine, 'angularSpeed', 'Angular Speed', 0.01, 5)
-        .add(this.characterControls.engine, 'acceleration', 'Acceleration', 10, 500)
-        .add(this.characterControls.engine, 'deceleration', 'Deceleration', 10, 500)
+        .add(this.character.engine, 'maxSpeed', 'Max', 10, 400)
+        .add(this.character.engine, 'maxReverseSpeed', 'Max Reverse', -200, 0)
+        .add(this.character.engine, 'angularSpeed', 'Angular Speed', 0.01, 5)
+        .add(this.character.engine, 'acceleration', 'Acceleration', 10, 500)
+        .add(this.character.engine, 'deceleration', 'Deceleration', 10, 500)
         .addFolder('Ship Scale')
-        .add(this.characterControls.scale, 'x', 'Scale X', 0, 5)
-        .add(this.characterControls.scale, 'y', 'Scale Y', 0, 5)
-        .add(this.characterControls.scale, 'z', 'Scale Z', 0, 5)
-    }, 5000)
-
-    /**
-     *
-     * @type {Object}
-     */
-    this.appConfig = {}
+        .add(this.character.scale, 'x', 'Scale X', 0, 5)
+        .add(this.character.scale, 'y', 'Scale Y', 0, 5)
+        .add(this.character.scale, 'z', 'Scale Z', 0, 5)
+    }, 3000)
   }
 
   /**
@@ -284,20 +289,15 @@ class Playground {
 
     this.copy(this.particlePlayGround)
     await this.sectorControls.beforeStart()
-    await this.characterControls.beforeStart()
-    this.characterControls.buildAim()
+    await this.character.beforeStart()
+    await this.spaceParticleControls.beforeStart()
+    this.character.buildAim()
 
+    setInterval(() => {
+      this.deltaInterval = this.clock.getDelta()
+      this.spaceParticleControls.update(this.deltaInterval)
+    }, 1000 / 30)
     this.animateStart()
-    return this
-  }
-
-  /**
-   *
-   * @param {Object} data
-   * @return {Playground}
-   */
-  setAppConfig(data) {
-    // this.appConfig = data
     return this
   }
 
@@ -308,7 +308,7 @@ class Playground {
    */
   copy(data) {
     this.sectorControls.copy(data)
-    this.characterControls
+    this.character
       .copyPlayer(data.getCurrentPlayer())
       .copy(data)
     return this
@@ -377,12 +377,12 @@ class Playground {
   animateStart() {
     stats.update()
     this.delta = this.clock.getDelta()
-    this.characterControls.update(this.delta)
+    this.character.update(this.delta)
     for (const player of this.playersControls) {
       player.update(this.delta)
     }
 
-    const position = this.characterControls.position
+    const position = this.character.position
     this.sectorControls.update(this.delta, position)
     this.lightControls.update(this.delta, position)
     this.renderer.render(this.scene, this.camera)
@@ -406,14 +406,6 @@ class Playground {
 
   /**
    *
-   * @returns {Player}
-   */
-  get character() {
-    return this.characterControls.player
-  }
-
-  /**
-   *
    * @param {SwapInfo} data
    * @returns {Playground}
    */
@@ -429,7 +421,7 @@ class Playground {
    */
   onMouseMove(e) {
     this.intersect.updateMouse(e)
-    this.characterControls.updateTooltip(this.intersect, e)
+    this.character.updateTooltip(this.intersect, e)
     this.sectorControls.updateTooltip(this.intersect, e)
   }
 
@@ -441,7 +433,7 @@ class Playground {
   onMouseClick(e) {
     this.intersect.updateMouse(e)
     this.sectorControls.onClick(this.intersect, e)
-    this.characterControls.onMouseClick(this.intersect, e)
+    this.character.onMouseClick(this.intersect, e)
   }
 
   /**
@@ -461,19 +453,19 @@ class Playground {
   onKeyDown(e) {
     switch (e.keyCode) {
       case 65://A
-        this.characterControls.enableLeft(true)
+        this.character.enableLeft(true)
         break
       case 68://D
-        this.characterControls.enableRight(true)
+        this.character.enableRight(true)
         break
       case 87://W
-        this.characterControls.enableForward(true)
+        this.character.enableForward(true)
         break
       case 83://S
-        this.characterControls.enableBackward(true)
+        this.character.enableBackward(true)
         break
       case 32://Space
-        this.characterControls.enableSlowdown(true)
+        this.character.enableSlowdown(true)
         break
       default:
         // console.log(e, 'def')
@@ -488,19 +480,19 @@ class Playground {
   onKeyUp(e) {
     switch (e.keyCode) {
       case 65://A
-        this.characterControls.enableLeft(false)
+        this.character.enableLeft(false)
         break
       case 68://D
-        this.characterControls.enableRight(false)
+        this.character.enableRight(false)
         break
       case 87://W
-        this.characterControls.enableForward(false)
+        this.character.enableForward(false)
         break
       case 83://S
-        this.characterControls.enableBackward(false)
+        this.character.enableBackward(false)
         break
       case 32://Space
-        this.characterControls.enableSlowdown(false)
+        this.character.enableSlowdown(false)
         break
       default:
         // console.log(e, 'def')

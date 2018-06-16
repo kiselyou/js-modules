@@ -21,7 +21,6 @@ export default async function startPlay(appConfig) {
   let playground = new Playground(loader, particlePlayGround)
 
   await playground
-    .setAppConfig(appConfig)
     .registrationEvents()
     .init('root-canvas')
 
@@ -32,10 +31,10 @@ export default async function startPlay(appConfig) {
   // B Удаленный игрок - игрок или игроки в других браузерах
 
   // Отправить информацию на сервер о текущем игроке A
-  socket.emit('swap-current-player', playground.character.getSwapInfo())
+  socket.emit('swap-current-player', playground.character.player.getSwapInfo())
   // Обновить информацию о текущем игроке A
   socket.on('swap-current-player', (swapPlayer) => {
-    playground.character.copy(swapPlayer)
+    playground.character.player.copy(swapPlayer)
   })
 
   // Добавление удаленного игрока B в сектор
@@ -45,7 +44,7 @@ export default async function startPlay(appConfig) {
       // отправить информацию о текущем игроке A у удаленного игрока B
       socket.emit('swap-add-specific-player', {
         destinationSocketId: swapPlayer.socketId,
-        character: playground.character.getSwapInfo()
+        character: playground.character.player.getSwapInfo()
       })
     }
   })
@@ -58,11 +57,11 @@ export default async function startPlay(appConfig) {
   })
 
   // Слежение за действиями текущего игрока A
-  playground.characterControls.addMoveEventListener((moveSwapInfo) => {
+  playground.character.addMoveEventListener((moveSwapInfo) => {
     // Отправить удаленным игрокам B информацию действиях текущего игрока A
     socket.emit('swap-player-action-move', {
       moveSwapInfo: moveSwapInfo,
-      characterId: playground.character.id
+      characterId: playground.character.player.id
     })
   })
 
@@ -78,7 +77,7 @@ export default async function startPlay(appConfig) {
   });
 
   // Отправляем информацию о выстрелах (от игрока A удаленным игрокам B)
-  playground.characterControls.shotControls.addShotEventListener((action, modelChargeSwapInfo) => {
+  playground.character.shotControls.addShotEventListener((action, modelChargeSwapInfo) => {
     socket.emit('swap-player-action-shot', playground.character.id, action, modelChargeSwapInfo)
   })
 
