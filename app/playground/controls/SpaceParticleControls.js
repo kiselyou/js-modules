@@ -28,7 +28,7 @@ class SpaceParticleControls {
      *
      * @type {boolean}
      */
-    this.enabled = true
+    this.enabled = false
   }
 
   /**
@@ -36,6 +36,7 @@ class SpaceParticleControls {
    */
   async beforeStart() {
     this.model.makeParticles(this.loader)
+    this.enabled = true
   }
 
   /**
@@ -45,11 +46,10 @@ class SpaceParticleControls {
    */
   update(delta) {
     if (this.enabled) {
-      const speed = this.character.engine.speed
-      const maxSpeed = this.character.engine.maxSpeed
+      const engine = this.character.spaceship.getEngine()
       this.model
-        .setSpeed(maxSpeed)
-        .setOpacity(speed / maxSpeed)
+        .setSpeed(engine.maxSpeed / 3)
+        .setOpacity((engine.speed / engine.maxSpeed) * 1.5)
         .update(delta)
     }
   }

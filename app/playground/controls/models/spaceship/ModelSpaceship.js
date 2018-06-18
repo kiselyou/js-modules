@@ -1,15 +1,16 @@
+import { Object3D } from 'three'
 import Aim from './../../../decoration/Aim'
 import MoveControls from './../../MoveControls'
+import Spaceship from "@entity/particles-spaceship/Spaceship";
 
 
-class ModelSpaceship extends MoveControls {
+class ModelSpaceship {
   /**
    *
    * @param {Scene} scene
    * @param {Loader} loader
    */
   constructor(scene, loader) {
-    super()
 
     /**
      * @type {Scene}
@@ -24,6 +25,24 @@ class ModelSpaceship extends MoveControls {
 
     /**
      *
+     * @type {Object3D}
+     */
+    this.model = new Object3D()
+
+    /**
+     *
+     * @type {Spaceship}
+     */
+    this.spaceship = new Spaceship()
+
+    /**
+     *
+     * @type {MoveControls}
+     */
+    this.moveControls = new MoveControls(this.model, this.spaceship)
+
+    /**
+     *
      * @type {Aim}
      */
     this.aim = new Aim()
@@ -35,8 +54,7 @@ class ModelSpaceship extends MoveControls {
    * @returns {void}
    */
   async beforeStart() {
-    this.buildModel()
-    await super.beforeStart()
+    await this.buildModel()
   }
 
   /**
@@ -45,7 +63,7 @@ class ModelSpaceship extends MoveControls {
    */
   buildAim() {
     this.aim.build()
-    this.add(this.aim)
+    this.model.add(this.aim)
     return this
   }
 
@@ -56,7 +74,7 @@ class ModelSpaceship extends MoveControls {
   buildModel() {
     const shell = this.spaceship.getShell()
     const model = this.loader.getModel(shell.modelKey)
-    this.add(model)
+    this.model.add(model)
     return this
   }
 
@@ -65,9 +83,7 @@ class ModelSpaceship extends MoveControls {
    * @returns {ModelSpaceship}
    */
   removeModel() {
-    // for (const element of this.mesh.children) {
-    //   this.mesh.remove(element)
-    // }
+    this.scene.remove(this.model)
     return this
   }
 
@@ -87,7 +103,7 @@ class ModelSpaceship extends MoveControls {
    * @returns {void}
    */
   update(delta) {
-    super.update(delta)
+    this.moveControls.update(delta)
   }
 }
 

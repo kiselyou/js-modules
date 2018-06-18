@@ -1,5 +1,4 @@
 import { Object3D, Math as TMath } from 'three'
-import Engine from '@entity/particles-spaceship/Engine'
 import Spaceship from '@entity/particles-spaceship/Spaceship'
 
 export const FORWARD = 'forward'
@@ -8,21 +7,24 @@ export const LEFT = 'left'
 export const RIGHT = 'right'
 export const SLOWDOWN = 'slowdown'
 
-class MoveControls extends Object3D {
-  constructor() {
-    super()
+class MoveControls {
+  /**
+   *
+   * @param {Object3D} model
+   * @param {Spaceship} spaceship
+   */
+  constructor(model, spaceship) {
+    /**
+     *
+     * @type {Object3D}
+     */
+    this.model = model
 
     /**
      *
      * @type {Spaceship}
      */
-    this.spaceship = new Spaceship()
-
-    /**
-     *
-     * @type {Engine|?}
-     */
-    this.engine = null
+    this.spaceship = spaceship
 
     /**
      *
@@ -60,7 +62,7 @@ class MoveControls extends Object3D {
    * @returns {void}
    */
   async beforeStart() {
-    this.engine = this.spaceship.getEngine()
+    // this.engine = this.spaceship.getEngine()
   }
 
   /**
@@ -166,44 +168,46 @@ class MoveControls extends Object3D {
     const isForward = this.moveActions[FORWARD]
     const isBackward = this.moveActions[BACKWARD]
 
+    const engine = this.spaceship.getEngine()
+
     if (isLeft) {
-      if (isBackward && this.engine.speed < 0) {
-        this.engine.bodyOrientation -= delta * this.engine.angularSpeed
+      if (isBackward && engine.speed < 0) {
+        engine.bodyOrientation -= delta * engine.angularSpeed
       } else if (!isBackward) {
-        this.engine.bodyOrientation += delta * this.engine.angularSpeed
+        engine.bodyOrientation += delta * engine.angularSpeed
       }
     }
 
     if (isRight) {
-      if (isBackward && this.engine.speed < 0) {
-        this.engine.bodyOrientation += delta * this.engine.angularSpeed
+      if (isBackward && engine.speed < 0) {
+        engine.bodyOrientation += delta * engine.angularSpeed
       } else if (!isBackward) {
-        this.engine.bodyOrientation -= delta * this.engine.angularSpeed
+        engine.bodyOrientation -= delta * engine.angularSpeed
       }
     }
 
     if (isForward) {
-      this.engine.speed = TMath.clamp(this.engine.speed + delta * this.engine.acceleration, this.engine.maxReverseSpeed, this.engine.maxSpeed)
+      engine.speed = TMath.clamp(engine.speed + delta * engine.acceleration, engine.maxReverseSpeed, engine.maxSpeed)
     }
 
     if (isBackward) {
-      this.engine.speed = TMath.clamp(this.engine.speed - delta * this.engine.deceleration, this.engine.maxReverseSpeed, this.engine.maxSpeed)
+      engine.speed = TMath.clamp(engine.speed - delta * engine.deceleration, engine.maxReverseSpeed, engine.maxSpeed)
     }
 
     if (this.moveActions[SLOWDOWN]) {
-      if ( this.engine.speed > 0 ) {
-        const k = this.exponentialEaseOut(this.engine.speed / this.engine.maxSpeed)
-        this.engine.speed = TMath.clamp(this.engine.speed - k * delta * this.engine.deceleration, 0, this.engine.maxSpeed)
+      if ( engine.speed > 0 ) {
+        const k = this.exponentialEaseOut(engine.speed / engine.maxSpeed)
+        engine.speed = TMath.clamp(engine.speed - k * delta * engine.deceleration, 0, engine.maxSpeed)
       } else {
-        const k = this.exponentialEaseOut(this.engine.speed / this.engine.maxReverseSpeed)
-        this.engine.speed = TMath.clamp(this.engine.speed + k * delta * this.engine.deceleration, this.engine.maxReverseSpeed, 0)
+        const k = this.exponentialEaseOut(engine.speed / engine.maxReverseSpeed)
+        engine.speed = TMath.clamp(engine.speed + k * delta * engine.deceleration, engine.maxReverseSpeed, 0)
       }
     }
 
-    let forwardDelta = this.engine.speed * delta
-    this.position.x += Math.sin(this.engine.bodyOrientation) * forwardDelta
-    this.position.z += Math.cos(this.engine.bodyOrientation) * forwardDelta
-    this.rotation.y = this.engine.bodyOrientation
+    let forwardDelta = engine.speed * delta
+    this.model.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
+    this.model.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
+    this.model.rotation.y = engine.bodyOrientation
   }
 
   /**
@@ -233,11 +237,12 @@ class MoveControls extends Object3D {
             this.enableSlowdown(moveActions[SLOWDOWN])
             break
           case 'engine':
-            this.engine.setSwapInfo(data[property])
+            const engine = this.spaceship.getEngine()
+            engine.setSwapInfo(data[property])
             break
           case 'position':
           case 'rotation':
-            this[property].copy(data[property])
+            this.model[property].copy(data[property])
             break
           default:
             this[property] = data[property]
@@ -264,7 +269,11 @@ class MoveControls extends Object3D {
     for (const property of properties) {
       switch (property) {
         case 'engine':
-          data['engine'] = this.engine.getSwapInfo()
+          data['engine'] = this.spaceship.getEngine().getSwapInfo()
+          break
+        case 'position':
+        case 'rotation':
+          data[property] = this.model[property]
           break
         default:
           data[property] = this[property]

@@ -52,7 +52,7 @@ class CharacterControls extends ModelSpaceship {
    * @returns {Vector3}
    */
   getTargetPosition() {
-    return this.calculate.getNextPosition(this, this.aim.position.z)
+    return this.calculate.getNextPosition(this.model, this.aim.position.z)
   }
 
   /**
@@ -61,7 +61,7 @@ class CharacterControls extends ModelSpaceship {
    * @returns {Vector3}
    */
   getDirection() {
-    return this.calculate.getDirection(this)
+    return this.calculate.getDirection(this.model)
   }
 
   /**
@@ -70,7 +70,7 @@ class CharacterControls extends ModelSpaceship {
   async beforeStart() {
     await super.beforeStart()
     await this.raceControls.beforeStart()
-    this.position.copy(this.player.position)
+    this.model.position.copy(this.player.position)
     this.enabled = true
   }
 
@@ -105,7 +105,7 @@ class CharacterControls extends ModelSpaceship {
     if (this.enabled) {
       super.update(delta)
       this.shotControls.update(delta)
-      this.player.position.copy(this.position)
+      this.player.position.copy(this.model.position)
     }
   }
 

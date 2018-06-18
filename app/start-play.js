@@ -57,7 +57,7 @@ export default async function startPlay(appConfig) {
   })
 
   // Слежение за действиями текущего игрока A
-  playground.character.addMoveEventListener((moveSwapInfo) => {
+  playground.character.moveControls.addMoveEventListener((moveSwapInfo) => {
     // Отправить удаленным игрокам B информацию действиях текущего игрока A
     socket.emit('swap-player-action-move', {
       moveSwapInfo: moveSwapInfo,
@@ -70,7 +70,7 @@ export default async function startPlay(appConfig) {
     //console.log(data.characterId)
     const playerControls = playground.findPlayerControls(data.characterId)
     if (playerControls) {
-      playerControls.setMoveSwapInfo(data.moveSwapInfo)
+      playerControls.moveControls.setMoveSwapInfo(data.moveSwapInfo)
     } else {
       throw new Error('Error PlayerControls: can not find player by id ' + data.characterId)
     }
@@ -78,7 +78,7 @@ export default async function startPlay(appConfig) {
 
   // Отправляем информацию о выстрелах (от игрока A удаленным игрокам B)
   playground.character.shotControls.addShotEventListener((action, modelChargeSwapInfo) => {
-    socket.emit('swap-player-action-shot', playground.character.id, action, modelChargeSwapInfo)
+    socket.emit('swap-player-action-shot', playground.character.player.id, action, modelChargeSwapInfo)
   })
 
   // Слушаем изменения о выстрелах (игроки B получают информацию от A)

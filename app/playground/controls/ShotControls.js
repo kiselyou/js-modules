@@ -169,7 +169,7 @@ class ShotControls {
       })
 
     // Calculate world position
-    const worldPosition = this.character.calculate.getPositionInWorld(this.character, modelCharge)
+    const worldPosition = this.character.calculate.getPositionInWorld(this.character.model, modelCharge)
     // Set world position for ModelCharge
     modelCharge.setPosition(worldPosition).enable(true)
 

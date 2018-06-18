@@ -93,7 +93,7 @@ class ModelSpaceParticles extends Object3D {
    * @returns {ModelSpaceParticles}
    */
   makeParticles(loader) {
-    this.position.copy(this.character.position)
+    this.position.copy(this.character.model.position)
 
     const direction = this.character.getDirection()
     this._startPoint.addScaledVector(direction, this.ariaSize)
@@ -136,7 +136,7 @@ class ModelSpaceParticles extends Object3D {
    * @returns {void}
    */
   update(delta) {
-    this.position.copy(this.character.position)
+    this.position.copy(this.character.model.position)
     for(let i = 0; i < this.children.length; i++) {
       let particle = this.children[i]
 

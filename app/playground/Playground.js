@@ -149,7 +149,7 @@ class Playground {
      * @type {OrbitControls}
      */
     this.cameraControls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.cameraControls.target.copy(this.character.position)
+    this.cameraControls.target.copy(this.character.model.position)
     this.cameraControls.enableKeys = false
     this.cameraControls.enablePan = false
     this.cameraControls.mouseButtons = { ORBIT: MOUSE.RIGHT, ZOOM: MOUSE.MIDDLE, PAN: MOUSE.LEFT };
@@ -164,8 +164,8 @@ class Playground {
      */
     this.gyroscope = new Gyroscope()
     this.gyroscope.add(this.camera);
-    this.character.add(this.gyroscope)
-    this.scene.add(this.character)
+    this.character.model.add(this.gyroscope)
+    this.scene.add(this.character.model)
 
     /**
      *
@@ -177,7 +177,10 @@ class Playground {
     this.scene.add(this.axesHelper)
 
     const panel = new DebugPanel()
+
     setTimeout(() => {
+
+      const engine = this.character.spaceship.getEngine()
       panel
         .addFolder('Renderer controls')
         .listenFields(true)
@@ -256,21 +259,21 @@ class Playground {
         .listenFields(false)
         .addFolder('Ship Info')
         .listenFields(true)
-        .add(this.character.engine, 'speed', 'Ship Speed')
-        .add(this.character.position, 'x', 'Ship X')
-        .add(this.character.position, 'y', 'Ship Y')
-        .add(this.character.position, 'z', 'Ship Z')
+        .add(engine, 'speed', 'Ship Speed')
+        .add(this.character.model.position, 'x', 'Ship X')
+        .add(this.character.model.position, 'y', 'Ship Y')
+        .add(this.character.model.position, 'z', 'Ship Z')
         .listenFields(false)
         .addFolder('Ship speed')
-        .add(this.character.engine, 'maxSpeed', 'Max', 10, 400)
-        .add(this.character.engine, 'maxReverseSpeed', 'Max Reverse', -200, 0)
-        .add(this.character.engine, 'angularSpeed', 'Angular Speed', 0.01, 5)
-        .add(this.character.engine, 'acceleration', 'Acceleration', 10, 500)
-        .add(this.character.engine, 'deceleration', 'Deceleration', 10, 500)
+        .add(engine, 'maxSpeed', 'Max', 10, 400)
+        .add(engine, 'maxReverseSpeed', 'Max Reverse', -200, 0)
+        .add(engine, 'angularSpeed', 'Angular Speed', 0.01, 5)
+        .add(engine, 'acceleration', 'Acceleration', 10, 500)
+        .add(engine, 'deceleration', 'Deceleration', 10, 500)
         .addFolder('Ship Scale')
-        .add(this.character.scale, 'x', 'Scale X', 0, 5)
-        .add(this.character.scale, 'y', 'Scale Y', 0, 5)
-        .add(this.character.scale, 'z', 'Scale Z', 0, 5)
+        .add(this.character.model.scale, 'x', 'Scale X', 0, 5)
+        .add(this.character.model.scale, 'y', 'Scale Y', 0, 5)
+        .add(this.character.model.scale, 'z', 'Scale Z', 0, 5)
     }, 3000)
   }
 
@@ -293,9 +296,11 @@ class Playground {
     this.copy(this.particlePlayGround)
     await this.sectorControls.beforeStart()
     await this.character.beforeStart()
+    await this.character.buildAim()
     await this.spaceParticleControls.beforeStart()
-    this.character.buildAim()
-    this.animateStart()
+    setTimeout(() => {
+      this.animateStart()
+    }, 1000)
     return this
   }
 
@@ -331,8 +336,9 @@ class Playground {
           .copy(this.particlePlayGround)
 
         playerControls.beforeStart()
+
         this.playersControls.push(playerControls)
-        this.scene.add(playerControls)
+        this.scene.add(playerControls.model)
       })
       .catch((error) => console.log(error, 'Something went wrong. Cannot add new player to scene.'))
   }
@@ -380,7 +386,7 @@ class Playground {
       player.update(this.delta)
     }
 
-    const position = this.character.position
+    const position = this.character.model.position
     this.sectorControls.update(this.delta, position)
     this.lightControls.update(this.delta, position)
     this.spaceParticleControls.update(this.delta)
@@ -452,19 +458,19 @@ class Playground {
   onKeyDown(e) {
     switch (e.keyCode) {
       case 65://A
-        this.character.enableLeft(true)
+        this.character.moveControls.enableLeft(true)
         break
       case 68://D
-        this.character.enableRight(true)
+        this.character.moveControls.enableRight(true)
         break
       case 87://W
-        this.character.enableForward(true)
+        this.character.moveControls.enableForward(true)
         break
       case 83://S
-        this.character.enableBackward(true)
+        this.character.moveControls.enableBackward(true)
         break
       case 32://Space
-        this.character.enableSlowdown(true)
+        this.character.moveControls.enableSlowdown(true)
         break
       default:
         // console.log(e, 'def')
@@ -479,19 +485,19 @@ class Playground {
   onKeyUp(e) {
     switch (e.keyCode) {
       case 65://A
-        this.character.enableLeft(false)
+        this.character.moveControls.enableLeft(false)
         break
       case 68://D
-        this.character.enableRight(false)
+        this.character.moveControls.enableRight(false)
         break
       case 87://W
-        this.character.enableForward(false)
+        this.character.moveControls.enableForward(false)
         break
       case 83://S
-        this.character.enableBackward(false)
+        this.character.moveControls.enableBackward(false)
         break
       case 32://Space
-        this.character.enableSlowdown(false)
+        this.character.moveControls.enableSlowdown(false)
         break
       default:
         // console.log(e, 'def')
