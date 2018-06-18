@@ -1,12 +1,12 @@
 import ModelSpaceParticle from './models/space-particle/ModelSpaceParticle'
-import { RIGHT, LEFT, FORWARD, BACKWARD, SLOWDOWN } from './MoveControls'
 
 class SpaceParticleControls {
   /**
    *
    * @param {CharacterControls} character
+   * @param {Loader} loader
    */
-  constructor(character) {
+  constructor(character, loader) {
     /**
      * @type {CharacterControls}
      */
@@ -14,9 +14,15 @@ class SpaceParticleControls {
 
     /**
      *
+     * @type {Loader}
+     */
+    this.loader = loader
+
+    /**
+     *
      * @type {ModelSpaceParticles}
      */
-    this.model = new ModelSpaceParticle()
+    this.model = new ModelSpaceParticle(this.character)
 
     /**
      *
@@ -29,27 +35,7 @@ class SpaceParticleControls {
    * @returns {void}
    */
   async beforeStart() {
-    this.model.makeParticles()
-    this.character.addMoveEventListener((moveSwapInfo, action) => {
-      switch (action) {
-        case RIGHT:
-
-          break
-        case LEFT:
-
-          break
-        case FORWARD:
-          this.model.speed = moveSwapInfo.engine.speed * 10
-          break
-        case BACKWARD:
-          this.model.speed = moveSwapInfo.engine.speed * 10
-          break
-        case SLOWDOWN:
-          this.model.speed = moveSwapInfo.engine.speed * 10
-          break
-      }
-      console.log(moveSwapInfo, action)
-    })
+    this.model.makeParticles(this.loader)
   }
 
   /**
@@ -59,8 +45,12 @@ class SpaceParticleControls {
    */
   update(delta) {
     if (this.enabled) {
-      this.model.update(delta)
-      this.model.position.copy(this.character.position)
+      const speed = this.character.engine.speed
+      const maxSpeed = this.character.engine.maxSpeed
+      this.model
+        .setSpeed(maxSpeed)
+        .setOpacity(speed / maxSpeed)
+        .update(delta)
     }
   }
 }

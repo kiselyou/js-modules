@@ -6,6 +6,9 @@ import {
   MOUSE,
   PCFSoftShadowMap, Math as tMath,
   AxesHelper,
+  Mesh,
+  MeshBasicMaterial,
+  CubeGeometry
 } from 'three'
 
 import SpaceParticleControls from './controls/SpaceParticleControls'
@@ -292,11 +295,6 @@ class Playground {
     await this.character.beforeStart()
     await this.spaceParticleControls.beforeStart()
     this.character.buildAim()
-
-    setInterval(() => {
-      this.deltaInterval = this.clock.getDelta()
-      this.spaceParticleControls.update(this.deltaInterval)
-    }, 1000 / 30)
     this.animateStart()
     return this
   }
@@ -385,6 +383,7 @@ class Playground {
     const position = this.character.position
     this.sectorControls.update(this.delta, position)
     this.lightControls.update(this.delta, position)
+    this.spaceParticleControls.update(this.delta)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.animateStart()
