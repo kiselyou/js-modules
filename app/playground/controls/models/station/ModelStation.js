@@ -1,6 +1,4 @@
-import { MeshBasicMaterial, SphereGeometry } from 'three'
 import Station from '@entity/particles-sector/Station'
-import DetectObject3D from '@helper/DetectObject3D'
 import * as CONST from '@app/constants'
 import Model from './../Model'
 
@@ -36,14 +34,8 @@ class ModelStation extends Station {
    * @returns {void}
    */
   buildMesh() {
-    const model3D = this.loader.getModel(CONST.KEY_STATION_2)
-    const maxSize = DetectObject3D.maxSize(model3D)
-
-    this.model.material = new MeshBasicMaterial({ transparent: true, opacity: 0.05 })
-    this.model.geometry = new SphereGeometry(maxSize, 25, 25)
-
-    this.model.add(model3D)
-
+    const model = this.loader.getModel(CONST.KEY_STATION_2)
+    this.model.add(model)
     this.scene.add(this.model)
   }
 

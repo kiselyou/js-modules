@@ -1,5 +1,6 @@
-import { Object3D, Math as TMath } from 'three'
+import { Math as TMath } from 'three'
 import Spaceship from '@entity/particles-spaceship/Spaceship'
+import Model from './models/Model'
 
 export const FORWARD = 'forward'
 export const BACKWARD = 'backward'
@@ -10,13 +11,13 @@ export const SLOWDOWN = 'slowdown'
 class MoveControls {
   /**
    *
-   * @param {Object3D} model
+   * @param {Model} model
    * @param {Spaceship} spaceship
    */
   constructor(model, spaceship) {
     /**
      *
-     * @type {Object3D}
+     * @type {Model}
      */
     this.model = model
 
@@ -159,6 +160,66 @@ class MoveControls {
 
   /**
    *
+   * @param {Engine} engine
+   */
+  updateIncline(engine) {
+    const isLeft = this.moveActions[LEFT]
+    const isRight = this.moveActions[RIGHT]
+    const isBackward = this.moveActions[BACKWARD]
+    const isSlowDown = this.moveActions[SLOWDOWN]
+
+    // Одновременно нажиты клавиши "лево" и "право"
+    if (isLeft && isRight) {
+      return
+    }
+
+    const speedShip = (engine.speed / engine.maxSpeed)
+    let speed = speedShip * engine.inclineSpeed / 1000
+
+    const currentAngle = this.model.element.rotation.z
+    const maxLeftAngle = - (engine.maxInclineAngle + speed)
+    const maxRightAngle = + (engine.maxInclineAngle - speed)
+
+    // движение назад, торможение, замедление
+    if (isBackward || isSlowDown || engine.speed <= 0) {
+      speed = Math.abs(speed)
+      if (currentAngle <= - speed) {
+        this.model.element.rotation.z += speed
+      }
+      if (currentAngle >= speed) {
+        this.model.element.rotation.z -= speed
+      }
+      if (currentAngle > - speed && currentAngle < speed) {
+        this.model.element.rotation.z = 0
+      }
+      return
+    }
+
+    if (isLeft && currentAngle > maxLeftAngle) {
+      this.model.element.rotation.z -= speed
+    }
+
+    if (isRight && currentAngle < maxRightAngle) {
+      this.model.element.rotation.z += speed
+    }
+
+    if (!isLeft && !isRight) {
+      if (currentAngle < - speed) {
+        this.model.element.rotation.z += speed * 2
+      }
+
+      if (currentAngle > speed) {
+        this.model.element.rotation.z -= speed * 2
+      }
+
+      if (currentAngle >= - speed && currentAngle <= speed) {
+        this.model.element.rotation.z = 0
+      }
+    }
+  }
+
+  /**
+   *
    * @param {number} delta
    * @returns {void}
    */
@@ -203,6 +264,8 @@ class MoveControls {
         engine.speed = TMath.clamp(engine.speed + k * delta * engine.deceleration, engine.maxReverseSpeed, 0)
       }
     }
+
+    this.updateIncline(engine)
 
     let forwardDelta = engine.speed * delta
     this.model.position.x += Math.sin(engine.bodyOrientation) * forwardDelta

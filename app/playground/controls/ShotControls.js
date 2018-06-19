@@ -123,12 +123,13 @@ class ShotControls {
    * @returns {Array.<Model>}
    */
   getModelsFromScene() {
-    return this.character.scene.children.filter((element) => {
-      if (element instanceof ModelSpaceship && element !== this.character) {
-        return true
+    const models = []
+    for (const element of this.character.scene.children) {
+      if (element instanceof Model) {
+        models.push(element.children[0])
       }
-      return element instanceof Model && element.enableIntersect
-    })
+    }
+    return models
   }
 
   /**

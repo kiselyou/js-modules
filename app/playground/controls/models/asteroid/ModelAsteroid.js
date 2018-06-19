@@ -1,5 +1,5 @@
 import Asteroid from '@entity/particles-sector/Asteroid'
-import {BoxGeometry, MeshPhongMaterial} from 'three'
+import { BoxGeometry, MeshPhongMaterial, Mesh } from 'three'
 import Model from './../Model'
 
 class ModelAsteroid extends Asteroid {
@@ -27,6 +27,12 @@ class ModelAsteroid extends Asteroid {
      * @type {Model}
      */
     this.model = new Model()
+
+    /**
+     *
+     * @type {Mesh}
+     */
+    this.mesh = new Mesh()
   }
 
   /**
@@ -34,10 +40,11 @@ class ModelAsteroid extends Asteroid {
    * @returns {void}
    */
   buildMesh() {
-    this.model.geometry = new BoxGeometry(6, 6, 6)
-    this.model.material = new MeshPhongMaterial({color: 0xFF0000})
-    this.model.castShadow = true
-    this.model.receiveShadow = true
+    this.mesh.geometry = new BoxGeometry(6, 6, 6)
+    this.mesh.material = new MeshPhongMaterial({color: 0xFF0000})
+    this.mesh.castShadow = true
+    this.mesh.receiveShadow = true
+    this.model.add(this.mesh)
     this.scene.add(this.model)
   }
 

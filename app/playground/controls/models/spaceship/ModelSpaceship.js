@@ -1,7 +1,8 @@
-import { Object3D } from 'three'
+import { Object3D, Group } from 'three'
 import Aim from './../../../decoration/Aim'
 import MoveControls from './../../MoveControls'
 import Spaceship from "@entity/particles-spaceship/Spaceship";
+import Model from './../Model'
 
 
 class ModelSpaceship {
@@ -25,9 +26,9 @@ class ModelSpaceship {
 
     /**
      *
-     * @type {Object3D}
+     * @type {Model}
      */
-    this.model = new Object3D()
+    this.model = new Model()
 
     /**
      *

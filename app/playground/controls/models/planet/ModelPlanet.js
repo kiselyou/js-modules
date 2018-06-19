@@ -32,6 +32,12 @@ class ModelPlanet extends Planet {
 
     /**
      *
+     * @type {Model}
+     */
+    this.model = new Model()
+
+    /**
+     *
      * @type {Mesh|?}
      */
     this.glowInsideModel = null
@@ -44,9 +50,9 @@ class ModelPlanet extends Planet {
 
     /**
      *
-     * @type {Model}
+     * @type {Mesh}
      */
-    this.model = new Model()
+    this.mesh = new Mesh()
 
     /**
      *
@@ -60,24 +66,25 @@ class ModelPlanet extends Planet {
    * @returns {ModelPlanet}
    */
   buildModel() {
-    this.model.geometry = new SphereGeometry(this.radius, this.segmentCount, this.segmentCount)
-    this.model.material = new MeshPhongMaterial({
+    this.mesh.geometry = new SphereGeometry(this.radius, this.segmentCount, this.segmentCount)
+    this.mesh.material = new MeshPhongMaterial({
       map: this.getTextureMap(),
     })
 
-    this.model.castShadow = true
-    this.model.receiveShadow = true
+    this.mesh.castShadow = true
+    this.mesh.receiveShadow = true
 
     if (this.glowInsideOption.enabled) {
-      this.glowInsideModel = getGlowInsideMesh(this.model, this.glowInsideOption)
-      this.model.add(this.glowInsideModel)
+      this.glowInsideModel = getGlowInsideMesh(this.mesh, this.glowInsideOption)
+      this.mesh.add(this.glowInsideModel)
     }
 
     if (this.glowOutsideOption.enabled) {
-      this.glowOutsideModel = getGlowOutsideMesh(this.model, this.glowOutsideOption)
-      this.model.add(this.glowOutsideModel)
+      this.glowOutsideModel = getGlowOutsideMesh(this.mesh, this.glowOutsideOption)
+      this.mesh.add(this.glowOutsideModel)
     }
 
+    this.model.add(this.mesh)
     this.scene.add(this.model)
     return this
   }
@@ -97,12 +104,13 @@ class ModelPlanet extends Planet {
    */
   removeModel() {
     if (this.glowInsideOption.enabled) {
-      this.model.remove(this.glowInsideModel)
+      this.mesh.remove(this.glowInsideModel)
     }
 
     if (this.glowOutsideOption.enabled) {
-      this.model.remove(this.glowOutsideModel)
+      this.mesh.remove(this.glowOutsideModel)
     }
+    this.model.remove(this.mesh)
     this.scene.remove(this.model)
     return this
   }

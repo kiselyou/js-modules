@@ -1,4 +1,5 @@
 import Particle from './../Particle'
+import { Math as TMath } from 'three'
 
 class Engine extends Particle {
   constructor() {
@@ -50,6 +51,20 @@ class Engine extends Particle {
      * @type {number}
      */
     this.deceleration = 400
+
+    /**
+     * Radian
+     *
+     * @type {number}
+     */
+    this.maxInclineAngle = TMath.degToRad(60)
+
+    /**
+     * This value is percent fom speed spaceship
+     *
+     * @type {number}
+     */
+    this.inclineSpeed = 15
 
     /**
      *
