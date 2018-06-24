@@ -1,18 +1,30 @@
 import ModelCharge from './models/charge/ModelCharge'
+import GunArea from '../decoration/GunArea'
 import Model from './models/Model'
-import { Vector3 } from 'three'
-import ModelSpaceship from "@app/playground/controls/models/spaceship/ModelSpaceship";
+import { Vector3, Raycaster } from 'three'
 
 class ShotControls {
   /**
    *
-   * @param {CharacterControls} characterControls
+   * @param {CharacterControls} character
    */
-  constructor(characterControls) {
+  constructor(character) {
     /**
      * @type {CharacterControls}
      */
-    this.character = characterControls
+    this.character = character
+
+    /**
+     *
+     * @type {GunArea}
+     */
+    this.gunArea = new GunArea()
+
+    /**
+     *
+     * @type {Raycaster}
+     */
+    this.raycaster = new Raycaster()
 
     /**
      *
@@ -236,7 +248,22 @@ class ShotControls {
     }
   }
 
+  /**
+   *
+   * @return {Promise<void>}
+   */
   async beforeStart() {
+    await this.gunArea.beforeStart()
+    this.character.model.addToGroup(this.gunArea)
+  }
+
+  /**
+   *
+   * @param {Intersect} intersect
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  onMouseClick(intersect, mouseEvent) {
 
   }
 }

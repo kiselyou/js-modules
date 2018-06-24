@@ -1,9 +1,7 @@
-import { Object3D, Group } from 'three'
-import Aim from './../../../decoration/Aim'
+import Spaceship from '@entity/particles-spaceship/Spaceship'
 import MoveControls from './../../MoveControls'
-import Spaceship from "@entity/particles-spaceship/Spaceship";
+import Aim from './../../../decoration/Aim'
 import Model from './../Model'
-
 
 class ModelSpaceship {
   /**
@@ -64,7 +62,7 @@ class ModelSpaceship {
    */
   buildAim() {
     this.aim.build()
-    this.model.add(this.aim)
+    this.model.addToGroup(this.aim)
     return this
   }
 

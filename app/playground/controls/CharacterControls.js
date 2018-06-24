@@ -1,10 +1,10 @@
-import RaceControls from './RaceControls'
 import ModelSpaceship from './models/spaceship/ModelSpaceship'
+import Calculate from './../lib/Calculate'
+import RaceControls from './RaceControls'
+import ShotControls from './ShotControls'
 import ParticlePlayGround from '@entity/ParticlePlayGround'
 import Player from '@entity/particles-sector/Player'
-import ShotControls from './ShotControls'
-import Calculate from './../lib/Calculate'
-import Slot from "@entity/particles-spaceship/Slot";
+import UserPanel from '@app/playground/decoration/UserPanel'
 
 class CharacterControls extends ModelSpaceship {
   /**
@@ -26,6 +26,11 @@ class CharacterControls extends ModelSpaceship {
      * @type {ShotControls}
      */
     this.shotControls = new ShotControls(this)
+
+    /**
+     * @type {UserPanel}
+     */
+    this.userPanel = new UserPanel(this)
 
     /**
      *
@@ -65,11 +70,33 @@ class CharacterControls extends ModelSpaceship {
   }
 
   /**
+   * Get angle of current model to target
+   *
+   * @param {Vector3} target
+   * @returns {number}
+   */
+  getAngleTo(target) {
+    const direction = this.getDirection()
+    return direction.angleTo(target)
+  }
+
+  /**
+   *
+   * @returns {Promise<void>}
+   */
+  async buildPanel() {
+    await this.userPanel.drawMainPanel()
+    await this.userPanel.drawShotPanel()
+    await this.userPanel.drawSpeedPanel()
+  }
+
+  /**
    * @returns {void}
    */
   async beforeStart() {
     await super.beforeStart()
     await this.raceControls.beforeStart()
+    await this.shotControls.beforeStart()
     this.model.position.copy(this.player.position)
     this.enabled = true
   }
@@ -121,17 +148,29 @@ class CharacterControls extends ModelSpaceship {
 
   /**
    *
+   * @param {MouseEvent} mouseEvent
+   * @returns {void}
+   */
+  panelMouseClick(mouseEvent) {
+    this.userPanel.onMouseClick(mouseEvent)
+  }
+
+  /**
+   *
    * @param {Intersect} intersect
    * @param {MouseEvent} mouseEvent
    * @returns {void}
    */
   onMouseClick(intersect, mouseEvent) {
-    const target = this.getTargetPosition()
-    //TODO: temp solution
-    const guns = this.spaceship.getSlotsByType(Slot.TYPE_GUN)
-    for (const gun of guns) {
-      this.shotControls.shot(gun.id, target)
-    }
+    this.shotControls.onMouseClick(intersect, mouseEvent)
+
+
+    // const target = this.getTargetPosition()
+    // //TODO: temp solution
+    // const guns = this.spaceship.getSlotsByType(Slot.TYPE_GUN)
+    // for (const gun of guns) {
+    //   this.shotControls.shot(gun.id, target)
+    // }
   }
 }
 

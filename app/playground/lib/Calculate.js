@@ -17,7 +17,7 @@ class Calculate {
 
   /**
    *
-   * @param {Object3D} obj
+   * @param {Object3D|Model} obj
    * @param {number} distance
    * @returns {Vector3}
    */
@@ -28,7 +28,7 @@ class Calculate {
 
   /**
    *
-   * @param {Object3D} obj
+   * @param {Object3D|Model} obj
    * @returns {Vector3}
    */
   getDirection(obj) {

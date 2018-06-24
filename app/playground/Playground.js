@@ -1,5 +1,6 @@
 import {
   PerspectiveCamera,
+  OrthographicCamera,
   Scene,
   WebGLRenderer,
   Clock,
@@ -298,10 +299,24 @@ class Playground {
     await this.character.beforeStart()
     await this.character.buildAim()
     await this.spaceParticleControls.beforeStart()
+    await this.buildPanel(rootContainerId)
     setTimeout(() => {
       this.animateStart()
     }, 1000)
     return this
+  }
+
+  /**
+   *
+   * @returns {Promise<void>}
+   */
+  async buildPanel(rootContainerId) {
+    await this.character.buildPanel()
+    const canvas = this.character.userPanel.canvas
+    document.getElementById(rootContainerId).appendChild(canvas)
+    canvas.addEventListener('click', (event) => {
+      this.character.panelMouseClick(event)
+    }, false)
   }
 
   /**
