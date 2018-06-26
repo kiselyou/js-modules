@@ -130,19 +130,19 @@ class ShotControls {
     }
   }
 
-  /**
-   *
-   * @returns {Array.<Model>}
-   */
-  getModelsFromScene() {
-    const models = []
-    for (const element of this.character.scene.children) {
-      if (element instanceof Model) {
-        models.push(element.children[0])
-      }
-    }
-    return models
-  }
+  // /**
+  //  *
+  //  * @returns {Array.<Model>}
+  //  */
+  // getModelsFromScene() {
+  //   const models = []
+  //   for (const element of this.character.scene.children) {
+  //     if (element instanceof Model) {
+  //       models.push(element.children[0])
+  //     }
+  //   }
+  //   return models
+  // }
 
   /**
    *
@@ -163,7 +163,7 @@ class ShotControls {
       return this
     }
 
-    const objects = this.getModelsFromScene()
+    const objects = this.character.getModelsFromScene()
     const direction = this.character.getDirection()
     const modelCharge = new ModelCharge()
       .copyCharge(slot.particle.charge)

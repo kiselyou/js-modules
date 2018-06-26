@@ -62,6 +62,17 @@ class Intersect {
    * @returns {boolean}
    */
   is(elements, recursive = false) {
+    return this.findIntersection(elements, recursive).length > 0
+  }
+
+  /**
+   *
+   * @param {Array.<Mesh|Object3D>|Mesh|Object3D} elements
+   * @param {boolean} [recursive]
+   * @param {number} [distance]
+   * @returns {Array}
+   */
+  findIntersection(elements, recursive = false, distance = 1000) {
     this.dirrection.setX(this.mouse.x)
     this.dirrection.setY(this.mouse.y)
     this.dirrection.unproject(this.camera)
@@ -69,7 +80,7 @@ class Intersect {
     this.rayStartFrom.copy(this.camera.position)
     this.rayStartFrom.add(this.gyroscope.parent.position)
     this.raycaster.ray.origin = this.rayStartFrom
-    this.raycaster.far = 1000
+    this.raycaster.far = distance
 
     this.raycaster.ray.direction = this.dirrection.sub(this.rayStartFrom).normalize()
 
@@ -79,7 +90,7 @@ class Intersect {
     } else {
       intersects = this.raycaster.intersectObject(elements, recursive)
     }
-    return intersects.length > 0
+    return intersects
   }
 }
 

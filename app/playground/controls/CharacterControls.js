@@ -5,6 +5,9 @@ import ShotControls from './ShotControls'
 import ParticlePlayGround from '@entity/ParticlePlayGround'
 import Player from '@entity/particles-sector/Player'
 import UserPanel from '@app/playground/decoration/UserPanel'
+import Model from '@app/playground/controls/models/Model'
+
+import { Mesh, CubeGeometry, MeshBasicMaterial } from 'three'
 
 class CharacterControls extends ModelSpaceship {
   /**
@@ -49,6 +52,29 @@ class CharacterControls extends ModelSpaceship {
      * @type {boolean}
      */
     this.enabled = false
+
+    /**
+     *
+     * @type {Array.<Slot>}
+     */
+    this.selectedSlots = []
+
+    this.tets = []
+  }
+
+  /**
+   *
+   * @returns {Array.<Model>}
+   */
+  getModelsFromScene() {
+    const models = []
+    for (const element of this.scene.children) {
+      if (element instanceof Model) {
+        models.push(element.element.children[0])
+        // models.push(element.children[0])
+      }
+    }
+    return models
   }
 
   /**
@@ -152,7 +178,18 @@ class CharacterControls extends ModelSpaceship {
    * @returns {void}
    */
   panelMouseClick(mouseEvent) {
-    this.userPanel.onMouseClick(mouseEvent)
+    this.userPanel.panelShot.onMouseClick(mouseEvent, (slot, shape) => {
+      if (shape.attr.isActive) {
+        this.selectedSlots.push(slot)
+      } else {
+        for (let i = 0; i < this.selectedSlots.length; i++) {
+          const selectedSlot = this.selectedSlots[i]
+          if (selectedSlot.id === slot.id) {
+            this.selectedSlots.splice(i, 1)
+          }
+        }
+      }
+    })
   }
 
   /**
@@ -162,7 +199,16 @@ class CharacterControls extends ModelSpaceship {
    * @returns {void}
    */
   onMouseClick(intersect, mouseEvent) {
-    this.shotControls.onMouseClick(intersect, mouseEvent)
+    if (this.selectedSlots.length > 0) {
+      const models = this.getModelsFromScene()
+      const intersectedObjects = intersect.findIntersection(models, true)
+      console.log(intersectedObjects)
+    }
+
+
+
+
+    // this.shotControls.onMouseClick(intersect, mouseEvent)
 
 
     // const target = this.getTargetPosition()

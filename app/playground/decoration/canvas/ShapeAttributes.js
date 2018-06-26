@@ -81,7 +81,7 @@ class ShapeAttributes {
      *
      * @type {?number}
      */
-    this.backgroundImageMargin = null
+    this.backgroundImagePadding = null
 
     /**
      *
@@ -203,12 +203,12 @@ class ShapeAttributes {
   /**
    *
    * @param {string} url
-   * @param {?number} [margin]
+   * @param {?number} [padding]
    * @returns {ShapeAttributes}
    */
-  setBackgroundImage(url, margin = null) {
+  setBackgroundImage(url, padding = null) {
     this.backgroundImage = url
-    this.backgroundImageMargin = margin
+    this.backgroundImagePadding = padding
     return this
   }
 

@@ -23,6 +23,43 @@ class Text {
      * @type {CanvasRenderingContext2D}
      */
     this.context = this.canvas.getContext('2d')
+
+    /**
+     * @param {Text} text
+     * @callback beforeCallback
+     */
+
+    /**
+     *
+     * @type {?beforeCallback}
+     */
+    this.beforeBuildCallback = null
+
+    /**
+     *
+     * @type {?beforeCallback}
+     */
+    this.beforeRebuildCallback = null
+  }
+
+  /**
+   *
+   * @param {beforeCallback} value
+   * @returns {Text}
+   */
+  beforeRebuild(value) {
+    this.beforeRebuildCallback = value
+    return this
+  }
+
+  /**
+   *
+   * @param {beforeCallback} value
+   * @returns {Text}
+   */
+  beforeBuild(value) {
+    this.beforeBuildCallback = value
+    return this
   }
 
   /**
@@ -31,8 +68,8 @@ class Text {
    * @param {?number} [y]
    * @return {Text}
    */
-  setMargin(x, y) {
-    this.attr.setMargin(x, y)
+  setPadding(x, y) {
+    this.attr.setPadding(x, y)
     return this
   }
 
@@ -41,8 +78,8 @@ class Text {
    * @param {?number} value
    * @return {Text}
    */
-  setMarginX(value) {
-    this.attr.setMarginX(value)
+  setPaddingX(value) {
+    this.attr.setPaddingX(value)
     return this
   }
 
@@ -51,8 +88,8 @@ class Text {
    * @param {?number} value
    * @return {Text}
    */
-  setMarginY(value) {
-    this.attr.setMarginY(value)
+  setPaddingY(value) {
+    this.attr.setPaddingY(value)
     return this
   }
 
@@ -147,10 +184,10 @@ class Text {
 
   /**
    *
-   * @return {Text}
+   * @returns {Text}
    */
   rebuild() {
-    this.clear().build()
+    this.clear()._draw()
     return this
   }
 
@@ -159,6 +196,16 @@ class Text {
    * @returns {Text}
    */
   build() {
+    this._beforeBuild()._draw()
+    return this
+  }
+
+  /**
+   *
+   * @returns {Text}
+   * @private
+   */
+  _draw() {
     this.context.font = this.attr.font
     this.context.fillStyle = this.attr.fontColor
     this.context.textAlign = this.attr.horizontalAlign
@@ -169,8 +216,6 @@ class Text {
     } else {
       this.context.fillText(this.attr.text, this.attr.positionX, this.attr.positionY)
     }
-
-    return this
   }
 
   /**
@@ -199,6 +244,30 @@ class Text {
       }
     }
     this.context.fillText(line, startX, startY);
+  }
+
+  /**
+   *
+   * @returns {Text}
+   * @private
+   */
+  _beforeBuild() {
+    if (this.beforeBuildCallback) {
+      this.beforeBuildCallback(this)
+    }
+    return this
+  }
+
+  /**
+   *
+   * @returns {Text}
+   * @private
+   */
+  _beforeRebuild() {
+    if (this.beforeRebuildCallback) {
+      this.beforeRebuildCallback(this)
+    }
+    return this
   }
 }
 

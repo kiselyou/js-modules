@@ -1,6 +1,6 @@
-import { Group, Object3D } from 'three'
+import { Group, Object3D, Mesh } from 'three'
 
-class Model extends Group {
+class Model extends Object3D {
   constructor() {
     super()
 
@@ -20,7 +20,7 @@ class Model extends Group {
 
   /**
    *
-   * @param {Object3D|Group|Mesh} obj
+   * @param {Object3D|Group|Mesh|Gyroscope} obj
    * @returns {Model}
    */
   addToGroup(obj) {

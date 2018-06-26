@@ -194,6 +194,14 @@ class Slot extends Particle {
   static get TYPE_SHELL() {
     return 5
   }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get TYPE_ENERGY() {
+    return 6
+  }
 }
 
 export default Slot

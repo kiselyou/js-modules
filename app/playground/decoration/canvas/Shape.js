@@ -38,10 +38,31 @@ class Shape {
      * @type {Array.<Shape>}
      */
     this.childrenShape = []
+
+    /**
+     * @param {Shape} shape
+     * @callback beforeCallback
+     */
+
+    /**
+     *
+     * @type {?beforeCallback}
+     */
+    this.beforeBuildCallback = null
   }
 
   /**
-   * @param {TextAttributes} attr
+   *
+   * @param {beforeCallback} value
+   * @returns {Shape}
+   */
+  beforeBuild(value) {
+    this.beforeBuildCallback = value
+    return this
+  }
+
+  /**
+   * @param {Text} text
    * @callback textAttributesCallback
    */
 
@@ -57,7 +78,7 @@ class Shape {
     this.childrenText.push(text)
 
     if (attributesCallback) {
-      attributesCallback(text.attr)
+      attributesCallback(text)
     }
     return this
   }
@@ -169,11 +190,11 @@ class Shape {
   /**
    *
    * @param {string} url
-   * @param {?number} [margin]
+   * @param {?number} [padding]
    * @returns {Shape}
    */
-  setBackgroundImage(url, margin) {
-    this.attr.setBackgroundImage(url, margin)
+  setBackgroundImage(url, padding) {
+    this.attr.setBackgroundImage(url, padding)
     return this
   }
 
@@ -206,12 +227,12 @@ class Shape {
    * @returns {Shape}
    */
   clear() {
-    this.border = this.attr.borderWeight || 0
+    const border = this.attr.borderWeight || 0
     this.shape.clearRect(
-      this.attr.startX - this.border,
-      this.attr.startY - this.border,
-      this.attr.width + this.border * 2,
-      this.attr.height + this.border * 2
+      this.attr.startX - border,
+      this.attr.startY - border,
+      this.attr.width + border * 2,
+      this.attr.height + border * 2
     )
     return this
   }
@@ -230,15 +251,10 @@ class Shape {
    *
    * @returns {Promise<Shape>}
    */
-  async rebuild() {
-    await this.clear().build()
-  }
-
-  /**
-   *
-   * @returns {Promise<Shape>}
-   */
   async build() {
+    this.clear()
+    this._beforeBuild()
+
     const attr = this.attr
     const shape = this.shape
 
@@ -247,7 +263,7 @@ class Shape {
     if (attr.backgroundImage) {
       await this.loadImage(attr.backgroundImage)
         .then((img) => {
-          const mg = attr.backgroundImageMargin
+          const mg = attr.backgroundImagePadding
           shape.save()
           this.buildForm(shape, attr)
           shape.clip()
@@ -280,6 +296,19 @@ class Shape {
     }
 
     return this
+  }
+
+  /**
+   *
+   * @param {CanvasRenderingContext2D} context
+   * @param {ShapeAttributes} attr
+   */
+  buildForm(context, attr) {
+    switch (attr.type) {
+      case ShapeAttributes.SQUARE:
+        this._buildSquare(context, attr)
+        break
+    }
   }
 
   /**
@@ -325,15 +354,14 @@ class Shape {
 
   /**
    *
-   * @param {CanvasRenderingContext2D} context
-   * @param {ShapeAttributes} attr
+   * @returns {Shape}
+   * @private
    */
-  buildForm(context, attr) {
-    switch (attr.type) {
-      case ShapeAttributes.SQUARE:
-        this._buildSquare(context, attr)
-        break
+  _beforeBuild() {
+    if (this.beforeBuildCallback) {
+      this.beforeBuildCallback(this)
     }
+    return this
   }
 }
 

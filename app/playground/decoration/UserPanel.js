@@ -1,6 +1,10 @@
 import Shape from './canvas/Shape'
-import Indicator from './canvas/Indicator'
+// import Indicator from './canvas/Indicator'
 import Slot from '@entity/particles-spaceship/Slot'
+
+import UserPanelShot from './UserPanelShot'
+import UserPanelSpeed from './UserPanelSpeed'
+import UserPanelIndicator from './UserPanelIndicator'
 
 class UserPanel {
   /**
@@ -21,39 +25,21 @@ class UserPanel {
 
     /**
      *
-     * @type {CanvasRenderingContext2D}
+     * @type {UserPanelIndicator}
      */
-    this.context = this.canvas.getContext('2d')
+    this.panelIndicator = new UserPanelIndicator(this.canvas, character)
 
     /**
      *
-     * @type {Array.<Shape>}
+     * @type {UserPanelSpeed}
      */
-    this.buttons = []
+    this.panelSpeed = new UserPanelSpeed(this.canvas, character)
 
     /**
      *
-     * @type {number}
+     * @type {UserPanelShot}
      */
-    this.sizeSpeedItem = 85
-
-    /**
-     *
-     * @type {number}
-     */
-    this.sizeShotItem = 40
-
-    /**
-     *
-     * @type {number}
-     */
-    this.maxCountShotItem = 10
-
-    /**
-     *
-     * @type {number}
-     */
-    this.marginShotItem = 2
+    this.panelShot = new UserPanelShot(this.canvas, character)
   }
 
   /**
@@ -64,8 +50,8 @@ class UserPanel {
     this.canvas.style.position = 'absolute'
     this.canvas.style.bottom = '4px'
     this.canvas.style.left = '2px'
-    this.canvas.height = this.sizeSpeedItem
-    this.canvas.width = this.maxCountShotItem * this.sizeShotItem + this.sizeSpeedItem
+    this.canvas.height = this.panelSpeed.height
+    this.canvas.width = this.panelShot.maxCount * this.panelShot.size + this.panelSpeed.width
     return this
   }
 
@@ -75,77 +61,22 @@ class UserPanel {
    */
   async drawMainPanel() {
     this.prepareCanvas()
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    const y = 46
-    const height = 8
-    const margin = 4
-    const labelWidth = 50
-
-    const options = [
-      {
-        color: '#F00',
-        label: 'Healthy:',
-        percent: 10
-      },
-      {
-        color: '#0037FF',
-        label: 'Energy:',
-        percent: 45
-      },
-      {
-        color: '#FFF',
-        label: 'Armor:',
-        percent: 90
-      }
-    ]
-
-    for (let i = 0; i < options.length; i++) {
-
-      const item = options[i]
-      const top = y + i * (height + margin)
-      const width = (this.maxCountShotItem * this.sizeShotItem) - (this.marginShotItem * 2)
-
-      const test = await new Indicator(this.canvas)
-        .horizontalLForm(this.marginShotItem, top, width, height, labelWidth, item.label)
-        .setBorder(2, 'rgb(2, 145, 145)')
-        .setIndicatorColor(item.color)
-        .setPercent(item.percent)
-        .build()
-
-      // setInterval(async () => {
-      //   await test.increase(0.1).rebuild()
-      // }, i * 10)
-    }
-
+    const top = 46
+    const left = this.panelShot.margin
+    const width = (this.panelShot.maxCount * this.panelShot.size) - (this.panelShot.margin * 2)
+    await this.panelIndicator.draw(left, top, width)
     return this
   }
 
+  /**
+   *
+   * @return {Promise<UserPanel>}
+   */
   async drawSpeedPanel() {
-    const shape = new Shape(this.canvas)
-
-    const width = (this.maxCountShotItem * this.sizeShotItem) + this.marginShotItem
-
-    await shape
-      .squareForm(width, this.marginShotItem, this.sizeSpeedItem - this.marginShotItem * 2, this.sizeSpeedItem - this.marginShotItem * 2)
-      .setBorder(2, 'transparent')
-      // .setBackground('rgb(4, 27, 31)')
-      .addText('speed', (attr) => {
-        attr
-          .setMarginY(25)
-          .setFontSize('10px')
-          .setHorizontalAlign('center')
-          .setVerticalAlign('bottom')
-          .setFontColor('rgb(2, 145, 145)')
-      })
-      .addText('186mh', (attr) => {
-        attr
-          .setFontSize('22px')
-          .setHorizontalAlign('center')
-          .setVerticalAlign('bottom')
-          .setFontColor('rgb(2, 145, 145)')
-      })
-      .build()
+    const top = this.panelShot.margin
+    const left = (this.panelShot.maxCount * this.panelShot.size) + this.panelShot.margin
+    await this.panelSpeed.draw(left, top, this.panelShot.margin)
+    return this
   }
 
   /**
@@ -153,48 +84,16 @@ class UserPanel {
    * @return {Promise<UserPanel>}
    */
   async drawShotPanel() {
-    const slots = this.character.spaceship.getSlotsByType(Slot.TYPE_GUN)
-
-    const mg = this.marginShotItem
-    const size = this.sizeShotItem - mg * 2
-    for (let i = mg, num = 0; i < (this.maxCountShotItem * this.sizeShotItem + mg); i += this.sizeShotItem, num++ ) {
-      const slot = slots[num]
-
-      const shape = new Shape(this.canvas)
-        .squareForm(i, mg, size, size, 0)
-        .addText(num + 1, (attr) => {
-          attr.setHorizontalAlign('right').setMargin(4, 2)
-        })
-
-      if (slot) {
-        shape
-          .setBorder(2, 'rgb(2, 145, 145)')
-          .setBackgroundImage('./app/web/images/icon/rocket-png-19.png', 4);
-        this.buttons.push(shape)
-      } else {
-        shape
-          .setBorder(2, 'rgb(105, 105, 105)')
-          .setBackground('rgba(21, 21, 21, 0.6)')
-      }
-
-      await shape.build()
-    }
-
-    return this
+    await this.panelShot.draw(0, 0)
   }
 
   /**
    *
-   * @param {MouseEvent} event
-   * @return {UserPanel}
+   * @returns {Promise<UserPanel>}
    */
-  onMouseClick(event) {
-    for (const button of this.buttons) {
-      button.onClickEvent(event, async (shape) => {
-        const activeColor = shape.attr.isActive ? 'rgb(205, 205, 205)' : 'rgb(2, 145, 145)'
-        await shape.setBorderColor(activeColor).rebuild()
-      })
-    }
+  async update() {
+    await this.panelIndicator.update()
+    await this.panelSpeed.update()
     return this
   }
 }

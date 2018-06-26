@@ -77,6 +77,8 @@ class Indicator extends Shape {
    * @return {Indicator}
    */
   setPercent(value) {
+    value = value < 0 ? 0 : value
+    value = value > 100 ? 100 : value
     this.percent = value
     return this
   }
@@ -126,7 +128,7 @@ class Indicator extends Shape {
       this.indicatorLabel
         .text(label, startX, startY, labelWidth, height)
         .setHorizontalAlign('right')
-        .setMargin(0, -2)
+        .setPadding(0, -2)
     }
 
     const percentWidth = this.indicatorPercent.attr.width
@@ -134,7 +136,7 @@ class Indicator extends Shape {
     this.indicatorPercent
       .text('', startX + labelWidth, startY, percentWidth, height)
       .setHorizontalAlign('left')
-      .setMargin(4, -2)
+      .setPadding(4, -2)
 
     this.squareForm(startX + labelWidth + percentWidth, startY, width - labelWidth - percentWidth, height, 4)
     this.indicator.setBorder(-1, 'transparent')
@@ -157,7 +159,7 @@ class Indicator extends Shape {
       this.indicatorLabel
         .text(label, width - labelWidth, startY, labelWidth, height)
         .setHorizontalAlign('left')
-        .setMargin(6, -2)
+        .setPadding(6, -2)
     }
 
     const percentWidth = this.indicatorPercent.attr.width
@@ -165,7 +167,7 @@ class Indicator extends Shape {
     this.indicatorPercent
       .text('', width - percentWidth - labelWidth, startY, percentWidth, height)
       .setHorizontalAlign('left')
-      .setMargin(6, -2)
+      .setPadding(6, -2)
 
     this.squareForm(startX, startY, width - percentWidth - labelWidth, height, 4)
     this.indicator.setBorder(-1, 'transparent')
@@ -173,14 +175,11 @@ class Indicator extends Shape {
     return this
   }
 
-  /**
-   *
-   * @returns {Promise<Indicator>}
-   */
-  async rebuild() {
-    this.indicatorLabel.rebuild()
-    this.indicatorPercent.rebuild()
-    await this.clear().build()
+  clear() {
+    this.indicatorLabel.clear()
+    this.indicatorPercent.clear()
+    super.clear()
+    return this
   }
 
   /**
@@ -188,6 +187,8 @@ class Indicator extends Shape {
    * @return {Promise<Indicator>}
    */
   async build() {
+    this.clear()
+
     const attr = this.attr
     const borderWeight = Math.abs(attr.borderWeight)
     const x = attr.startX + borderWeight / 2

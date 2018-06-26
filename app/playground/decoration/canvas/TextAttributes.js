@@ -73,7 +73,7 @@ class TextAttributes {
      *
      * @type {{x: number, y: number}}
      */
-    this.margin = {x: 2, y: 0}
+    this.padding = {x: 2, y: 0}
   }
 
   /**
@@ -107,11 +107,11 @@ class TextAttributes {
     switch (this.horizontalAlign) {
       case 'right':
       case 'end':
-        return this.startX + this.width - this.margin.x
+        return this.startX + this.width - this.padding.x
       case 'center':
-        return (this.startX + this.width / 2) - this.margin.x
+        return (this.startX + this.width / 2) - this.padding.x
     }
-    return this.startX + this.margin.x
+    return this.startX + this.padding.x
   }
 
   /**
@@ -122,11 +122,11 @@ class TextAttributes {
     switch (this.verticalAlign) {
       case 'bottom':
       case 'end':
-        return this.startY + this.height - this.margin.y
+        return this.startY + this.height - this.padding.y
       case 'middle':
-        return (this.startY / 2 + this.height / 2) - this.margin.y
+        return (this.startY / 2 + this.height / 2) - this.padding.y
     }
-    return this.startY + this.margin.y
+    return this.startY + this.padding.y
   }
 
   /**
@@ -135,9 +135,9 @@ class TextAttributes {
    * @param {?number} [y]
    * @return {TextAttributes}
    */
-  setMargin(x, y) {
-    this.setMarginX(x)
-    this.setMarginY(y)
+  setPadding(x, y) {
+    this.setPaddingX(x)
+    this.setPaddingY(y)
     return this
   }
 
@@ -146,8 +146,8 @@ class TextAttributes {
    * @param {?number} value
    * @return {TextAttributes}
    */
-  setMarginX(value) {
-    this.margin.x = value || 0
+  setPaddingX(value) {
+    this.padding.x = value || 0
     return this
   }
 
@@ -156,8 +156,8 @@ class TextAttributes {
    * @param {?number} value
    * @return {TextAttributes}
    */
-  setMarginY(value) {
-    this.margin.y = value || 0
+  setPaddingY(value) {
+    this.padding.y = value || 0
     return this
   }
 

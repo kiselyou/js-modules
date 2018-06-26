@@ -165,7 +165,7 @@ class Playground {
      */
     this.gyroscope = new Gyroscope()
     this.gyroscope.add(this.camera);
-    this.character.model.add(this.gyroscope)
+    this.character.model.addToGroup(this.gyroscope)
     this.scene.add(this.character.model)
 
     /**
@@ -302,6 +302,11 @@ class Playground {
     await this.buildPanel(rootContainerId)
     setTimeout(() => {
       this.animateStart()
+
+      setInterval(async () => {
+        await this.character.userPanel.update()
+      }, 1000 / 10)
+
     }, 1000)
     return this
   }

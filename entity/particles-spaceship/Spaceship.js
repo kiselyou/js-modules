@@ -144,11 +144,19 @@ class Spaceship extends Particle {
 
   /**
    *
+   * @returns {Particle|?}
+   */
+  getEnergy() {
+    return this.getParticleByType(Slot.TYPE_ENERGY)
+  }
+
+  /**
+   *
    * @param {string} id
    * @returns {Shell|?}
    */
   getGunBySlotId(id) {
-    const slots = this.getSlot(id)
+    const slots = this.getSlotById(id)
     return slots ? slots.particle : null
   }
 
