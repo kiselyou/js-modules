@@ -6,6 +6,11 @@ import Armor from './Armor'
 import Shell from './Shell'
 
 class Slot extends Particle {
+  /**
+   * Есть разичные слоты и у каждого свое назанчение. т.е. каждый слот содержит информацию о сущности (сущности может и не быть)
+   * Каждые слот можно идентифицировать по назначению. (Slot().type)
+   * Например сущность Gun может быть в слоте со значением свойства new Slot().type равным Slot.TYPE_GUN и т.д.
+   */
   constructor() {
     super()
 
@@ -38,6 +43,12 @@ class Slot extends Particle {
      * @type {string|?}
      */
     this.particleId = null
+
+    /**
+     *
+     * @type {number}
+     */
+    this.status = Slot.STATUS_DISABLED
   }
 
   /**
@@ -62,11 +73,21 @@ class Slot extends Particle {
 
   /**
    *
-   * @param {number} value - constants of current class
+   * @param {number} value - constants of current class with prefix TYPE_...
    * @returns {Slot}
    */
   setType(value) {
     this.type = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value - constants of current class with prefix STATUS_...
+   * @returns {Slot}
+   */
+  setStatus(value) {
+    this.status = value
     return this
   }
 
@@ -201,6 +222,38 @@ class Slot extends Particle {
    */
   static get TYPE_ENERGY() {
     return 6
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get STATUS_DISABLED() {
+    return 0
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get STATUS_ENABLED() {
+    return 1
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get STATUS_ACTIVE() {
+    return 2
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  static get STATUS_SELECTED() {
+    return 3
   }
 }
 

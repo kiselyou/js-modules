@@ -66,7 +66,7 @@ class UserPanelShot {
       if (slot) {
         shape
           .setBorder(2, 'rgb(2, 145, 145)')
-          .setBackgroundImage('./app/web/images/icon/rocket-png-19.png', 4);
+          .setBackgroundImage('./app/web/images/icon/rocket-slot-a.png', 4);
         this.buttons.push({shape, slot})
       } else {
         shape
@@ -100,6 +100,16 @@ class UserPanelShot {
         await shape.setBorderColor(activeColor).build()
       })
     }
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value - possible values are constants of Slot class
+   * @returns {UserPanelShot}
+   */
+  setSlotStatus(value) {
+    
     return this
   }
 }

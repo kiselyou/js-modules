@@ -1,4 +1,4 @@
-import { Group, Object3D, Mesh } from 'three'
+import { Group, Object3D, Mesh, Box3, Box3Helper } from 'three'
 
 class Model extends Object3D {
   constructor() {
@@ -16,6 +16,17 @@ class Model extends Object3D {
      */
     this.element = new Object3D()
     super.add(this.element)
+  }
+
+  /**
+   *
+   * @param {number} color
+   * @returns {Box3Helper}
+   */
+  getHelperBox(color = 0xffff00) {
+    const box = new Box3()
+    box.setFromObject(this)
+    return new Box3Helper(box, color)
   }
 
   /**
