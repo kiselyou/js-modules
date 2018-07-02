@@ -56,7 +56,6 @@ class UserPanelShot {
     const size = this.size - this.margin * 2
     for (let i = this.margin, num = 0; i < (this.maxCount * this.size + this.margin); i += this.size, num++ ) {
       const slot = slots[num]
-
       const shape = new Shape(this.canvas)
         .squareForm(left + i, top + this.margin, size, size, 0)
         .addText(num + 1, (text) => {
@@ -64,8 +63,32 @@ class UserPanelShot {
         })
 
       if (slot) {
+        slot.onChangeStatus(async (slot) => {
+          switch (slot.status) {
+            case Slot.STATUS_ACTIVE:
+              await shape
+                .setBackground('rgb(50, 50, 50)')
+                .setBorder(2, 'rgb(0, 85, 85)')
+                .build()
+              break;
+            case Slot.STATUS_SELECTED:
+              await shape
+                .setBackground('rgb(21, 21, 21)')
+                .setBorder(2, 'rgb(205, 205, 205)')
+                .build()
+              break;
+            case Slot.STATUS_ENABLED:
+            default:
+              await shape
+                .setBackground('rgb(21, 21, 21)')
+                .setBorder(2, 'rgb(2, 145, 145)')
+                .build()
+              break;
+          }
+        })
         shape
           .setBorder(2, 'rgb(2, 145, 145)')
+          .setBackground('rgb(21, 21, 21)')
           .setBackgroundImage('./app/web/images/icon/rocket-slot-a.png', 4);
         this.buttons.push({shape, slot})
       } else {
@@ -95,21 +118,9 @@ class UserPanelShot {
   onMouseClick(event, clickCallback) {
     for (const button of this.buttons) {
       button.shape.onClickEvent(event, async (shape) => {
-        clickCallback(button.slot, button.shape)
-        const activeColor = shape.attr.isActive ? 'rgb(205, 205, 205)' : 'rgb(2, 145, 145)'
-        await shape.setBorderColor(activeColor).build()
+        clickCallback(button.slot, shape)
       })
     }
-    return this
-  }
-
-  /**
-   *
-   * @param {number} value - possible values are constants of Slot class
-   * @returns {UserPanelShot}
-   */
-  setSlotStatus(value) {
-    
     return this
   }
 }

@@ -260,6 +260,10 @@ class Shape {
 
     this.buildForm(shape, attr)
 
+    if (attr.backgroundColor) {
+      shape.fillStyle = attr.backgroundColor
+      shape.fill()
+    }
     if (attr.backgroundImage) {
       await this.loadImage(attr.backgroundImage)
         .then((img) => {
@@ -271,17 +275,11 @@ class Shape {
           shape.restore()
         })
     }
-
-    if (attr.borderWeight) {
-      shape.lineWidth = attr.borderWeight
-    }
-
     if (attr.borderColor) {
       shape.strokeStyle = attr.borderColor
     }
-    if (attr.backgroundColor) {
-      shape.fillStyle = attr.backgroundColor
-      shape.fill()
+    if (attr.borderWeight) {
+      shape.lineWidth = attr.borderWeight
     }
 
     shape.globalAlpha = attr.opacity

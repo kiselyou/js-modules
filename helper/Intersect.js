@@ -1,4 +1,5 @@
 import { PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three'
+import Model from '@app/playground/controls/models/Model'
 
 class Intersect {
   /**
@@ -72,7 +73,7 @@ class Intersect {
    * @param {number} [distance]
    * @returns {Array}
    */
-  findIntersection(elements, recursive = false, distance = 1000) {
+  findIntersection(elements, recursive = false, distance = Infinity) {
     this.dirrection.setX(this.mouse.x)
     this.dirrection.setY(this.mouse.y)
     this.dirrection.unproject(this.camera)
@@ -91,6 +92,41 @@ class Intersect {
       intersects = this.raycaster.intersectObject(elements, recursive)
     }
     return intersects
+  }
+
+  /**
+   *
+   * @param {Array.<Model>} elements
+   * @param {boolean} [recursive]
+   * @param {number} [distance]
+   * @returns {Array}
+   */
+  findIntersectionModels(elements, recursive = false, distance = Infinity) {
+    const findModel = (obj) => {
+      const parent = obj['parent']
+      if (!obj || !parent) {
+        return null
+      }
+
+      if (parent instanceof Model) {
+        return parent
+      }
+
+      return findModel(parent)
+    }
+
+    const keys = []
+    const models = []
+    const intersection = this.findIntersection(elements, recursive, distance)
+    for (const data of intersection) {
+      const model = findModel(data.object)
+      if (!keys.includes(model.uuid)) {
+        keys.push(model.uuid)
+        models.push(model)
+      }
+    }
+
+    return models
   }
 }
 

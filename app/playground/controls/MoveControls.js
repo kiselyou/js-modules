@@ -176,7 +176,7 @@ class MoveControls {
     const speedShip = (engine.speed / engine.maxSpeed)
     let speed = speedShip * engine.inclineSpeed / 1000
 
-    const currentAngle = this.model.element.rotation.z
+    const currentAngle = this.model.rotation.z
     const maxLeftAngle = - (engine.maxInclineAngle + speed)
     const maxRightAngle = + (engine.maxInclineAngle - speed)
 
@@ -184,36 +184,36 @@ class MoveControls {
     if (isBackward || isSlowDown || engine.speed <= 0) {
       speed = Math.abs(speed)
       if (currentAngle <= - speed) {
-        this.model.element.rotation.z += speed
+        this.model.rotation.z += speed
       }
       if (currentAngle >= speed) {
-        this.model.element.rotation.z -= speed
+        this.model.rotation.z -= speed
       }
       if (currentAngle > - speed && currentAngle < speed) {
-        this.model.element.rotation.z = 0
+        this.model.rotation.z = 0
       }
       return
     }
 
     if (isLeft && currentAngle > maxLeftAngle) {
-      this.model.element.rotation.z -= speed
+      this.model.rotation.z -= speed
     }
 
     if (isRight && currentAngle < maxRightAngle) {
-      this.model.element.rotation.z += speed
+      this.model.rotation.z += speed
     }
 
     if (!isLeft && !isRight) {
       if (currentAngle < - speed) {
-        this.model.element.rotation.z += speed * 2
+        this.model.rotation.z += speed * 2
       }
 
       if (currentAngle > speed) {
-        this.model.element.rotation.z -= speed * 2
+        this.model.rotation.z -= speed * 2
       }
 
       if (currentAngle >= - speed && currentAngle <= speed) {
-        this.model.element.rotation.z = 0
+        this.model.rotation.z = 0
       }
     }
   }

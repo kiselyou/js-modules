@@ -1,6 +1,6 @@
-import { Group, Object3D, Mesh, Box3, Box3Helper } from 'three'
+import { Group, Object3D, Mesh } from 'three'
 
-class Model extends Object3D {
+class Model extends Group {
   constructor() {
     super()
 
@@ -14,19 +14,8 @@ class Model extends Object3D {
      *
      * @type {Object3D}
      */
-    this.element = new Object3D()
-    super.add(this.element)
-  }
-
-  /**
-   *
-   * @param {number} color
-   * @returns {Box3Helper}
-   */
-  getHelperBox(color = 0xffff00) {
-    const box = new Box3()
-    box.setFromObject(this)
-    return new Box3Helper(box, color)
+    this.decoration = new Object3D()
+    super.add(this.decoration)
   }
 
   /**
@@ -35,7 +24,7 @@ class Model extends Object3D {
    * @returns {Model}
    */
   addToGroup(obj) {
-    super.add(obj)
+    this.decoration.add(obj)
     return this
   }
 
@@ -45,24 +34,8 @@ class Model extends Object3D {
    * @returns {Model}
    */
   removeFromGroup(obj) {
-    super.remove(obj)
+    this.decoration.remove(obj)
     return this
-  }
-
-  /**
-   *
-   * @param {Mesh|Group|Object3D} element
-   */
-  add(element) {
-    this.element.add(element)
-  }
-
-  /**
-   *
-   * @param {Mesh|Group|Object3D} element
-   */
-  remove(element) {
-    this.element.remove(element)
   }
 }
 

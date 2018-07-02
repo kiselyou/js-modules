@@ -116,7 +116,7 @@ class Playground {
      *
      * @type {CharacterControls}
      */
-    this.character = new CharacterControls(this.scene, this.loader)
+    this.character = new CharacterControls(this)
 
     /**
      *
@@ -165,7 +165,7 @@ class Playground {
      */
     this.gyroscope = new Gyroscope()
     this.gyroscope.add(this.camera);
-    this.character.model.addToGroup(this.gyroscope)
+    this.character.model.add(this.gyroscope)
     this.scene.add(this.character.model)
 
     /**
@@ -297,17 +297,13 @@ class Playground {
     this.copy(this.particlePlayGround)
     await this.sectorControls.beforeStart()
     await this.character.beforeStart()
-    await this.character.buildAim()
     await this.spaceParticleControls.beforeStart()
     await this.buildPanel(rootContainerId)
-    setTimeout(() => {
-      this.animateStart()
 
-      setInterval(async () => {
-        await this.character.userPanel.update()
-      }, 1000 / 10)
-
-    }, 1000)
+    this.animateStart()
+    setInterval(async () => {
+      await this.character.userPanel.update()
+    }, 1000 / 10)
     return this
   }
 
@@ -320,7 +316,11 @@ class Playground {
     const canvas = this.character.userPanel.canvas
     document.getElementById(rootContainerId).appendChild(canvas)
     canvas.addEventListener('click', (event) => {
-      this.character.panelMouseClick(event)
+      this.character.panelMouseClick(event, 'left')
+    }, false)
+    canvas.addEventListener('contextmenu', (event) => {
+      event.preventDefault()
+      this.character.panelMouseClick(event, 'right')
     }, false)
   }
 
@@ -350,7 +350,7 @@ class Playground {
         this.particlePlayGround.addParticlePlayer(particlePlayer)
 
         const player = this.particlePlayGround.getPlayerById(playerId)
-        const playerControls = new CharacterControls(this.scene, this.loader)
+        const playerControls = new CharacterControls(this)
         playerControls
           .copyPlayer(player)
           .copy(this.particlePlayGround)

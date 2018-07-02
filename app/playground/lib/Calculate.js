@@ -1,4 +1,4 @@
-import { Vector3, Mesh } from 'three'
+import { Vector3 } from 'three'
 
 class Calculate {
   constructor() {
@@ -7,12 +7,6 @@ class Calculate {
      * @type {Vector3}
      */
     this.tmp = new Vector3(0, 0, 0)
-
-    /**
-     *
-     * @type {Mesh}
-     */
-    this.mesh = new Mesh()
   }
 
   /**
@@ -50,7 +44,7 @@ class Calculate {
 
   /**
    *
-   * @param {Object3D} parent
+   * @param {Object3D|Model} parent
    * @param {Object3D} element
    * @returns {Vector3}
    */

@@ -6,21 +6,25 @@ import Model from './../Model'
 class ModelSpaceship {
   /**
    *
-   * @param {Scene} scene
-   * @param {Loader} loader
+   * @param {Playground} playground
    */
-  constructor(scene, loader) {
+  constructor(playground) {
+    /**
+     *
+     * @type {Playground}
+     */
+    this.playground = playground
 
     /**
      * @type {Scene}
      */
-    this.scene = scene
+    this.scene = this.playground.scene
 
     /**
      *
      * @type {Loader}
      */
-    this.loader = loader
+    this.loader = this.playground.loader
 
     /**
      *
@@ -40,13 +44,13 @@ class ModelSpaceship {
      */
     this.moveControls = new MoveControls(this.model, this.spaceship)
 
-    /**
-     *
-     * @type {Aim}
-     */
-    this.aim = new Aim()
-    this.aim.position.z = 800
-    this.aim.scale.set(0.15, 0.15, 0.15)
+    // /**
+    //  *
+    //  * @type {Aim}
+    //  */
+    // this.aim = new Aim()
+    // this.aim.position.z = 800
+    // this.aim.scale.set(0.15, 0.15, 0.15)
   }
 
   /**
@@ -56,15 +60,15 @@ class ModelSpaceship {
     await this.buildModel()
   }
 
-  /**
-   *
-   * @returns {ModelSpaceship}
-   */
-  buildAim() {
-    this.aim.build()
-    this.model.addToGroup(this.aim)
-    return this
-  }
+  // /**
+  //  *
+  //  * @returns {ModelSpaceship}
+  //  */
+  // buildAim() {
+  //   this.aim.build()
+  //   this.model.addToGroup(this.aim)
+  //   return this
+  // }
 
   /**
    *

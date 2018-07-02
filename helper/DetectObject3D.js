@@ -6,7 +6,7 @@ const target = new Vector3()
 class DetectObject3D {
   /**
    *
-   * @param {Object3D} element
+   * @param {Object3D|Model} element
    * @returns {Vector3}
    */
   static size(element) {

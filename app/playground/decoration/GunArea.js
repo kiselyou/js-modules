@@ -1,6 +1,6 @@
-import { DoubleSide, Object3D, Mesh, Vector3, RingGeometry, MeshBasicMaterial, BoxGeometry } from 'three'
+import { DoubleSide, Object3D, Group, Mesh, Vector3, RingGeometry, MeshBasicMaterial, BoxGeometry } from 'three'
 
-class GunArea extends Object3D {
+class GunArea extends Group {
   constructor() {
     super()
 

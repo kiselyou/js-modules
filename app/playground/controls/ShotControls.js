@@ -1,7 +1,6 @@
 import ModelCharge from './models/charge/ModelCharge'
 import GunArea from '../decoration/GunArea'
-import Model from './models/Model'
-import { Vector3, Raycaster } from 'three'
+import {Vector3, Raycaster, BoxGeometry, MeshBasicMaterial, Mesh} from 'three'
 
 class ShotControls {
   /**
@@ -14,11 +13,11 @@ class ShotControls {
      */
     this.character = character
 
-    /**
-     *
-     * @type {GunArea}
-     */
-    this.gunArea = new GunArea()
+    // /**
+    //  *
+    //  * @type {GunArea}
+    //  */
+    // this.gunArea = new GunArea()
 
     /**
      *
@@ -130,20 +129,6 @@ class ShotControls {
     }
   }
 
-  // /**
-  //  *
-  //  * @returns {Array.<Model>}
-  //  */
-  // getModelsFromScene() {
-  //   const models = []
-  //   for (const element of this.character.scene.children) {
-  //     if (element instanceof Model) {
-  //       models.push(element.children[0])
-  //     }
-  //   }
-  //   return models
-  // }
-
   /**
    *
    * @returns {Spaceship}
@@ -154,37 +139,100 @@ class ShotControls {
 
   /**
    *
-   * @param {string} slotId
-   * @param {Vector3|?} [target]
+   * @returns {number}
+   * @private
    */
-  shot(slotId, target) {
-    const slot = this.spaceship.getSlotById(slotId)
-    if ( ! slot) {
-      return this
-    }
+  angleDirection(a, b) {
+    return Math.atan2(b.z - a.z, b.x - a.x);
+  }
+
+  /**
+   *
+   * @param {Slot} slot
+   * @param {Model|?} [target]
+   */
+  shot(slot, target) {
 
     const objects = this.character.getModelsFromScene()
-    const direction = this.character.getDirection()
+
+
+
+
     const modelCharge = new ModelCharge()
       .copyCharge(slot.particle.charge)
       // Set slot position for ModelCharge. This value will be change bellow.
       // It need to calculate world position
       .setPosition(slot.position)
-      .setDirection(direction)
-      .setTarget(target)
+      // .setDirection(direction)
+      // .setTarget(target.position)
       .buildMesh()
       .onRemove(() => {
         this.removeCharge(modelCharge)
         this.callShotEvent(ShotControls.EVENT_CHARGE_DELETE, modelCharge.getModelChargeSwapInfo())
       })
-      .setIntersectObjects(objects, (intersect) => {
+      .setIntersectObjects(objects, () => {
         this.callShotEvent(ShotControls.EVENT_CHARGE_INTERSECT, modelCharge.getModelChargeSwapInfo())
       })
 
     // Calculate world position
     const worldPosition = this.character.calculate.getPositionInWorld(this.character.model, modelCharge)
     // Set world position for ModelCharge
-    modelCharge.setPosition(worldPosition).enable(true)
+    modelCharge.setPosition(worldPosition)
+
+
+    //TODO разделить логику с вариантами стрельбы
+    //==================================================================================================================
+    // Стрельба прямо
+    // const direction = this.character.getDirection()
+    //==================================================================================================================
+
+    //==================================================================================================================
+    // Стрельба по цели
+    // const targetDirection = new Vector3().copy(target.position).sub(modelCharge.position)
+    // const direction = targetDirection.normalize()
+    //==================================================================================================================
+
+    //==================================================================================================================
+    // Стрельба с упреждением
+    // TODO Вынести расчет упреждения
+    const chargeSpeed = slot.particle.charge.speed
+    const distanceToTarget = worldPosition.distanceTo(target.position)
+    // Время полета пули до цели
+    const chargeTime = distanceToTarget / chargeSpeed
+
+    // TODO перенести поиск контрола
+    const controls = this.character.playground.playersControls.find((controls) => {
+      return controls.model.uuid === target.uuid
+    })
+
+    let targetSpeed = 0
+    if (controls) {
+      const engine = controls.spaceship.getEngine()
+      targetSpeed = engine.speed
+    }
+
+    // Направление движения цели
+    const d = this.character.calculate.getDirection(target)
+    const v = new Vector3()
+
+    v.setX(targetSpeed * chargeTime * d.x)
+    v.setZ(targetSpeed * chargeTime * d.z)
+    v.add(target.position)
+
+    // const geometry = new BoxGeometry(6, 6, 6)
+    // const material = new MeshBasicMaterial({color: 0xFFFF00})
+    // const mesh = new Mesh(geometry, material)
+    // mesh.position.copy(v)
+    // this.character.scene.add(mesh)
+
+    const targetDirection = new Vector3().copy(v).sub(modelCharge.position)
+    const direction = targetDirection.normalize()
+    //==================================================================================================================
+
+
+
+
+    modelCharge.setDirection(direction).enable(true)
 
     this.addCharge(modelCharge)
     this.callShotEvent(ShotControls.EVENT_CHARGE_ADD, modelCharge.getModelChargeSwapInfo())
@@ -253,8 +301,8 @@ class ShotControls {
    * @return {Promise<void>}
    */
   async beforeStart() {
-    await this.gunArea.beforeStart()
-    this.character.model.addToGroup(this.gunArea)
+    // await this.gunArea.beforeStart()
+    // this.character.model.addToGroup(this.gunArea)
   }
 
   /**

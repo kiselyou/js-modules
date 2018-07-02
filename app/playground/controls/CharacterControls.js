@@ -7,19 +7,17 @@ import Player from '@entity/particles-sector/Player'
 import UserPanel from '@app/playground/decoration/UserPanel'
 import Model from '@app/playground/controls/models/Model'
 
-import Shape from './../decoration/canvas/Shape'
-
-import { Mesh, CubeGeometry, MeshBasicMaterial, SpriteMaterial, Sprite, CanvasTexture, Box3, Box3Helper } from 'three'
-import DetectObject3D from "@helper/DetectObject3D";
+import Slot from '@entity/particles-spaceship/Slot'
+import ModelTarget from './models/charge/ModelTarget'
+import { Vector3 } from 'three'
 
 class CharacterControls extends ModelSpaceship {
   /**
    *
-   * @param {Scene} scene
-   * @param {Loader} loader
+   * @param {Playground} playground
    */
-  constructor(scene, loader) {
-    super(scene, loader)
+  constructor(playground) {
+    super(playground)
 
     /**
      *
@@ -64,37 +62,23 @@ class CharacterControls extends ModelSpaceship {
 
     /**
      *
-     * @type {Array.<{slot: Slot, target: Mesh}>}
+     * @type {Array.<ModelTarget>}
      */
-    this.target = []
-
-    /**
-     *
-     * @type {HTMLCanvasElement}
-     */
-    this.canvas = document.createElement('canvas')
-    this.canvas.height = 512
-    this.canvas.width = 512
-    this.shapeTarget = new Shape(this.canvas)
-
-    setTimeout(() => {
-      for (const model of this.scene.children) {
-        if (model instanceof Model) {
-          this.scene.add(model.getHelperBox())
-        }
-      }
-    }, 2000)
+    this.targets = []
   }
 
   /**
    *
    * @returns {Array.<Model>}
    */
-  getModelsFromScene() {
+  getModelsFromScene(excludeCurrent = true) {
     const models = []
     for (const element of this.scene.children) {
       if (element instanceof Model) {
-        models.push(element.element.children[0])
+        if (element.id === this.model.id && excludeCurrent) {
+          continue
+        }
+        models.push(element)
       }
     }
     return models
@@ -106,7 +90,7 @@ class CharacterControls extends ModelSpaceship {
    * @returns {Vector3}
    */
   getTargetPosition() {
-    return this.calculate.getNextPosition(this.model, this.aim.position.z)
+    return this.calculate.getNextPosition(this.model, 150)
   }
 
   /**
@@ -196,152 +180,116 @@ class CharacterControls extends ModelSpaceship {
   }
 
   /**
+   * Удалить слоты из списка выбранных.
+   *
+   * @param {Slot} slot
+   * @returns {CharacterControls}
+   */
+  removeSelectedSlot(slot) {
+    const index = this.selectedSlots.indexOf(slot)
+    if (index >= 0) {
+      this.selectedSlots.splice(index, 1)
+    }
+    return this
+  }
+
+  /**
+   * Назначить слот (оружие) на цель.
+   * Есть разичные слоты и у каждого свое назанчение.
+   * Каждые слот можно идентифицировать по назначению.
+   * Например сущность Gun может быть в слоте со значением свойства Slot.type равным Slot.TYPE_GUN
+   *
+   * @param {Array.<Slot>} slots
+   * @param {Model} model
+   * @returns {CharacterControls}
+   */
+  async assignSlotOnTarget(slots, model) {
+    for (const slot of slots) {
+      slot.setStatus(Slot.STATUS_ACTIVE)
+    }
+
+    let modelTarget = this.targets.find((modelTarget) => {
+      return modelTarget.model.id === model.id
+    })
+
+    if (modelTarget) {
+      // Если цель выбрана нужно обновить слоты и перегенерить цель
+      await modelTarget.addSlots(slots).draw()
+    } else {
+      // Создать и запомнить цель
+      const modelTarget = await new ModelTarget(model, slots).draw()
+      this.targets.push(modelTarget)
+    }
+    return this
+  }
+
+  /**
+   * Событие клика по панели "выбора оружия".
    *
    * @param {MouseEvent} mouseEvent
+   * @param {string} mouseButton - 'left'|'right'
    * @returns {void}
    */
-  panelMouseClick(mouseEvent) {
-    this.userPanel.panelShot.onMouseClick(mouseEvent, (slot, shape) => {
-      if (shape.attr.isActive) {
+  panelMouseClick(mouseEvent, mouseButton) {
+    this.userPanel.panelShot.onMouseClick(mouseEvent, async (slot) => {
+      if (this.selectedSlots.indexOf(slot) === -1 && mouseButton === 'left') {
+        slot.setStatus(Slot.STATUS_SELECTED)
         this.selectedSlots.push(slot)
       } else {
-        this.removeSelectedSlot(slot.id)
+        slot.setStatus(Slot.STATUS_ENABLED)
+        this.removeSelectedSlot(slot)
+      }
+      for (const modelTarget of this.targets) {
+        await modelTarget.removeSlot(slot).draw()
       }
     })
   }
 
   /**
-   * Remove slot from selected slots by Slot id
-   *
-   * @param {string} id
-   * @returns {CharacterControls}
-   */
-  removeSelectedSlot(id) {
-    for (let i = 0; i < this.selectedSlots.length; i++) {
-      const selectedSlot = this.selectedSlots[i]
-      if (selectedSlot.id === id) {
-        this.selectedSlots.splice(i, 1)
-      }
-    }
-    return this
-  }
-
-  /**
-   * Remove target slot by Slot id
-   *
-   * @param {string} id
-   * @returns {CharacterControls}
-   */
-  removeTargetSlot(id) {
-    for (let i = 0; i < this.target.length; i++) {
-      const targetSlot = this.target[i]
-      if (targetSlot.id === id) {
-        this.target.splice(i, 1)
-      }
-    }
-    return this
-  }
-
-  /**
-   * @typedef {{distance: number, face: Face3, faceIndex: number, object: Mesh, point: Vector3}} selectedTarget
-   */
-
-  /**
-   * Есть разичные слоты и у каждого свое назанчение.
-   * Каждые слот можно идентифицировать по назначению.
-   * Например сущность Gun может быть в слоте со значением свойства Slot.type равным Slot.TYPE_GUN
-   *
-   * @param {Array.<Slot>} gunSlots
-   * @param {selectedTarget} target
-   * @returns {CharacterControls}
-   */
-  async assignGunOnTarget(gunSlots, target) {
-    for (const slot of gunSlots) {
-      // удалить стрельбу оружия по бругим объектам
-      for (const target of this.target) {
-        // Если цель уже назначена на одну и ту-же цель то оттменяем все дальнейшие дествия
-        if (target.slot.id === slot.id) {
-          return this
-        }
-        // Удалить стрельбу по объекту
-        this.removeTargetSlot(target.slot.id)
-      }
-      // добавить стрельбу по текущему объекту
-      this.target.push({slot, target: target.object})
-
-
-
-      await this.shapeTarget
-        .squareForm(0, 0, 512, 512)
-        .addText(1, (text) => {
-          text.setHorizontalAlign('right').setPadding(4, 2)
-        })
-        .setBorder(2, 'transparent')
-        .setBackgroundImage('./app/web/images/icon/rocket-slot-a.png', 4)
-        .build()
-
-      const numberTexture = new CanvasTexture(this.canvas)
-      const spriteMaterial = new SpriteMaterial({map: numberTexture})
-
-      const sprite = new Sprite(spriteMaterial);
-
-      // const maxSize = DetectObject3D.maxSize(target.object)
-      // console.log(maxSize)
-
-      const size = DetectObject3D.size(target.object)
-
-      console.log(size, target, target.object.position)
-
-      console.log(size.y, size.y / 2)
-
-      sprite.position.y = (size.y / 2 + 2)
-
-      sprite.scale.set(2, 2, 1);
-      target.object.add(sprite)
-
-
-
-
-
-
-
-
-
-      // активный слот убераем из выбранных
-      this.removeSelectedSlot(slot.id)
-      // переводим состояние текущего Slot в состояние assigned
-      // TODO изменить состояние кнопки
-    }
-    return this
-  }
-
-  /**
+   * Событие клика по карте.
    *
    * @param {Intersect} intersect
    * @param {MouseEvent} mouseEvent
    * @returns {void}
    */
   onMouseClick(intersect, mouseEvent) {
+    let shotEnabled = true
     if (this.selectedSlots.length > 0) {
       const models = this.getModelsFromScene()
-      const intersectedObjects = intersect.findIntersection(models, true)
+      const intersectedObjects = intersect.findIntersectionModels(models, true)
       if (intersectedObjects.length > 0) {
-        this.assignGunOnTarget(this.selectedSlots, intersectedObjects[0])
+        shotEnabled = false
+        this.assignSlotOnTarget(this.selectedSlots, intersectedObjects[0])
+        this.selectedSlots = []
       }
     }
 
+    if (shotEnabled) {
+      this.eachSlot((slot, target) => {
+        // console.log(slot, slot.particle.charge, target.model)
+        this.shotControls.shot(slot, target.model)
+      })
+    }
+  }
 
+  /**
+   * @param {Slot} slot
+   * @param {ModelTarget} target
+   * @callback eachSlotCallback
+   */
 
-
-    // this.shotControls.onMouseClick(intersect, mouseEvent)
-
-
-    // const target = this.getTargetPosition()
-    // //TODO: temp solution
-    // const guns = this.spaceship.getSlotsByType(Slot.TYPE_GUN)
-    // for (const gun of guns) {
-    //   this.shotControls.shot(gun.id, target)
-    // }
+  /**
+   *
+   * @param {eachSlotCallback} callback
+   * @returns {CharacterControls}
+   */
+  eachSlot(callback) {
+    for (const target of this.targets) {
+      for (const slot of target.slots) {
+        callback(slot, target)
+      }
+    }
+    return this
   }
 }
 

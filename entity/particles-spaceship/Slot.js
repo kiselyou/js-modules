@@ -4,6 +4,7 @@ import Engine from './Engine'
 import Gun from './Gun'
 import Armor from './Armor'
 import Shell from './Shell'
+import Listener from './../../helper/event/Listener'
 
 class Slot extends Particle {
   /**
@@ -52,6 +53,21 @@ class Slot extends Particle {
   }
 
   /**
+   * @param {Slot} slot
+   * @callback changeStatusEvent
+   */
+
+  /**
+   *
+   * @param {changeStatusEvent} callback
+   * @returns {Slot}
+   */
+  onChangeStatus(callback) {
+    Listener.on(this.id, callback)
+    return this
+  }
+
+  /**
    *
    * @param {boolean} value
    * @returns {Slot}
@@ -88,6 +104,7 @@ class Slot extends Particle {
    */
   setStatus(value) {
     this.status = value
+    Listener.emit(this.id, this)
     return this
   }
 

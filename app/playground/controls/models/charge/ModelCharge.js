@@ -116,7 +116,7 @@ class ModelCharge extends Object3D {
    * @returns {ModelCharge}
    */
   buildMesh() {
-    const geometry = new SphereGeometry(0.4, 6, 6)
+    const geometry = new SphereGeometry(0.2, 6, 6)
     const material = new MeshBasicMaterial({ color: 0xCCCCCC })
     this.add(new Mesh(geometry, material))
     return this
