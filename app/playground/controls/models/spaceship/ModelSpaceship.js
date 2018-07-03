@@ -54,6 +54,38 @@ class ModelSpaceship {
   }
 
   /**
+   *
+   * @returns {Engine|?}
+   */
+  getEngine() {
+    return this.spaceship.getEngine()
+  }
+
+  /**
+   *
+   * @returns {Shell|?}
+   */
+  getShell() {
+    return this.spaceship.getShell()
+  }
+
+  /**
+   *
+   * @returns {Energy|?}
+   */
+  getEnergy() {
+    return this.spaceship.getEnergy()
+  }
+
+  /**
+   *
+   * @returns {Armor|?}
+   */
+  getArmor() {
+    return this.spaceship.getArmor()
+  }
+
+  /**
    * @returns {void}
    */
   async beforeStart() {

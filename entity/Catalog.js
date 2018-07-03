@@ -1,5 +1,6 @@
 import Spaceship from './particles-spaceship/Spaceship'
 import Engine from './particles-spaceship/Engine'
+import Energy from './particles-spaceship/Energy'
 import Armor from './particles-spaceship/Armor'
 import Shell from './particles-spaceship/Shell'
 import Gun from './particles-spaceship/Gun'
@@ -53,9 +54,9 @@ class Catalog {
    * @param {string} id
    * @returns {Spaceship|null}
    */
-  getSpaceShipById(id) {
+  getSpaceshipById(id) {
     const value = this.findEntityById('Spaceship', id)
-    return value ? new Spaceship().copy(value).rebuildId() : null
+    return value ? new Spaceship().copy(value) : null
   }
 
   /**
@@ -65,7 +66,17 @@ class Catalog {
    */
   getEngineById(id) {
     const value = this.findEntityById('Engine', id)
-    return value ? new Engine().copy(value).rebuildId() : null
+    return value ? new Engine().copy(value) : null
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Energy|null}
+   */
+  getEnergyById(id) {
+    const value = this.findEntityById('Energy', id)
+    return value ? new Energy().copy(value) : null
   }
 
   /**
@@ -75,7 +86,7 @@ class Catalog {
    */
   getShellById(id) {
     const value = this.findEntityById('Shell', id)
-    return value ? new Shell().copy(value).rebuildId() : null
+    return value ? new Shell().copy(value) : null
   }
 
   /**
@@ -85,7 +96,7 @@ class Catalog {
    */
   getArmorById(id) {
     const value = this.findEntityById('Armor', id)
-    return value ? new Armor().copy(value).rebuildId() : null
+    return value ? new Armor().copy(value) : null
   }
 
   /**
@@ -95,7 +106,7 @@ class Catalog {
    */
   getGunById(id) {
     const value = this.findEntityById('Gun', id)
-    return value ? new Gun().copy(value).rebuildId() : null
+    return value ? new Gun().copy(value) : null
   }
 
   /**
@@ -107,6 +118,30 @@ class Catalog {
   findEntityById(entityName, id) {
     const value = this.items.find((item) => {
       return item.entity === entityName && item.id === id
+    })
+    return value || null
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Particle|?}
+   */
+  findById(id) {
+    const value = this.items.find((item) => {
+      return item.id === id
+    })
+    return value || null
+  }
+
+  /**
+   *
+   * @param {string} entity
+   * @returns {Particle|?}
+   */
+  findByEntityName(entity) {
+    const value = this.items.find((item) => {
+      return item.entity === entity
     })
     return value || null
   }

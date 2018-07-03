@@ -6,7 +6,8 @@
     "scripts": {
         "start:prod": "node_modules/.bin/pm2 start process.yml",
         "server:start": "nodemon ./api/index.js --exec babel-node --presets es2015",
-        "server:migrate": "nodemon ./api/migrate/install.js --exec babel-node --presets es2015",
+        "server:migrate:install": "nodemon ./api/migrate/install.js --exec babel-node --presets es2015 --migrate install",
+        "server:migrate:update": "nodemon ./api/migrate/install.js --exec babel-node --presets es2015 --migrate update",
         "client:watch": "NODE_ENV='development' webpack --watch --mode development",
         "client:build": "NODE_ENV='production' webpack --mode production --env.patch",
         "test": "mocha --require babel-register ./modules -name '*.test.js' --recursive"

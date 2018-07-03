@@ -12,6 +12,7 @@ import { sector } from './map-sector'
 import { status } from './map-status'
 import { planet } from './map-planet'
 import { engine } from './map-engine'
+import { energy } from './map-energy'
 import { armor } from './map-armor'
 import { shell } from './map-shell'
 import { race } from './map-race'
@@ -26,6 +27,7 @@ export const catalog = new Catalog()
   .copy(race)
   .copy(shell)
   .copy(armor)
+  .copy(energy)
   .copy(sector)
   .copy(status)
   .copy(planet)

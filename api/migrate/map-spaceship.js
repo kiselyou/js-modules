@@ -16,6 +16,11 @@ export const spaceship = [
     )
     .addSlot(
       new Slot()
+        .setParticleId('6cfd3a13-d4c5-4977-9472-53286063616a')
+        .setType(Slot.TYPE_ENERGY)
+    )
+    .addSlot(
+      new Slot()
         .setParticleId('a546531f-a38e-43db-8604-06b3b36d7291')
         .setType(Slot.TYPE_ENGINE)
     )
@@ -56,6 +61,11 @@ export const spaceship = [
     )
     .addSlot(
       new Slot()
+        .setParticleId('b265df0c-0192-4c64-8f27-33409929b8b3')
+        .setType(Slot.TYPE_ENERGY)
+    )
+    .addSlot(
+      new Slot()
         .setParticleId('a1f8c408-b804-41ad-9659-8f04fe8c22cb')
         .setType(Slot.TYPE_ENGINE)
     )
@@ -87,6 +97,11 @@ export const spaceship = [
       new Slot()
         .setParticleId('c2d4df8a-5dc3-4a51-b54d-fa352a2dbb6c')
         .setType(Slot.TYPE_ARMOR)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('eeaf29c2-9d43-40ce-921a-f6765a528a68')
+        .setType(Slot.TYPE_ENERGY)
     )
     .addSlot(
       new Slot()

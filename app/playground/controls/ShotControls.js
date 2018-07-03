@@ -122,9 +122,11 @@ class ShotControls {
         this.removeCharge(charge)
         break
       case ShotControls.EVENT_CHARGE_INTERSECT:
+        // TODO вычести урон
+        console.log(data)
         // Снаряд пересекся с объектом. Изменяем информацию у игрока B
-        charge = this.findChargeByName(data.name)
-        this.removeCharge(charge)
+        // charge = this.findChargeByName(data.name)
+        // this.removeCharge(charge)
         break
     }
   }
@@ -149,89 +151,62 @@ class ShotControls {
   /**
    *
    * @param {Slot} slot
+   * @param {Model} target
+   * @param {ModelCharge} charge
+   * @return {Vector3}
+   */
+  calculateShotDirection(slot, target, charge) {
+    switch (slot.particle.direction) {
+      // Стрельба прямо
+      case 'direct':
+        return this.character.getDirection()
+      // Стрельба по цели
+      case 'target':
+        return this.character.calculate.getVectorDirection(charge.position, target.position)
+      // Стрельба с упреждением
+      case 'deflection':
+      default:
+        const controls = this.character.findCharacterControlsByModel(target)
+        let targetSpeed = 0
+        if (controls) {
+          const engine = controls.getEngine()
+          targetSpeed = engine.speed
+        }
+        const deflection = this.character.calculate.deflection(target, targetSpeed, charge, slot.particle.charge.speed)
+        return deflection.normalize()
+    }
+  }
+
+  /**
+   *
+   * @param {Slot} slot
    * @param {Model|?} [target]
    */
   shot(slot, target) {
-
+    // TODO добавить время перезарядки
     const objects = this.character.getModelsFromScene()
-
-
-
-
     const modelCharge = new ModelCharge()
       .copyCharge(slot.particle.charge)
-      // Set slot position for ModelCharge. This value will be change bellow.
-      // It need to calculate world position
-      .setPosition(slot.position)
-      // .setDirection(direction)
-      // .setTarget(target.position)
       .buildMesh()
       .onRemove(() => {
         this.removeCharge(modelCharge)
         this.callShotEvent(ShotControls.EVENT_CHARGE_DELETE, modelCharge.getModelChargeSwapInfo())
       })
-      .setIntersectObjects(objects, () => {
-        this.callShotEvent(ShotControls.EVENT_CHARGE_INTERSECT, modelCharge.getModelChargeSwapInfo())
+      .setIntersectObjects(objects, (intersect) => {
+        // TODO вычести урон
+        const swapInfo = { intersect, swapInfo: modelCharge.getModelChargeSwapInfo()}
+        this.callShotEvent(ShotControls.EVENT_CHARGE_INTERSECT, swapInfo)
       })
+      // Set slot position for ModelCharge. This value will be change bellow.
+      // It need to calculate world position
+      .setPosition(slot.position)
 
     // Calculate world position
     const worldPosition = this.character.calculate.getPositionInWorld(this.character.model, modelCharge)
     // Set world position for ModelCharge
     modelCharge.setPosition(worldPosition)
 
-
-    //TODO разделить логику с вариантами стрельбы
-    //==================================================================================================================
-    // Стрельба прямо
-    // const direction = this.character.getDirection()
-    //==================================================================================================================
-
-    //==================================================================================================================
-    // Стрельба по цели
-    // const targetDirection = new Vector3().copy(target.position).sub(modelCharge.position)
-    // const direction = targetDirection.normalize()
-    //==================================================================================================================
-
-    //==================================================================================================================
-    // Стрельба с упреждением
-    // TODO Вынести расчет упреждения
-    const chargeSpeed = slot.particle.charge.speed
-    const distanceToTarget = worldPosition.distanceTo(target.position)
-    // Время полета пули до цели
-    const chargeTime = distanceToTarget / chargeSpeed
-
-    // TODO перенести поиск контрола
-    const controls = this.character.playground.playersControls.find((controls) => {
-      return controls.model.uuid === target.uuid
-    })
-
-    let targetSpeed = 0
-    if (controls) {
-      const engine = controls.spaceship.getEngine()
-      targetSpeed = engine.speed
-    }
-
-    // Направление движения цели
-    const d = this.character.calculate.getDirection(target)
-    const v = new Vector3()
-
-    v.setX(targetSpeed * chargeTime * d.x)
-    v.setZ(targetSpeed * chargeTime * d.z)
-    v.add(target.position)
-
-    // const geometry = new BoxGeometry(6, 6, 6)
-    // const material = new MeshBasicMaterial({color: 0xFFFF00})
-    // const mesh = new Mesh(geometry, material)
-    // mesh.position.copy(v)
-    // this.character.scene.add(mesh)
-
-    const targetDirection = new Vector3().copy(v).sub(modelCharge.position)
-    const direction = targetDirection.normalize()
-    //==================================================================================================================
-
-
-
-
+    const direction = this.calculateShotDirection(slot, target, modelCharge)
     modelCharge.setDirection(direction).enable(true)
 
     this.addCharge(modelCharge)

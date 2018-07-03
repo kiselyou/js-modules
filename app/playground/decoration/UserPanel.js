@@ -1,7 +1,3 @@
-import Shape from './canvas/Shape'
-// import Indicator from './canvas/Indicator'
-import Slot from '@entity/particles-spaceship/Slot'
-
 import UserPanelShot from './UserPanelShot'
 import UserPanelSpeed from './UserPanelSpeed'
 import UserPanelIndicator from './UserPanelIndicator'
@@ -92,7 +88,6 @@ class UserPanel {
    * @returns {Promise<UserPanel>}
    */
   async update() {
-    await this.panelIndicator.update()
     await this.panelSpeed.update()
     return this
   }

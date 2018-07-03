@@ -1,22 +1,23 @@
 import { mgDBAsync } from './../db/mongo'
 import Catalog from './../../entity/Catalog'
+import NodeProcess from './../../helper/package/NodeProcess'
 
 import { installStarlight } from './map-star-light'
 import { installAsteroid } from './map-asteroid'
 import { installCatalog } from './map-catalog'
 import { installStation } from './map-station'
 import { installSector } from './map-sector'
-import { installPlayer } from './map-player'
+import { installPlayer, updatePlayer } from './map-player'
 import { installPlanet } from './map-planet'
 
 /**
  *
  * @returns {void}
  */
-async function start() {
+async function install() {
   const db = await mgDBAsync()
-  await clearCollection(db)
-  await installCatalog(db)
+  await clearCollection(db, ['Catalog', 'Sector', 'SectorHasParticle'])
+  await installCatalog()
 
   const catalog = await getCatalog(db)
 
@@ -29,19 +30,36 @@ async function start() {
   await installStation(db, catalog, sectorId)
   await installStarlight(db, catalog, sectorId)
 
-  console.log('FINISHED')
+  console.log('INSTALL FINISHED')
+  console.log('press "ctrl + z" to stop watcher')
+}
+
+/**
+ *
+ * @return {Promise<void>|void}
+ */
+async function update() {
+  const db = await mgDBAsync()
+  await clearCollection(db, ['Catalog'])
+  await installCatalog()
+
+  const catalog = await getCatalog(db)
+
+  await updatePlayer(db, catalog)
+
+  console.log('UPDATE FINISHED')
   console.log('press "ctrl + z" to stop watcher')
 }
 
 /**
  *
  * @param {Db} db
+ * @param {Array.<string>} collections
  */
-async function clearCollection(db) {
-  const collections = ['Catalog', 'Sector', 'SectorHasParticle']
+async function clearCollection(db, collections) {
   for (const collectionName of collections) {
     const collection = await db.createCollection(collectionName)
-    await collection.deleteMany()
+    await collection.deleteMany({})
   }
 }
 
@@ -56,4 +74,14 @@ async function getCatalog(db) {
   return new Catalog().copy(data)
 }
 
-start()
+const action = NodeProcess.runScriptArgument('--migrate')
+switch (action) {
+  case 'install':
+    install()
+    break
+  case 'update':
+    update()
+    break
+  default:
+    console.log('Try to set run script argument (--migrate install | --migrate update)')
+}

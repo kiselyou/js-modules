@@ -8,6 +8,17 @@ class Particle {
     this.entity = this.constructor.name
 
     /**
+     * @type {string}
+     */
+    this.id = uuidV4()
+
+    /**
+     *
+     * @type {?string}
+     */
+    this.catalogId = null
+
+    /**
      *
      * @type {string|?}
      */
@@ -18,11 +29,6 @@ class Particle {
      * @type {string|?}
      */
     this.description = null
-
-    /**
-     * @type {string}
-     */
-    this.id = uuidV4()
   }
 
   /**
@@ -32,6 +38,16 @@ class Particle {
    */
   setId(id) {
     this.id = id
+    return this
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Particle}
+   */
+  setCatalogId(id) {
+    this.catalogId = id
     return this
   }
 

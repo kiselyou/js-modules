@@ -41,6 +41,24 @@ class UserPanelIndicator {
      * @type {number}
      */
     this.labelWidth = 50
+
+    this.options = [
+      {
+        color: '#F00',
+        label: 'Healthy:',
+        entity: () => this.character.spaceship.getShell()
+      },
+      {
+        color: '#0037FF',
+        label: 'Energy:',
+        entity: () => this.character.spaceship.getEnergy()
+      },
+      {
+        color: '#FFF',
+        label: 'Armor:',
+        entity: () => this.character.spaceship.getArmor()
+      }
+    ]
   }
 
   /**
@@ -51,26 +69,8 @@ class UserPanelIndicator {
    * @returns {Promise<void>}
    */
   async draw(left, top, indicatorWidth) {
-    const options = [
-      {
-        color: '#F00',
-        label: 'Healthy:',
-        entity: this.character.spaceship.getShell()
-      },
-      {
-        color: '#0037FF',
-        label: 'Energy:',
-        entity: this.character.spaceship.getEnergy()
-      },
-      {
-        color: '#FFF',
-        label: 'Armor:',
-        entity: this.character.spaceship.getArmor()
-      }
-    ]
-
-    for (let i = 0; i < options.length; i++) {
-      const item = options[i]
+    for (let i = 0; i < this.options.length; i++) {
+      const item = this.options[i]
       const x = left
       const y = top + i * (this.indicatorHeight + this.indicatorMargin)
 
@@ -78,20 +78,17 @@ class UserPanelIndicator {
         .horizontalLForm(x, y, indicatorWidth, this.indicatorHeight, this.labelWidth, item.label)
         .setBorder(2, 'rgb(2, 145, 145)')
         .setIndicatorColor(item.color)
-        .setPercent(item.entity ? item.entity.state : 0)
-        .build()
-
-      if (item.entity) {
-        this.indicator.beforeBuild((shape) => {
-          shape.setPercent(item.entity.state)
+        .beforeBuild((shape) => {
+          const entity = item.entity()
+          shape.setPercent(entity.state)
         })
-      }
+        .build()
     }
   }
 
   /**
    *
-   * @returns {Promise<UserPanelIndicator>}
+   * @returns {Promise<UserPanelIndicator>|void}
    */
   async update() {
     await this.indicator.build()

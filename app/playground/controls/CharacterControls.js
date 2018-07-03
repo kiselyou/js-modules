@@ -69,6 +69,18 @@ class CharacterControls extends ModelSpaceship {
 
   /**
    *
+   * @param {Model} model
+   * @returns {?CharacterControls}
+   */
+  findCharacterControlsByModel(model) {
+    const controls = this.playground.playersControls.find((controls) => {
+      return controls.model.uuid === model.uuid
+    })
+    return controls || null
+  }
+
+  /**
+   *
    * @returns {Array.<Model>}
    */
   getModelsFromScene(excludeCurrent = true) {
@@ -266,8 +278,15 @@ class CharacterControls extends ModelSpaceship {
 
     if (shotEnabled) {
       this.eachSlot((slot, target) => {
-        // console.log(slot, slot.particle.charge, target.model)
-        this.shotControls.shot(slot, target.model)
+        const spendEnergy = slot.particle.energy
+        const energy = this.getEnergy()
+        if (energy.isEnergy(spendEnergy)) {
+          energy.reduce(spendEnergy)
+          this.shotControls.shot(slot, target.model)
+          this.userPanel.panelIndicator.update()
+        } else {
+          // TODO нет энергии делаем что-то
+        }
       })
     }
   }

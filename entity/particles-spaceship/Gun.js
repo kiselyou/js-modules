@@ -16,6 +16,46 @@ class Gun extends Particle {
      * @type {Charge}
      */
     this.charge = new Charge()
+
+    /**
+     *
+     * @type {number}
+     */
+    this.direction = Gun.DIRECTION_DEFLECTION
+
+    /**
+     * Количество потребляемой енергии за выстрел
+     *
+     * @type {number}
+     */
+    this.energy = 10
+
+    /**
+     * Время перезарядки
+     *
+     * @type {number}
+     */
+    this.time = 1000
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @return {Gun}
+   */
+  setEnergy(value) {
+    this.energy = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @return {Gun}
+   */
+  setTime(value) {
+    this.time = value
+    return this
   }
 
   /**
@@ -68,6 +108,30 @@ class Gun extends Particle {
       }
     }
     return this
+  }
+
+  /**
+   *
+   * @return {number}
+   */
+  static get DIRECTION_DIRECT() {
+    return 1
+  }
+
+  /**
+   *
+   * @return {number}
+   */
+  static get DIRECTION_TARGET() {
+    return 2
+  }
+
+  /**
+   *
+   * @return {number}
+   */
+  static get DIRECTION_DEFLECTION() {
+    return 3
   }
 }
 

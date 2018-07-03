@@ -38,26 +38,26 @@ export const createAndInsertPlayer = async function (user, spaceshipId) {
  * @returns {Promise<void>}
  */
 export const insertPlayer = async function (db, entity, catalog) {
-  const spaceshipData = catalog.getSpaceShipById(entity.spaceshipId)
-  if (spaceshipData) {
-    const spaceship = new Spaceship().copy(spaceshipData).rebuildId()
-    entity.setSpaceshipId(spaceship.id)
+  const catalogSpaceship = catalog.getSpaceshipById(entity.spaceshipId)
+  const catalogId = catalogSpaceship.id
+  catalogSpaceship.rebuildId().setCatalogId(catalogId)
 
-    for (const slot of spaceship.slot) {
-      slot.rebuildId()
-      await insertParticle(db, entity.id, slot, catalog)
-    }
+  entity.setSpaceshipId(catalogSpaceship.id)
 
-    const playerHasParticle = new PlayerHasParticle()
-      .setPlayerId(entity.id)
-      .setParticle(spaceship)
-
-    const collectionPlayer = await db.collection('Player');
-    await collectionPlayer.updateOne({ id: entity.id }, { $set: entity }, { upsert: true })
-
-    const collectionSpaceship = await db.collection('PlayerHasParticle');
-    await collectionSpaceship.updateOne({ id: playerHasParticle.id }, { $set: playerHasParticle }, { upsert: true })
+  for (const slot of catalogSpaceship.slot) {
+    slot.rebuildId()
+    await insertPlayerParticle(db, entity.id, slot, catalog)
   }
+
+  const playerHasParticle = new PlayerHasParticle()
+    .setPlayerId(entity.id)
+    .setParticle(catalogSpaceship)
+
+  const collectionPlayer = await db.collection('Player');
+  await collectionPlayer.updateOne({ id: entity.id }, { $set: entity }, { upsert: true })
+
+  const collectionSpaceship = await db.collection('PlayerHasParticle');
+  await collectionSpaceship.updateOne({ id: playerHasParticle.id }, { $set: playerHasParticle }, { upsert: true })
 }
 
 /**
@@ -68,33 +68,103 @@ export const insertPlayer = async function (db, entity, catalog) {
  * @param {Catalog} catalog
  * @returns {Promise<void>}
  */
-async function insertParticle(db, playerId, slot, catalog) {
-  let particle = null
+async function insertPlayerParticle(db, playerId, slot, catalog) {
+  let catalogParticle = null
   switch (slot.type) {
     case Slot.TYPE_ENGINE:
-      particle = catalog.getEngineById(slot.particleId)
+      catalogParticle = catalog.getEngineById(slot.particleId)
       break;
     case Slot.TYPE_GUN:
-      particle = catalog.getGunById(slot.particleId)
+      catalogParticle = catalog.getGunById(slot.particleId)
       break
     case Slot.TYPE_SHELL:
-      particle = catalog.getShellById(slot.particleId)
+      catalogParticle = catalog.getShellById(slot.particleId)
+      break
+    case Slot.TYPE_ENERGY:
+      catalogParticle = catalog.getEnergyById(slot.particleId)
       break
     case Slot.TYPE_ARMOR:
-      particle = catalog.getArmorById(slot.particleId)
+      catalogParticle = catalog.getArmorById(slot.particleId)
       break
   }
 
-  if (particle) {
-    particle.id = uuidV4()
+  if (catalogParticle) {
+    const catalogId = catalogParticle.id
+    catalogParticle.rebuildId().setCatalogId(catalogId)
 
     const entity = new PlayerHasParticle()
     entity
       .setSlotId(slot.id)
       .setPlayerId(playerId)
-      .setParticle(particle)
+      .setParticle(catalogParticle)
 
     const collection = await db.collection('PlayerHasParticle')
     await collection.updateOne({ playerId, slotId: slot.id }, { $set: entity }, { upsert: true })
   }
+}
+
+/**
+ *
+ * @param {Db} db
+ * @param {Object} [where]
+ * @return {Promise<Array>}
+ */
+export const findPlayers = async function (db, where = {}) {
+  const collection = await db.collection('Player')
+  return await collection.find(where).toArray()
+}
+
+/**
+ *
+ * @param {Db} db
+ * @param {Object} where
+ * @return {Promise<?Object>}
+ */
+export const findPlayer = async function (db, where) {
+  const collection = await db.collection('Player')
+  return await collection.findOne(where)
+}
+
+/**
+ *
+ * @param {Db} db
+ * @param {Object} where
+ * @return {Promise<void>}
+ */
+export const deletePlayer = async function (db, where) {
+  const collection = await db.createCollection('Player')
+  await collection.deleteMany(where)
+}
+
+/**
+ *
+ * @param {Db} db
+ * @param {Object} where
+ * @return {Promise<Array>}
+ */
+export const findPlayerParticles = async function (db, where) {
+  const collection = await db.collection('PlayerHasParticle')
+  return await collection.find(where).toArray()
+}
+
+/**
+ *
+ * @param {Db} db
+ * @param {Object} where
+ * @return {Promise<?Object>}
+ */
+export const findPlayerParticle = async function (db, where) {
+  const collection = await db.collection('PlayerHasParticle')
+  return await collection.findOne(where)
+}
+
+/**
+ *
+ * @param {Db} db
+ * @param {Object} where
+ * @return {Promise<void>}
+ */
+export const deletePlayerParticles = async function (db, where) {
+  const collection = await db.createCollection('PlayerHasParticle')
+  await collection.deleteMany(where)
 }

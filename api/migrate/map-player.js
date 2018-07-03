@@ -1,5 +1,6 @@
 import Player from './../../entity/particles-sector/Player'
-import { insertPlayer } from './../repository/RepositoryPlayer'
+import { insertPlayer, findPlayers, findPlayerParticle, deletePlayer, deletePlayerParticles } from './../repository/RepositoryPlayer'
+import * as core from "../core";
 
 export const players = [
   // new Player()
@@ -18,7 +19,26 @@ export const players = [
  * @returns {Promise<void>}
  */
 export const installPlayer = async function (db, catalog) {
-  for (const entity of players) {
-    await insertPlayer(db, entity, catalog)
+  for (const player of players) {
+    await insertPlayer(db, player, catalog)
+  }
+}
+
+/**
+ *
+ * @param {Db} db
+ * @param {Catalog} catalog
+ * @return {Promise<void>}
+ */
+export const updatePlayer = async function (db, catalog) {
+  const players = await findPlayers(db)
+  for (const player of players) {
+    const spaceship = await findPlayerParticle(db, {'particle.id': player.spaceshipId})
+    const spaceshipData = catalog.findById(spaceship.particle.catalogId)
+    const newPlayer = new Player().copy(player).setSpaceshipId(spaceshipData.id)
+
+    await deletePlayer(db, {id: player.id})
+    await deletePlayerParticles(db, { playerId: player.id })
+    await insertPlayer(db, newPlayer, catalog)
   }
 }

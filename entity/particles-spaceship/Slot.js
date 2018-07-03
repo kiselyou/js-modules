@@ -4,6 +4,7 @@ import Engine from './Engine'
 import Gun from './Gun'
 import Armor from './Armor'
 import Shell from './Shell'
+import Energy from './Energy'
 import Listener from './../../helper/event/Listener'
 
 class Slot extends Particle {
@@ -189,6 +190,9 @@ class Slot extends Particle {
         break
       case 'Shell':
         this.particle = new Shell().copy(particle)
+        break
+      case 'Energy':
+        this.particle = new Energy().copy(particle)
         break
     }
   }

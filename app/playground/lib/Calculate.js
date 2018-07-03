@@ -33,6 +33,16 @@ class Calculate {
 
   /**
    *
+   * @param {Vector3} a
+   * @param {Vector3} b
+   * @returns {Vector3}
+   */
+  getVectorDirection(a, b) {
+    return this.tmp.copy(b).sub(a).normalize().clone()
+  }
+
+  /**
+   *
    * @param {Object3D} parent
    * @param {Object3D} child
    * @returns {Vector3}
@@ -53,6 +63,28 @@ class Calculate {
     const startPosition = this.getChildPositionInWorld(parent, element)
     parent.remove(element)
     return startPosition
+  }
+
+  /**
+   * Расчет упреждения
+   *
+   * @param {Model} modelTarget
+   * @param {Number} modelTargetSpeed
+   * @param {Model|Object3D} modelCharge
+   * @param {number} modelChargeSpeed
+   */
+  deflection(modelTarget, modelTargetSpeed, modelCharge, modelChargeSpeed) {
+    // Расстояние от выстрела до цели
+    const distanceToTarget = modelCharge.position.distanceTo(modelTarget.position)
+    // Время полета пули до цели
+    const time = distanceToTarget / modelChargeSpeed
+    // Направление движения цели
+    const direction = this.getDirection(modelTarget)
+
+    this.tmp.setX(modelTargetSpeed * time * direction.x)
+    this.tmp.setZ(modelTargetSpeed * time * direction.z)
+    this.tmp.add(modelTarget.position)
+    return this.tmp.sub(modelCharge.position).clone()
   }
 }
 
