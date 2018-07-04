@@ -130,9 +130,7 @@ class CharacterControls extends ModelSpaceship {
    * @returns {Promise<void>}
    */
   async buildPanel() {
-    await this.userPanel.drawMainPanel()
-    await this.userPanel.drawShotPanel()
-    await this.userPanel.drawSpeedPanel()
+    await this.userPanel.draw()
   }
 
   /**
@@ -245,6 +243,8 @@ class CharacterControls extends ModelSpaceship {
   panelMouseClick(mouseEvent, mouseButton) {
     this.userPanel.panelShot.onMouseClick(mouseEvent, async (slot) => {
       if (this.selectedSlots.indexOf(slot) === -1 && mouseButton === 'left') {
+
+        console.log(slot)
         slot.setStatus(Slot.STATUS_SELECTED)
         this.selectedSlots.push(slot)
       } else {
@@ -281,8 +281,10 @@ class CharacterControls extends ModelSpaceship {
         const spendEnergy = slot.particle.energy
         const energy = this.getEnergy()
         if (energy.isEnergy(spendEnergy)) {
+          console.log(energy.state)
           energy.reduce(spendEnergy)
           this.shotControls.shot(slot, target.model)
+          console.log(energy.state)
           this.userPanel.panelIndicator.update()
         } else {
           // TODO нет энергии делаем что-то

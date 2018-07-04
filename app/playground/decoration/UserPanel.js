@@ -55,8 +55,7 @@ class UserPanel {
    *
    * @return {Promise<UserPanel>}
    */
-  async drawMainPanel() {
-    this.prepareCanvas()
+  async drawIndicatorPanel() {
     const top = 46
     const left = this.panelShot.margin
     const width = (this.panelShot.maxCount * this.panelShot.size) - (this.panelShot.margin * 2)
@@ -81,6 +80,13 @@ class UserPanel {
    */
   async drawShotPanel() {
     await this.panelShot.draw(0, 0)
+  }
+
+  async draw() {
+    this.prepareCanvas()
+    await this.drawIndicatorPanel()
+    await this.drawShotPanel()
+    await this.drawSpeedPanel()
   }
 
   /**

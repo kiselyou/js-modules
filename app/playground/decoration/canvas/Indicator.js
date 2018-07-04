@@ -32,15 +32,15 @@ class Indicator extends Shape {
      * @type {Text}
      */
     this.indicatorLabel = new Text(this.canvas)
-    this.indicatorLabel.setFontSize('10px').setFontColor('rgb(2, 145, 145)')
+    this.indicatorLabel.setFontSize('9px').setFontColor('rgb(2, 145, 145)')
 
     /**
      *
      * @type {Text}
      */
     this.indicatorPercent = new Text(this.canvas)
-    this.indicatorPercent.attr.setWidth(36)
-    this.indicatorPercent.setFontSize('10px').setFontColor('rgb(2, 145, 145)')
+    this.indicatorPercent.attr.setWidth(40)
+    this.indicatorPercent.setFontSize('9px').setFontColor('rgb(2, 145, 145)')
 
     /**
      *
@@ -127,7 +127,7 @@ class Indicator extends Shape {
     if (labelWidth > 0) {
       this.indicatorLabel
         .text(label, startX, startY, labelWidth, height)
-        .setHorizontalAlign('right')
+        .setHorizontalAlign('left')
         .setPadding(0, -2)
     }
 
@@ -178,7 +178,6 @@ class Indicator extends Shape {
   clear() {
     this.indicatorLabel.clear()
     this.indicatorPercent.clear()
-    super.clear()
     return this
   }
 
@@ -187,8 +186,6 @@ class Indicator extends Shape {
    * @return {Promise<Indicator>}
    */
   async build() {
-    this.clear()
-
     const attr = this.attr
     const borderWeight = Math.abs(attr.borderWeight)
     const x = attr.startX + borderWeight / 2
@@ -205,8 +202,8 @@ class Indicator extends Shape {
 
     if (this.indicatorLabel.attr.width > 0) {
       this.indicatorPercent.attr.setText(`${showIndicatorValue}%`)
-      this.indicatorPercent.build()
-      this.indicatorLabel.build()
+      this.indicatorPercent.rebuild()
+      this.indicatorLabel.rebuild()
     }
 
     return this

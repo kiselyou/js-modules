@@ -64,7 +64,7 @@ class UserPanelSpeed {
       })
       .addText(engine.speed.toFixed(1), (text) => {
         text
-          .setFontSize('26px')
+          .setFontSize('20px')
           .setHorizontalAlign('center')
           .setVerticalAlign('middle')
           .setFontColor('rgb(2, 145, 145)')
