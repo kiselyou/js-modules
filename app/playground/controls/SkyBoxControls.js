@@ -78,12 +78,12 @@ class SkyBoxControls {
       metalness: -0.3
     })
 
-    const panel = new DebugPanel()
-      .addFolder('Sky Box Star')
-      .add(starsMaterial, 'transparent', 'transparent')
-      .add(starsMaterial, 'depthWrite', 'depthWrite')
-      .add(starsMaterial, 'roughness', 'roughness', -1, 1)
-      .add(starsMaterial, 'metalness', 'metalness', -1, 1)
+    // const panel = new DebugPanel()
+    //   .addFolder('Sky Box Star')
+    //   .add(starsMaterial, 'transparent', 'transparent')
+    //   .add(starsMaterial, 'depthWrite', 'depthWrite')
+    //   .add(starsMaterial, 'roughness', 'roughness', -1, 1)
+    //   .add(starsMaterial, 'metalness', 'metalness', -1, 1)
 
     const starsGeometry = new SphereGeometry(this._size * 1.2, this.segments, this.segments)
     const starsMesh = new Mesh(starsGeometry, starsMaterial)
@@ -97,12 +97,12 @@ class SkyBoxControls {
       metalness: 0
     })
 
-    panel
-      .addFolder('Sky Box Space')
-      .add(starsMaterial, 'transparent', 'transparent')
-      .add(starsMaterial, 'depthWrite', 'depthWrite')
-      .add(starsMaterial, 'roughness', 'roughness', -1, 1)
-      .add(starsMaterial, 'metalness', 'metalness', -1, 1)
+    // panel
+    //   .addFolder('Sky Box Space')
+    //   .add(starsMaterial, 'transparent', 'transparent')
+    //   .add(starsMaterial, 'depthWrite', 'depthWrite')
+    //   .add(starsMaterial, 'roughness', 'roughness', -1, 1)
+    //   .add(starsMaterial, 'metalness', 'metalness', -1, 1)
 
     this.sky.geometry = new SphereGeometry(this._size, this.segments, this.segments)
     this.sky.renderOrder = -100000

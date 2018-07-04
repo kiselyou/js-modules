@@ -101,6 +101,10 @@ class Loader {
 
     this._models[CONST.KEY_STATION_1] = await this.loadModel('./app/web/models/station/1/station.3ds')
     this._models[CONST.KEY_STATION_2] = await this.loadModel('./app/web/models/station/2/station.3ds')
+
+    this._models[CONST.KEY_ASTEROID_1] = await this.loadModel('./app/web/models/asteroid/1/asteroid.3ds')
+    this._models[CONST.KEY_ASTEROID_2] = await this.loadModel('./app/web/models/asteroid/2/asteroid.3ds')
+    this._models[CONST.KEY_ASTEROID_3] = await this.loadModel('./app/web/models/asteroid/3/asteroid.3ds')
   }
 
   /**

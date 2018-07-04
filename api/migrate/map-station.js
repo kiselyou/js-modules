@@ -4,19 +4,25 @@ import * as CONST from './../../app/constants'
 
 export const station = [
   new Station()
-    .setDistanceToCenter(400)
-    .setAngleToCenter(Math.PI / 4)
-    .setModelKey(CONST.KEY_STATION_2)
+    .setDistanceToCenter(2400)
+    .setAngleToCenter(Math.PI / 2.5)
+    .setModelKey(CONST.KEY_STATION_1)
     .setName('Солнечная станция')
     .setId('7b857a0d-b128-42cf-9471-d1053a100a2c'),
   new Station()
-    .setDistanceToCenter(600)
-    .setAngleToCenter(Math.PI / 4)
+    .setDistanceToCenter(2200)
+    .setAngleToCenter( - Math.PI / 4)
+    .setModelKey(CONST.KEY_STATION_1)
+    .setName('Солнечная станция')
+    .setId('d512cad4-d856-4559-8766-b811b998d39d'),
+  new Station()
+    .setDistanceToCenter(1600)
+    .setAngleToCenter( - Math.PI / 6)
     .setModelKey(CONST.KEY_STATION_2)
-    .setName('Научная станция')
+    .setName('Промышленная станция')
     .setId('47295f7e-2645-450a-8036-1445ee500a6b'),
   new Station()
-    .setDistanceToCenter(800)
+    .setDistanceToCenter(3800)
     .setAngleToCenter(Math.PI / 4)
     .setModelKey(CONST.KEY_STATION_2)
     .setName('Промышленная станция')

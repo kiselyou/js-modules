@@ -58,13 +58,13 @@ class BaseModelControls {
      */
     this.eventControls = new EventControls()
 
-    this.debugPanel = null
-    setTimeout(() => {
-      this.debugPanel = new DebugPanel()
-        .addFolder(this.entity)
-        .add(this.elements, 'length', 'Count elements')
-        .add(this, 'enabled', 'Controls enabled')
-    }, 2000)
+    // this.debugPanel = null
+    // setTimeout(() => {
+    //   this.debugPanel = new DebugPanel()
+    //     .addFolder(this.entity)
+    //     .add(this.elements, 'length', 'Count elements')
+    //     .add(this, 'enabled', 'Controls enabled')
+    // }, 2000)
   }
 
   /**
@@ -169,11 +169,11 @@ class BaseModelControls {
     for (const element of this.elements) {
       ++i
       // DEBUG PANEL
-      const isIntersect = intersect.is(element.model)
-      if (isIntersect) {
-        const folderName = `${this.entity} ${element.name} - ${i}`
-        this.prepareDebugPanel(element, folderName)
-      }
+      // const isIntersect = intersect.is(element.model)
+      // if (isIntersect) {
+      //   const folderName = `${this.entity} ${element.name} - ${i}`
+      //   this.prepareDebugPanel(element, folderName)
+      // }
 
       element.onClick(intersect, mouseEvent)
     }
@@ -186,52 +186,52 @@ class BaseModelControls {
    */
   prepareDebugPanel(element, folderName) {
     this.eventControls.once(folderName, () => {
-      this.debugPanel
-        .addFolder(folderName)
-        .add(element.model.scale, 'x', 'Scale X', 0.01, 100)
-        .add(element.model.scale, 'y', 'Scale Y', 0.01, 100)
-        .add(element.model.scale, 'z', 'Scale Z', 0.01, 100)
-        .add(element.model.position, 'x', 'Position X', -5000000, 5000000)
-        .add(element.model.position, 'y', 'Position Y', -5000000, 5000000)
-        .add(element.model.position, 'z', 'Position Z', -5000000, 5000000)
-        .add(element, 'angleToCenter', 'AngleToCenter', 0, 360)
-        .add(element, 'distanceToCenter', 'distanceToCenter', -5000000, 5000000)
-        .add(element.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
-        .add(element.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
-        .add(element.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
+      // this.debugPanel
+      //   .addFolder(folderName)
+      //   .add(element.model.scale, 'x', 'Scale X', 0.01, 100)
+      //   .add(element.model.scale, 'y', 'Scale Y', 0.01, 100)
+      //   .add(element.model.scale, 'z', 'Scale Z', 0.01, 100)
+      //   .add(element.model.position, 'x', 'Position X', -5000000, 5000000)
+      //   .add(element.model.position, 'y', 'Position Y', -5000000, 5000000)
+      //   .add(element.model.position, 'z', 'Position Z', -5000000, 5000000)
+      //   .add(element, 'angleToCenter', 'AngleToCenter', 0, 360)
+      //   .add(element, 'distanceToCenter', 'distanceToCenter', -5000000, 5000000)
+      //   .add(element.model.rotation, 'x', 'rotation X', 0, 4 * Math.PI)
+      //   .add(element.model.rotation, 'y', 'rotation Y', 0, 4 * Math.PI)
+      //   .add(element.model.rotation, 'z', 'rotation Z', 0, 4 * Math.PI)
 
       if (element instanceof ModelPlanet) {
 
-        this.debugPanel
-          .add(element, 'radius', 'Radius', 0.1, 6000)
-          .addEventOnChange((value, name) => {
-            switch (name) {
-              case 'radius':
-                element.rebuildModel()
-                break;
-            }
-          })
+        // this.debugPanel
+        //   .add(element, 'radius', 'Radius', 0.1, 6000)
+        //   .addEventOnChange((value, name) => {
+        //     switch (name) {
+        //       case 'radius':
+        //         element.rebuildModel()
+        //         break;
+        //     }
+        //   })
 
         if (element.glowInsideModel) {
-          this.debugPanel
-            .addFolder('Glow inside ' + folderName)
-            .add(element.glowInsideModel.material.uniforms.coefficient, 'value', 'In.Glow coeff', -5, 5)
-            .add(element.glowInsideModel.material.uniforms.power, 'value', 'In.Glow power', -5, 5)
-            .add(element.glowInsideModel.material.uniforms.glowColor, 'value', 'In.Glow color', null, null, true)
-            .add(element.glowInsideModel.scale, 'x', 'Scale X', 0.01, 100)
-            .add(element.glowInsideModel.scale, 'y', 'Scale Y', 0.01, 100)
-            .add(element.glowInsideModel.scale, 'z', 'Scale Z', 0.01, 100)
+          // this.debugPanel
+          //   .addFolder('Glow inside ' + folderName)
+          //   .add(element.glowInsideModel.material.uniforms.coefficient, 'value', 'In.Glow coeff', -5, 5)
+          //   .add(element.glowInsideModel.material.uniforms.power, 'value', 'In.Glow power', -5, 5)
+          //   .add(element.glowInsideModel.material.uniforms.glowColor, 'value', 'In.Glow color', null, null, true)
+          //   .add(element.glowInsideModel.scale, 'x', 'Scale X', 0.01, 100)
+          //   .add(element.glowInsideModel.scale, 'y', 'Scale Y', 0.01, 100)
+          //   .add(element.glowInsideModel.scale, 'z', 'Scale Z', 0.01, 100)
         }
 
         if (element.glowOutsideModel) {
-          this.debugPanel
-            .addFolder('Glow outside ' + folderName)
-            .add(element.glowOutsideModel.material.uniforms.coefficient, 'value', 'Out.Glow coeff', -5, 5)
-            .add(element.glowOutsideModel.material.uniforms.power, 'value', 'Out.Glow power', -5, 5)
-            .add(element.glowOutsideModel.material.uniforms.glowColor, 'value', 'Out.Glow color', null, null, true)
-            .add(element.glowOutsideModel.scale, 'x', 'Scale X', 0.01, 100)
-            .add(element.glowOutsideModel.scale, 'y', 'Scale Y', 0.01, 100)
-            .add(element.glowOutsideModel.scale, 'z', 'Scale Z', 0.01, 100)
+          // this.debugPanel
+          //   .addFolder('Glow outside ' + folderName)
+          //   .add(element.glowOutsideModel.material.uniforms.coefficient, 'value', 'Out.Glow coeff', -5, 5)
+          //   .add(element.glowOutsideModel.material.uniforms.power, 'value', 'Out.Glow power', -5, 5)
+          //   .add(element.glowOutsideModel.material.uniforms.glowColor, 'value', 'Out.Glow color', null, null, true)
+          //   .add(element.glowOutsideModel.scale, 'x', 'Scale X', 0.01, 100)
+          //   .add(element.glowOutsideModel.scale, 'y', 'Scale Y', 0.01, 100)
+          //   .add(element.glowOutsideModel.scale, 'z', 'Scale Z', 0.01, 100)
         }
       }
     })

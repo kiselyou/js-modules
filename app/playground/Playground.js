@@ -1,40 +1,26 @@
 import {
   PerspectiveCamera,
-  OrthographicCamera,
   Scene,
   WebGLRenderer,
   Clock,
   MOUSE,
   PCFSoftShadowMap, Math as tMath,
-  AxesHelper,
-  Mesh,
-  MeshBasicMaterial,
-  CubeGeometry
 } from 'three'
 
 import SpaceParticleControls from './controls/SpaceParticleControls'
-
-import Stats from 'stats-js'
 import Intersect from '@helper/Intersect'
-
 import CharacterControls from '@app/playground/controls/CharacterControls'
 import SectorControls from '@app/playground/controls/SectorControls'
-
 import Gyroscope from '@app/three-dependense/Gyroscope'
 import OrbitControls from '@app/three-dependense/OrbitControls'
-import DebugPanel from '@app/debug/DebugPanel'
 import LightControls from '@app/playground/controls/LightControls'
 import ParticlePlayGround from '@entity/ParticlePlayGround'
 import ParticlePlayer from '@entity/ParticlePlayer'
 import EventControls from './controls/EventControls'
 import Ajax from '@helper/ajax/Ajax'
 
-const stats = new Stats()
-// stats.setMode(1)
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.left = '0px';
-stats.domElement.style.top = '0px';
-document.body.appendChild(stats.domElement);
+import DebugPanelShip from './debug/DebugPanelShip'
+import StatusFPS from './debug/StatusFPS'
 
 class Playground {
   /**
@@ -174,108 +160,11 @@ class Playground {
      */
     this.intersect = new Intersect(this.camera, this.gyroscope)
 
-    this.axesHelper = new AxesHelper(150)
-    this.scene.add(this.axesHelper)
-
-    const panel = new DebugPanel()
-
-    setTimeout(() => {
-
-      const engine = this.character.spaceship.getEngine()
-      panel
-        .addFolder('Renderer controls')
-        .listenFields(true)
-        .add(this.renderer.shadowMap, 'enabled', 'Shadow map')
-        .add(this.renderer, 'gammaInput', 'Gamma input')
-        .add(this.renderer, 'gammaOutput', 'Gamma output')
-        .listenFields(false)
-        .addEventOnChange((value, name) => {
-          switch (name) {
-            case 'enabled':
-            case 'gammaInput':
-            case 'gammaOutput':
-              this.renderer.dispose()
-          }
-        })
-
-        .addFolder('Point light controls')
-        .listenFields(true)
-        .add(this.lightControls, 'pointLightMoveWithModel', 'Move with model')
-        .add(this.lightControls.pointLight, 'castShadow', 'Cast Shadow')
-        .listenFields(false)
-        .add(this.lightControls.pointLight, 'decay', 'Decay', 0, 5)
-        .add(this.lightControls.pointLight, 'distance', 'Distance', 0, 8000)
-        .add(this.lightControls.pointLight, 'power', 'Power', 0, 1000)
-        .add(this.lightControls.pointLight, 'color', 'Color', null, null, true)
-        .add(this.lightControls.pointLight, 'intensity', 'Intensity', 0, 100)
-        .add(this.lightControls.pointLight.position, 'x', 'X', -2000, 2000)
-        .add(this.lightControls.pointLight.position, 'y', 'Y', -2000, 2000)
-        .add(this.lightControls.pointLight.position, 'z', 'Z', -2000, 2000)
-
-        .addFolder('Hemisphere light controls')
-        .listenFields(true)
-        .add(this.lightControls, 'hemisphereLightMoveWithModel', 'Move with model')
-        .listenFields(false)
-        .add(this.lightControls.hemisphereLight, 'color', 'Sky Color', null, null, true)
-        .add(this.lightControls.hemisphereLight, 'groundColor', 'Ground Color', null, null, true)
-        .add(this.lightControls.hemisphereLight, 'intensity', 'Intensity', 0, 100)
-        .add(this.lightControls.hemisphereLight.position, 'x', 'X', -2000, 2000)
-        .add(this.lightControls.hemisphereLight.position, 'y', 'Y', -2000, 2000)
-        .add(this.lightControls.hemisphereLight.position, 'z', 'Z', -2000, 2000)
-
-        .addFolder('Ambient light controls')
-        .listenFields(true)
-        .add(this.lightControls, 'ambientLightMoveWithModel', 'Move with model')
-        .listenFields(false)
-        .add(this.lightControls.ambientLight, 'color', 'Color', null, null, true)
-        .add(this.lightControls.ambientLight, 'intensity', 'Intensity', 0, 2)
-        .add(this.lightControls.ambientLight.position, 'x', 'X', -2000, 2000)
-        .add(this.lightControls.ambientLight.position, 'y', 'Y', -2000, 2000)
-        .add(this.lightControls.ambientLight.position, 'z', 'Z', -2000, 2000)
-
-        .addFolder('Camera')
-        .add(this.camera, 'fov', 'Fov', 0, 100)
-        .add(this.camera, 'far', 'Far', 500, 15000)
-        .add(this.camera, 'zoom', 'Zoom', 0.1, 100)
-        .addEventOnChange((value, name) => {
-          switch (name) {
-            case 'fov':
-            case 'far':
-            case 'zoom':
-              this.camera.updateProjectionMatrix()
-          }
-        })
-        .addFolder('CameraControls')
-        .listenFields(true)
-        .add(this.cameraControls, 'enableKeys', 'EnableKeys')
-        .add(this.cameraControls, 'enablePan', 'EnablePan')
-        .listenFields(false)
-        .add(this.cameraControls, 'minDistance', 'MinDistance', 0, 100)
-        .add(this.cameraControls, 'maxDistance', 'MaxDistance', 101, 2000)
-        .add(this.cameraControls, 'maxPolarAngle', 'MaxPolarAngle', 0, Math.PI)
-
-        .addFolder('Ship Controls')
-        .listenFields(true)
-        .add(this.character, 'enabled', 'Controls enabled')
-        .listenFields(false)
-        .addFolder('Ship Info')
-        .listenFields(true)
-        .add(engine, 'speed', 'Ship Speed')
-        .add(this.character.model.position, 'x', 'Ship X')
-        .add(this.character.model.position, 'y', 'Ship Y')
-        .add(this.character.model.position, 'z', 'Ship Z')
-        .listenFields(false)
-        .addFolder('Ship speed')
-        .add(engine, 'maxSpeed', 'Max', 10, 400)
-        .add(engine, 'maxReverseSpeed', 'Max Reverse', -200, 0)
-        .add(engine, 'angularSpeed', 'Angular Speed', 0.01, 5)
-        .add(engine, 'acceleration', 'Acceleration', 10, 500)
-        .add(engine, 'deceleration', 'Deceleration', 10, 500)
-        .addFolder('Ship Scale')
-        .add(this.character.model.scale, 'x', 'Scale X', 0, 5)
-        .add(this.character.model.scale, 'y', 'Scale Y', 0, 5)
-        .add(this.character.model.scale, 'z', 'Scale Z', 0, 5)
-    }, 3000)
+    /**
+     *
+     * @type {StatusFPS}
+     */
+    this.status = new StatusFPS()
   }
 
   /**
@@ -299,6 +188,9 @@ class Playground {
     await this.character.beforeStart()
     await this.spaceParticleControls.beforeStart()
     await this.buildPanel(rootContainerId)
+
+    new DebugPanelShip(this.character).build()
+    this.status.build()
 
     this.animateStart()
     setInterval(async () => {
@@ -399,7 +291,7 @@ class Playground {
    * @returns {Playground}
    */
   animateStart() {
-    stats.update()
+    this.status.update()
     this.delta = this.clock.getDelta()
     this.character.update(this.delta)
     for (const player of this.playersControls) {

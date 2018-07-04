@@ -1,5 +1,4 @@
 import Station from '@entity/particles-sector/Station'
-import * as CONST from '@app/constants'
 import Model from './../Model'
 
 class ModelStation extends Station {
@@ -34,9 +33,13 @@ class ModelStation extends Station {
    * @returns {void}
    */
   buildMesh() {
-    const model = this.loader.getModel(CONST.KEY_STATION_2)
-    this.model.add(model)
-    this.scene.add(this.model)
+    const model = this.loader.getModel(this.modelKey)
+    if (model) {
+      this.model.add(model)
+      this.scene.add(this.model)
+    } else {
+      throw new Error('Couldn\'t find Asteroid model')
+    }
   }
 
   /**
