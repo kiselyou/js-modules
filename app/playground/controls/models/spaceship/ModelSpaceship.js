@@ -109,7 +109,7 @@ class ModelSpaceship {
   buildModel() {
     const shell = this.spaceship.getShell()
     const model = this.loader.getModel(shell.modelKey)
-    this.model.add(model)
+    this.model.build(model, this.spaceship.id)
     return this
   }
 

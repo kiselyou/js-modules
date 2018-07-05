@@ -84,7 +84,7 @@ class ModelPlanet extends Planet {
       this.mesh.add(this.glowOutsideModel)
     }
 
-    this.model.add(this.mesh)
+    this.model.build(this.mesh, this.id)
     this.scene.add(this.model)
     return this
   }

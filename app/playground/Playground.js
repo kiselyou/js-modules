@@ -40,19 +40,13 @@ class Playground {
      *
      * @type {Clock}
      */
-    this.clock = new Clock();
+    this.clockCore = new Clock();
 
     /**
      *
-     * @type {number}
+     * @type {Clock}
      */
-    this.deltaInterval = this.clock.getDelta()
-
-    /**
-     *
-     * @type {number}
-     */
-    this.delta = this.clock.getDelta()
+    this.clockUI = new Clock();
 
     /**
      *
@@ -172,7 +166,7 @@ class Playground {
    * @param {string} rootContainerId
    * @returns {Playground}
    */
-  async init(rootContainerId) {
+  init(rootContainerId) {
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = PCFSoftShadowMap;
@@ -183,24 +177,43 @@ class Playground {
     document.getElementById(rootContainerId)
       .appendChild(this.renderer.domElement)
 
-    this.copy(this.particlePlayGround)
-    await this.sectorControls.beforeStart()
-    await this.character.beforeStart()
-    await this.spaceParticleControls.beforeStart()
-    await this.buildPanel(rootContainerId)
+    this.beforeStart()
+      .then(() => {
+        this
+          .updateCore()
+          .updateUserInterface()
+          .afterStart()
+          .buildPanel(rootContainerId)
+          .catch((e) => new Error(e))
+      })
 
-    new DebugPanelShip(this.character).build()
-    this.status.build()
-
-    this.animateStart()
-    setInterval(async () => {
-      await this.character.userPanel.update()
-    }, 1000 / 10)
     return this
   }
 
   /**
    *
+   * @returns {Promise<void>}
+   */
+  async beforeStart() {
+    this.copy(this.particlePlayGround)
+    await this.sectorControls.beforeStart()
+    await this.character.beforeStart()
+    await this.spaceParticleControls.beforeStart()
+  }
+
+  /**
+   *
+   * @returns {Playground}
+   */
+  afterStart() {
+    new DebugPanelShip(this.character).build()
+    this.status.build()
+    return this
+  }
+
+  /**
+   *
+   * @param {string} rootContainerId
    * @returns {Promise<void>}
    */
   async buildPanel(rootContainerId) {
@@ -290,21 +303,38 @@ class Playground {
    *
    * @returns {Playground}
    */
-  animateStart() {
-    this.status.update()
-    this.delta = this.clock.getDelta()
-    this.character.update(this.delta)
-    for (const player of this.playersControls) {
-      player.update(this.delta)
-    }
+  updateUserInterface() {
+    setInterval(() => {
+      const delta = this.clockUI.getDelta()
+      this.character.shotControls.update(delta)
+      this.character.userPanel.update().catch((e) => new Error(e))
 
+      for (const player of this.playersControls) {
+        player.shotControls.update(delta)
+      }
+
+    }, 1000 / 30)
+    return this
+  }
+
+  /**
+   *
+   * @returns {Playground}
+   */
+  updateCore() {
+    this.status.update()
+    const delta = this.clockCore.getDelta()
+    this.character.update(delta)
+    for (const player of this.playersControls) {
+      player.update(delta)
+    }
     const position = this.character.model.position
-    this.sectorControls.update(this.delta, position)
-    this.lightControls.update(this.delta, position)
-    this.spaceParticleControls.update(this.delta)
+    this.sectorControls.update(delta, position)
+    this.lightControls.update(delta, position)
+    this.spaceParticleControls.update(delta)
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
-      this.animateStart()
+      this.updateCore()
     })
     return this
   }

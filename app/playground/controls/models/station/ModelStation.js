@@ -35,7 +35,7 @@ class ModelStation extends Station {
   buildMesh() {
     const model = this.loader.getModel(this.modelKey)
     if (model) {
-      this.model.add(model)
+      this.model.build(model, this.id)
       this.scene.add(this.model)
     } else {
       throw new Error('Couldn\'t find Asteroid model')

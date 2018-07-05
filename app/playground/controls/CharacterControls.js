@@ -73,8 +73,17 @@ class CharacterControls extends ModelSpaceship {
    * @returns {?CharacterControls}
    */
   findCharacterControlsByModel(model) {
+    if (!model) {
+      return null
+    }
+
+    // console.log(model.name, this, this.playground.playersControls)
+
+    if (model.name === this.model.name) {
+      return this
+    }
     const controls = this.playground.playersControls.find((controls) => {
-      return controls.model.uuid === model.uuid
+      return model && model.name === controls.model.name
     })
     return controls || null
   }
@@ -83,7 +92,7 @@ class CharacterControls extends ModelSpaceship {
    *
    * @returns {Array.<Model>}
    */
-  getModelsFromScene(excludeCurrent = true) {
+  getModels(excludeCurrent = true) {
     const models = []
     for (const element of this.scene.children) {
       if (element instanceof Model) {
@@ -94,6 +103,15 @@ class CharacterControls extends ModelSpaceship {
       }
     }
     return models
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @returns {?Model}
+   */
+  findModelByName(name) {
+    return this.scene.children.find((model) => model.name === name) || null
   }
 
   /**
@@ -174,7 +192,6 @@ class CharacterControls extends ModelSpaceship {
   update(delta) {
     if (this.enabled) {
       super.update(delta)
-      this.shotControls.update(delta)
       this.player.position.copy(this.model.position)
     }
   }
@@ -243,8 +260,6 @@ class CharacterControls extends ModelSpaceship {
   panelMouseClick(mouseEvent, mouseButton) {
     this.userPanel.panelShot.onMouseClick(mouseEvent, async (slot) => {
       if (this.selectedSlots.indexOf(slot) === -1 && mouseButton === 'left') {
-
-        console.log(slot)
         slot.setStatus(Slot.STATUS_SELECTED)
         this.selectedSlots.push(slot)
       } else {
@@ -267,11 +282,11 @@ class CharacterControls extends ModelSpaceship {
   onMouseClick(intersect, mouseEvent) {
     let shotEnabled = true
     if (this.selectedSlots.length > 0) {
-      const models = this.getModelsFromScene()
-      const intersectedObjects = intersect.findIntersectionModels(models, true)
+      const models = this.getModels()
+      const intersectedObjects = intersect.findIntersection(models)
       if (intersectedObjects.length > 0) {
         shotEnabled = false
-        this.assignSlotOnTarget(this.selectedSlots, intersectedObjects[0])
+        this.assignSlotOnTarget(this.selectedSlots, intersectedObjects[0]['object'])
         this.selectedSlots = []
       }
     }
@@ -281,10 +296,8 @@ class CharacterControls extends ModelSpaceship {
         const spendEnergy = slot.particle.energy
         const energy = this.getEnergy()
         if (energy.isEnergy(spendEnergy)) {
-          console.log(energy.state)
           energy.reduce(spendEnergy)
           this.shotControls.shot(slot, target.model)
-          console.log(energy.state)
           this.userPanel.panelIndicator.update()
         } else {
           // TODO нет энергии делаем что-то

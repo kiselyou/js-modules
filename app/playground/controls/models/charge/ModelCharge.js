@@ -185,7 +185,7 @@ class ModelCharge extends Object3D {
 
   /**
    *
-   * @param {Array.<Mesh>} objects
+   * @param {Array.<Model>} objects
    * @param {Vector3} rayStart
    * @param {Vector3} direction
    * @param {number|Infinity} [far]
@@ -196,17 +196,18 @@ class ModelCharge extends Object3D {
     this.raycaster.ray.direction.copy(direction)
     this.raycaster.near = 0
     this.raycaster.far = far
-    return this.raycaster.intersectObjects(objects, true)
+    return this.raycaster.intersectObjects(objects, false)
   }
 
   /**
    *
    * @private
+   * @param {Array.<Model>} intersectionModels
    * @returns {Array<{distance: number, face: Face3, faceIndex: number, object: Mesh, point: Vector3, uv: Vector2}>}
    */
-  _findIntersection() {
+  _findIntersection(intersectionModels) {
     const far = this.prev.distanceTo(this.position)
-    return this.isRayIntersect(this.intersectObjects, this.prev, this.direction, far)
+    return this.isRayIntersect(intersectionModels, this.prev, this.direction, far)
   }
 
   /**
@@ -231,18 +232,19 @@ class ModelCharge extends Object3D {
       this.prev.copy(this.position)
       this.position.addScaledVector(this.direction, this.charge.speed * delta)
 
-      const intersects = this._findIntersection()
+      const distance = this.start.distanceTo(this.position)
+
+      if (distance >= this.charge.maxDistance) {
+        this._remove()
+        return
+      }
+
+      const intersects = this._findIntersection(this.intersectObjects)
       if (intersects.length > 0) {
         this._remove()
         for (const callback of this.intersectEvents) {
           callback(intersects)
         }
-        return
-      }
-
-      const distance = this.start.distanceTo(this.position)
-      if (distance >= this.charge.maxDistance) {
-        this._remove()
       }
     }
   }

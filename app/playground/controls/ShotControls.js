@@ -123,7 +123,11 @@ class ShotControls {
         break
       case ShotControls.EVENT_CHARGE_INTERSECT:
         // TODO вычести урон
-        console.log(data)
+
+        const targetModel = this.character.findModelByName(data['targetName'])
+        const controls = this.character.findCharacterControlsByModel(targetModel)
+
+        // console.log(data, controls)
         // Снаряд пересекся с объектом. Изменяем информацию у игрока B
         // charge = this.findChargeByName(data.name)
         // this.removeCharge(charge)
@@ -184,7 +188,7 @@ class ShotControls {
    */
   shot(slot, target) {
     // TODO добавить время перезарядки
-    const objects = this.character.getModelsFromScene()
+    const objects = this.character.getModels()
     const modelCharge = new ModelCharge()
       .copyCharge(slot.particle.charge)
       .buildMesh()
@@ -194,7 +198,10 @@ class ShotControls {
       })
       .setIntersectObjects(objects, (intersect) => {
         // TODO вычести урон
-        const swapInfo = { intersect, swapInfo: modelCharge.getModelChargeSwapInfo()}
+
+        const targetName = intersect[0]['object']['name']
+        // console.log(targetName)
+        const swapInfo = { targetName, swapInfo: modelCharge.getModelChargeSwapInfo() }
         this.callShotEvent(ShotControls.EVENT_CHARGE_INTERSECT, swapInfo)
       })
       // Set slot position for ModelCharge. This value will be change bellow.
