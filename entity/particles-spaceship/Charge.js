@@ -1,4 +1,5 @@
 import Particle from './../Particle'
+import Damage from './Damage'
 
 class Charge extends Particle {
   constructor() {
@@ -8,13 +9,31 @@ class Charge extends Particle {
      *
      * @type {number}
      */
-    this.speed = 300
+    this.speed = 800
 
     /**
      *
      * @type {number}
      */
-    this.maxDistance = 3000
+    this.damageMin = 24
+
+    /**
+     *
+     * @type {number}
+     */
+    this.damageMax = 40
+
+    /**
+     *
+     * @type {number}
+     */
+    this.maxDistance = 2000
+
+    /**
+     *
+     * @type {number}
+     */
+    this.type = Damage.TYPE_SLIP
   }
 
   /**
@@ -25,6 +44,9 @@ class Charge extends Particle {
     const properties = [
       'speed',
       'maxDistance',
+      'damageMin',
+      'damageMax',
+      'type'
     ]
     for (const property of properties) {
       switch (property) {

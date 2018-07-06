@@ -236,9 +236,12 @@ class Playground {
    */
   copy(data) {
     this.sectorControls.copy(data)
-    this.character
-      .copyPlayer(data.getCurrentPlayer())
-      .copy(data)
+
+    const player = data.getCurrentPlayer()
+    this.character.copy(player)
+
+    const spaceship = data.getPlayerSpaceship(player)
+    this.character.spaceship.copy(spaceship)
     return this
   }
 
@@ -256,12 +259,11 @@ class Playground {
 
         const player = this.particlePlayGround.getPlayerById(playerId)
         const playerControls = new CharacterControls(this)
-        playerControls
-          .copyPlayer(player)
-          .copy(this.particlePlayGround)
+        playerControls.copy(player)
 
+        const spaceship = this.particlePlayGround.getPlayerSpaceship(player)
+        playerControls.spaceship.copy(spaceship)
         playerControls.beforeStart()
-
         this.playersControls.push(playerControls)
         this.scene.add(playerControls.model)
       })
@@ -276,7 +278,7 @@ class Playground {
   removePlayer(playerId) {
     for (let i = 0; i < this.playersControls.length; i++) {
       const playerControls = this.playersControls[i]
-      if (playerControls.player.id === playerId) {
+      if (playerControls.id === playerId) {
         this.scene.remove(playerControls)
         this.playersControls.splice(i, 1)
         break;
@@ -292,7 +294,7 @@ class Playground {
    */
   findPlayerControls(playerId) {
     for (const playerControls of this.playersControls) {
-      if (playerControls.player.id === playerId) {
+      if (playerControls.id === playerId) {
         return playerControls
       }
     }

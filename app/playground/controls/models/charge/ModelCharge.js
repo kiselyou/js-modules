@@ -25,13 +25,6 @@ class ModelCharge extends Object3D {
     this.start = new Vector3()
 
     /**
-     * This is target position of model
-     *
-     * @type {Vector3}
-     */
-    this.target = new Vector3()
-
-    /**
      * This is previous position of model
      *
      * @type {Vector3}
@@ -87,6 +80,21 @@ class ModelCharge extends Object3D {
      * @type {boolean}
      */
     this.enabled = false
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.disableCalc = false
+  }
+
+  /**
+   *
+   * @returns {ModelCharge}
+   */
+  disableCalculation(value = true) {
+    this.disableCalc = value
+    return this
   }
 
   /**
@@ -140,16 +148,6 @@ class ModelCharge extends Object3D {
   setPosition(value) {
     this.start.copy(value)
     this.position.copy(value)
-    return this
-  }
-
-  /**
-   *
-   * @param {Vector3} v
-   * @return {ModelCharge}
-   */
-  setTarget(v) {
-    this.target.copy(v)
     return this
   }
 
@@ -216,7 +214,6 @@ class ModelCharge extends Object3D {
    * @returns {void}
    */
   _remove() {
-    this.enable(false)
     if (this.removeEvent) {
       this.removeEvent()
     }
@@ -229,19 +226,23 @@ class ModelCharge extends Object3D {
    */
   update(delta) {
     if (this.enabled) {
+      if (this.disableCalc) {
+        this.position.addScaledVector(this.direction, this.charge.speed * delta)
+        return
+      }
       this.prev.copy(this.position)
       this.position.addScaledVector(this.direction, this.charge.speed * delta)
 
       const distance = this.start.distanceTo(this.position)
-
       if (distance >= this.charge.maxDistance) {
+        this.enable(false)
         this._remove()
         return
       }
 
       const intersects = this._findIntersection(this.intersectObjects)
       if (intersects.length > 0) {
-        this._remove()
+        this.enable(false)
         for (const callback of this.intersectEvents) {
           callback(intersects)
         }
@@ -257,9 +258,6 @@ class ModelCharge extends Object3D {
     const properties = [
       'name',
       'enabled',
-      'start',
-      'target',
-      'prev',
       'direction',
       'position',
       'charge'
@@ -289,9 +287,6 @@ class ModelCharge extends Object3D {
           case 'charge':
             this.charge.setChargeSwapInfo(data[property])
             break
-          case 'start':
-          case 'target':
-          case 'prev':
           case 'direction':
           case 'position':
             this[property].copy(data[property])

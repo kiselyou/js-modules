@@ -31,10 +31,10 @@ export default async function startPlay(appConfig) {
   // B Удаленный игрок - игрок или игроки в других браузерах
 
   // Отправить информацию на сервер о текущем игроке A
-  socket.emit('swap-current-player', playground.character.player.getSwapInfo())
+  socket.emit('swap-current-player', playground.character.getSwapInfo())
   // Обновить информацию о текущем игроке A
   socket.on('swap-current-player', (swapPlayer) => {
-    playground.character.player.copy(swapPlayer)
+    playground.character.copy(swapPlayer)
   })
 
   // Добавление удаленного игрока B в сектор
@@ -44,7 +44,7 @@ export default async function startPlay(appConfig) {
       // отправить информацию о текущем игроке A у удаленного игрока B
       socket.emit('swap-add-specific-player', {
         destinationSocketId: swapPlayer.socketId,
-        character: playground.character.player.getSwapInfo()
+        character: playground.character.getSwapInfo()
       })
     }
   })
@@ -61,13 +61,12 @@ export default async function startPlay(appConfig) {
     // Отправить удаленным игрокам B информацию действиях текущего игрока A
     socket.emit('swap-player-action-move', {
       moveSwapInfo: moveSwapInfo,
-      characterId: playground.character.player.id
+      characterId: playground.character.id
     })
   })
 
   // Изменяем состояние текущего игрока A у удаленных игроков B
   socket.on('swap-player-action-move', (data) => {
-    //console.log(data.characterId)
     const playerControls = playground.findPlayerControls(data.characterId)
     if (playerControls) {
       playerControls.moveControls.setMoveSwapInfo(data.moveSwapInfo)
@@ -78,7 +77,7 @@ export default async function startPlay(appConfig) {
 
   // Отправляем информацию о выстрелах (от игрока A удаленным игрокам B)
   playground.character.shotControls.addShotEventListener((action, modelChargeSwapInfo) => {
-    socket.emit('swap-player-action-shot', playground.character.player.id, action, modelChargeSwapInfo)
+    socket.emit('swap-player-action-shot', playground.character.id, action, modelChargeSwapInfo)
   })
 
   // Слушаем изменения о выстрелах (игроки B получают информацию от A)

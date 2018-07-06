@@ -2,8 +2,7 @@ import ModelSpaceship from './models/spaceship/ModelSpaceship'
 import Calculate from './../lib/Calculate'
 import RaceControls from './RaceControls'
 import ShotControls from './ShotControls'
-import ParticlePlayGround from '@entity/ParticlePlayGround'
-import Player from '@entity/particles-sector/Player'
+
 import UserPanel from '@app/playground/decoration/UserPanel'
 import Model from '@app/playground/controls/models/Model'
 
@@ -44,12 +43,6 @@ class CharacterControls extends ModelSpaceship {
 
     /**
      *
-     * @type {Player}
-     */
-    this.player = new Player()
-
-    /**
-     *
      * @type {boolean}
      */
     this.enabled = false
@@ -72,19 +65,20 @@ class CharacterControls extends ModelSpaceship {
    * @param {Model} model
    * @returns {?CharacterControls}
    */
-  findCharacterControlsByModel(model) {
+  findCharacter(model) {
     if (!model) {
       return null
     }
-
-    // console.log(model.name, this, this.playground.playersControls)
-
     if (model.name === this.model.name) {
       return this
+    }
+    if (model.name === this.playground.character.model.name) {
+      return this.playground.character
     }
     const controls = this.playground.playersControls.find((controls) => {
       return model && model.name === controls.model.name
     })
+
     return controls || null
   }
 
@@ -158,30 +152,7 @@ class CharacterControls extends ModelSpaceship {
     await super.beforeStart()
     await this.raceControls.beforeStart()
     await this.shotControls.beforeStart()
-    this.model.position.copy(this.player.position)
     this.enabled = true
-  }
-
-  /**
-   *
-   * @param {Player|Object} data
-   * @returns {CharacterControls}
-   */
-  copyPlayer(data) {
-    this.player.copy(data)
-    return this
-  }
-
-  /**
-   * Before call this method - Player must be set
-   *
-   * @param {ParticlePlayGround} data
-   * @returns {ModelSpaceship}
-   */
-  copy(data) {
-    super.copy(data)
-    this.spaceship.copy(data.getPlayerSpaceship(this.player))
-    return this
   }
 
   /**
@@ -192,7 +163,6 @@ class CharacterControls extends ModelSpaceship {
   update(delta) {
     if (this.enabled) {
       super.update(delta)
-      this.player.position.copy(this.model.position)
     }
   }
 
@@ -298,7 +268,7 @@ class CharacterControls extends ModelSpaceship {
         if (energy.isEnergy(spendEnergy)) {
           energy.reduce(spendEnergy)
           this.shotControls.shot(slot, target.model)
-          this.userPanel.panelIndicator.update()
+          this.userPanel.panelIndicator.update([3])
         } else {
           // TODO нет энергии делаем что-то
         }

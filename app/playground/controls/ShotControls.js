@@ -1,6 +1,6 @@
 import ModelCharge from './models/charge/ModelCharge'
-import GunArea from '../decoration/GunArea'
-import {Vector3, Raycaster, BoxGeometry, MeshBasicMaterial, Mesh} from 'three'
+import { Vector3, Raycaster } from 'three'
+import { randInt } from '@helper/integer/Integer'
 
 class ShotControls {
   /**
@@ -12,18 +12,6 @@ class ShotControls {
      * @type {CharacterControls}
      */
     this.character = character
-
-    // /**
-    //  *
-    //  * @type {GunArea}
-    //  */
-    // this.gunArea = new GunArea()
-
-    /**
-     *
-     * @type {Raycaster}
-     */
-    this.raycaster = new Raycaster()
 
     /**
      *
@@ -110,8 +98,12 @@ class ShotControls {
     switch (action) {
       case ShotControls.EVENT_CHARGE_ADD:
         // Добавляем снаряд игроку B
-        const modelCharge = new ModelCharge().setModelChargeSwapInfo(data).buildMesh()
-        this.addCharge(modelCharge)
+        this.addCharge(
+          new ModelCharge()
+            .setModelChargeSwapInfo(data)
+            .disableCalculation()
+            .buildMesh()
+        )
         break
       case ShotControls.EVENT_CHARGE_UPDATE:
         // TODO Корректировка позиции снаряда у игрока "B" возможно нет необходимости
@@ -123,14 +115,43 @@ class ShotControls {
         break
       case ShotControls.EVENT_CHARGE_INTERSECT:
         // TODO вычести урон
-
+        const swapInfo = data['swapInfo']
+        // Try to find CharacterControls by mode
         const targetModel = this.character.findModelByName(data['targetName'])
-        const controls = this.character.findCharacterControlsByModel(targetModel)
+        const controls = this.character.findCharacter(targetModel)
+        if (controls) {
+          const charge = swapInfo['charge']
+          const damageSize = randInt(charge['damageMin'], charge['damageMax'])
 
-        // console.log(data, controls)
+          const armor = controls.getArmor()
+          const armorDamage = armor.getDamage(charge['type'])
+          const damageArmorSize = armorDamage.getSize(damageSize)
+
+          const shell = controls.getShell()
+          const shellDamage = shell.getDamage(charge['type'])
+
+
+          let damageShellSize = 0
+          if (armor.isArmor(damageArmorSize)) {
+            armor.reduce(damageArmorSize)
+            damageShellSize = shellDamage.getSize(damageArmorSize)
+          } else {
+            damageShellSize = shellDamage.getSize(damageSize)
+          }
+
+          if (shell.isShell(damageShellSize)) {
+            shell.reduce(damageShellSize)
+          }
+          controls.userPanel.panelIndicator.update([1, 2])
+        }
+
+        // Try to find StationControls
+
+        // Try to find AsteroidControls
+
         // Снаряд пересекся с объектом. Изменяем информацию у игрока B
-        // charge = this.findChargeByName(data.name)
-        // this.removeCharge(charge)
+        charge = this.findChargeByName(swapInfo.name)
+        this.removeCharge(charge)
         break
     }
   }
@@ -170,7 +191,7 @@ class ShotControls {
       // Стрельба с упреждением
       case 'deflection':
       default:
-        const controls = this.character.findCharacterControlsByModel(target)
+        const controls = this.character.findCharacter(target)
         let targetSpeed = 0
         if (controls) {
           const engine = controls.getEngine()
@@ -197,12 +218,10 @@ class ShotControls {
         this.callShotEvent(ShotControls.EVENT_CHARGE_DELETE, modelCharge.getModelChargeSwapInfo())
       })
       .setIntersectObjects(objects, (intersect) => {
-        // TODO вычести урон
-
         const targetName = intersect[0]['object']['name']
-        // console.log(targetName)
-        const swapInfo = { targetName, swapInfo: modelCharge.getModelChargeSwapInfo() }
-        this.callShotEvent(ShotControls.EVENT_CHARGE_INTERSECT, swapInfo)
+        const swapInfo = modelCharge.getModelChargeSwapInfo()
+        this.callShotEvent(ShotControls.EVENT_CHARGE_INTERSECT, { targetName, swapInfo })
+        this.removeCharge(modelCharge)
       })
       // Set slot position for ModelCharge. This value will be change bellow.
       // It need to calculate world position
@@ -272,9 +291,7 @@ class ShotControls {
    */
   update(delta) {
     for (const charge of this.charges) {
-      if (charge.enabled) {
-        charge.update(delta)
-      }
+      charge.update(delta)
     }
   }
 

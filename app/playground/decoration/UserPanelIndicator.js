@@ -94,7 +94,7 @@ class UserPanelIndicator {
 
   /**
    *
-   * @param {Array.<number>} keys - possible values (1 - Healthy, 2 - Energy, 3)
+   * @param {Array.<number>} keys - possible values (1 - Healthy, 2 - Armor, 3 - Energy)
    * @returns {Promise<UserPanelIndicator>|void}
    */
   async update(keys = []) {
@@ -110,7 +110,7 @@ class UserPanelIndicator {
         if (!indicator) {
           continue
         }
-        await indicator.build()
+        await indicator.indicator.build()
       }
     }
     return this

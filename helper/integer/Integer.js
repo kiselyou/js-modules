@@ -18,3 +18,14 @@ export function randInt(min, max) {
 export function randFloat(min, max) {
   return Math.random() * (max - min) + min
 }
+
+/**
+ *
+ * @param {number} value
+ * @param {number} digits
+ * @returns {Number}
+ */
+export function roundPlus(value, digits = 2) {
+  const v = Math.pow(10, digits);
+  return Math.round(value * v) / v
+}

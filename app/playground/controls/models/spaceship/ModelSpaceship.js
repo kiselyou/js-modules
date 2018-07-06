@@ -1,14 +1,16 @@
 import Spaceship from '@entity/particles-spaceship/Spaceship'
+import Player from '@entity/particles-sector/Player'
 import MoveControls from './../../MoveControls'
-import Aim from './../../../decoration/Aim'
 import Model from './../Model'
 
-class ModelSpaceship {
+class ModelSpaceship extends Player {
   /**
    *
    * @param {Playground} playground
    */
   constructor(playground) {
+    super()
+
     /**
      *
      * @type {Playground}
@@ -43,14 +45,6 @@ class ModelSpaceship {
      * @type {MoveControls}
      */
     this.moveControls = new MoveControls(this.model, this.spaceship)
-
-    // /**
-    //  *
-    //  * @type {Aim}
-    //  */
-    // this.aim = new Aim()
-    // this.aim.position.z = 800
-    // this.aim.scale.set(0.15, 0.15, 0.15)
   }
 
   /**
@@ -92,16 +86,6 @@ class ModelSpaceship {
     await this.buildModel()
   }
 
-  // /**
-  //  *
-  //  * @returns {ModelSpaceship}
-  //  */
-  // buildAim() {
-  //   this.aim.build()
-  //   this.model.addToGroup(this.aim)
-  //   return this
-  // }
-
   /**
    *
    * @returns {ModelSpaceship}
@@ -109,7 +93,8 @@ class ModelSpaceship {
   buildModel() {
     const shell = this.spaceship.getShell()
     const model = this.loader.getModel(shell.modelKey)
-    this.model.build(model, this.spaceship.id)
+    this.model.build(model, this.id)
+    this.model.position.copy(this.position)
     return this
   }
 
@@ -124,11 +109,12 @@ class ModelSpaceship {
 
   /**
    *
-   * @param {ParticlePlayGround} data
+   * @param {Player|Object} data
+   * @param {Array} [except]
    * @returns {ModelSpaceship}
    */
-  copy(data) {
-
+  copy(data, except = []) {
+    super.copy(data, except)
     return this
   }
 
@@ -139,6 +125,7 @@ class ModelSpaceship {
    */
   update(delta) {
     this.moveControls.update(delta)
+    this.position.copy(this.model.position)
   }
 }
 
