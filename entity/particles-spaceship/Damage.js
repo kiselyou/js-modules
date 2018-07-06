@@ -1,4 +1,4 @@
-import { roundPlus } from '@helper/integer/Integer'
+import { roundPlus } from './../../helper/integer/Integer'
 
 class Damage {
   constructor() {
