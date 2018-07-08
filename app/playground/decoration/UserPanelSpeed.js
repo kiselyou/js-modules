@@ -42,16 +42,16 @@ class UserPanelSpeed {
    * @param {number} left
    * @param {number} top
    * @param {number} margin
-   * @returns {Promise<UserPanelSpeed>}
+   * @returns {UserPanelSpeed}
    */
-  async draw(left, top, margin) {
+  draw(left, top, margin) {
     const engine = this.character.spaceship.getEngine()
     if (!engine) {
       return this
     }
 
     const shape = new Shape(this.canvas)
-    await shape
+    shape
       .squareForm(left, top, this.width - margin * 2, this.height - margin * 2)
       .setBorder(2, 'transparent')
       .addText('m/s', (text) => {
@@ -69,22 +69,22 @@ class UserPanelSpeed {
           .setVerticalAlign('middle')
           .setFontColor('rgb(2, 145, 145)')
           .beforeBuild((text) => {
-            text.attr.setText(engine.speed.toFixed(1))
+            text.attr.setText(engine.speed.toFixed(0))
           })
       })
       .build()
 
-    await this.shapes.push(shape)
+    this.shapes.push(shape)
     return this
   }
 
   /**
    *
-   * @returns {Promise<UserPanelSpeed>}
+   * @returns {UserPanelSpeed}
    */
-  async update() {
+  update() {
     for (const shape of this.shapes) {
-      await shape.build()
+      shape.build()
     }
     return this
   }

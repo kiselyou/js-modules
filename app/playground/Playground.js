@@ -181,10 +181,8 @@ class Playground {
       .then(() => {
         this
           .updateCore()
-          .updateUserInterface()
           .afterStart()
           .buildPanel(rootContainerId)
-          .catch((e) => new Error(e))
       })
 
     return this
@@ -214,10 +212,10 @@ class Playground {
   /**
    *
    * @param {string} rootContainerId
-   * @returns {Promise<void>}
+   * @returns {Playground}
    */
-  async buildPanel(rootContainerId) {
-    await this.character.buildPanel()
+  buildPanel(rootContainerId) {
+    this.character.buildPanel()
     const canvas = this.character.userPanel.canvas
     document.getElementById(rootContainerId).appendChild(canvas)
     canvas.addEventListener('click', (event) => {
@@ -227,6 +225,7 @@ class Playground {
       event.preventDefault()
       this.character.panelMouseClick(event, 'right')
     }, false)
+    return this
   }
 
   /**
@@ -305,30 +304,16 @@ class Playground {
    *
    * @returns {Playground}
    */
-  updateUserInterface() {
-    setInterval(() => {
-      const delta = this.clockUI.getDelta()
-      this.character.shotControls.update(delta)
-      this.character.userPanel.update().catch((e) => new Error(e))
-
-      for (const player of this.playersControls) {
-        player.shotControls.update(delta)
-      }
-
-    }, 1000 / 30)
-    return this
-  }
-
-  /**
-   *
-   * @returns {Playground}
-   */
   updateCore() {
     this.status.update()
     const delta = this.clockCore.getDelta()
     this.character.update(delta)
+    this.character.shotControls.update(delta)
+    this.character.userPanel.update()
+
     for (const player of this.playersControls) {
       player.update(delta)
+      player.shotControls.update(delta)
     }
     const position = this.character.model.position
     this.sectorControls.update(delta, position)

@@ -28,7 +28,7 @@ class UserPanelIndicator {
      *
      * @type {number}
      */
-    this.indicatorHeight = 6
+    this.indicatorHeight = 8
 
     /**
      *
@@ -46,20 +46,20 @@ class UserPanelIndicator {
       {
         key: 1,
         color: '#F00',
-        label: 'Healthy:',
+        label: 'Shell:',
         entity: () => this.character.spaceship.getShell()
       },
       {
         key: 2,
         color: 'rgb(250, 200, 60)',
-        label: 'Shell energy:',
-        entity: () => this.character.spaceship.getArmor()
+        label: 'Ship energy:',
+        entity: () => this.character.spaceship.getShipEnergy()
       },
       {
         key: 3,
         color: 'rgb(250, 250, 250)',
         label: 'Shot energy:',
-        entity: () => this.character.spaceship.getEnergy()
+        entity: () => this.character.spaceship.getGunEnergy()
       },
     ]
   }
@@ -69,16 +69,16 @@ class UserPanelIndicator {
    * @param {number} left
    * @param {number} top
    * @param {number} indicatorWidth
-   * @returns {Promise<void>}
+   * @returns {void}
    */
-  async draw(left, top, indicatorWidth) {
+  draw(left, top, indicatorWidth) {
     for (let i = 0; i < this.options.length; i++) {
       const item = this.options[i]
       const x = left
       const y = top + i * (this.indicatorHeight + this.indicatorMargin)
 
       const indicator = new Indicator(this.canvas)
-      await indicator
+      indicator
         .horizontalLForm(x, y, indicatorWidth, this.indicatorHeight, this.labelWidth, item.label)
         .setBorder(2, 'rgb(2, 145, 145)')
         .setIndicatorColor(item.color)
@@ -95,12 +95,12 @@ class UserPanelIndicator {
   /**
    *
    * @param {Array.<number>} keys - possible values (1 - Healthy, 2 - Armor, 3 - Energy)
-   * @returns {Promise<UserPanelIndicator>|void}
+   * @returns {UserPanelIndicator}
    */
-  async update(keys = []) {
+  update(keys = []) {
     if (keys.length === 0) {
       for (const item of this.indicators) {
-        await item.indicator.build()
+        item.indicator.build()
       }
     } else {
       for (const key of keys) {
@@ -110,7 +110,7 @@ class UserPanelIndicator {
         if (!indicator) {
           continue
         }
-        await indicator.indicator.build()
+        indicator.indicator.build()
       }
     }
     return this

@@ -139,10 +139,11 @@ class CharacterControls extends ModelSpaceship {
 
   /**
    *
-   * @returns {Promise<void>}
+   * @returns {CharacterControls}
    */
-  async buildPanel() {
-    await this.userPanel.draw()
+  buildPanel() {
+    this.userPanel.draw()
+    return this
   }
 
   /**
@@ -163,6 +164,14 @@ class CharacterControls extends ModelSpaceship {
   update(delta) {
     if (this.enabled) {
       super.update(delta)
+      super.restoreShell(delta, () => {
+        // Обновить индикаторы брони корпуса
+        this.userPanel.panelIndicator.update([1])
+      })
+      super.restoreEnergy(delta, () => {
+        // Обновить индикаторы енергии
+        this.userPanel.panelIndicator.update([2, 3])
+      })
     }
   }
 
@@ -200,7 +209,7 @@ class CharacterControls extends ModelSpaceship {
    * @param {Model} model
    * @returns {CharacterControls}
    */
-  async assignSlotOnTarget(slots, model) {
+  assignSlotOnTarget(slots, model) {
     for (const slot of slots) {
       slot.setStatus(Slot.STATUS_ACTIVE)
     }
@@ -211,10 +220,10 @@ class CharacterControls extends ModelSpaceship {
 
     if (modelTarget) {
       // Если цель выбрана нужно обновить слоты и перегенерить цель
-      await modelTarget.addSlots(slots).draw()
+      modelTarget.addSlots(slots).draw()
     } else {
       // Создать и запомнить цель
-      const modelTarget = await new ModelTarget(model, slots).draw()
+      const modelTarget = new ModelTarget(model, slots).draw()
       this.targets.push(modelTarget)
     }
     return this
@@ -228,7 +237,7 @@ class CharacterControls extends ModelSpaceship {
    * @returns {void}
    */
   panelMouseClick(mouseEvent, mouseButton) {
-    this.userPanel.panelShot.onMouseClick(mouseEvent, async (slot) => {
+    this.userPanel.panelShot.onMouseClick(mouseEvent, (slot) => {
       if (this.selectedSlots.indexOf(slot) === -1 && mouseButton === 'left') {
         slot.setStatus(Slot.STATUS_SELECTED)
         this.selectedSlots.push(slot)
@@ -237,7 +246,7 @@ class CharacterControls extends ModelSpaceship {
         this.removeSelectedSlot(slot)
       }
       for (const modelTarget of this.targets) {
-        await modelTarget.removeSlot(slot).draw()
+        modelTarget.removeSlot(slot).draw()
       }
     })
   }
@@ -264,9 +273,11 @@ class CharacterControls extends ModelSpaceship {
     if (shotEnabled) {
       this.eachSlot((slot, target) => {
         const spendEnergy = slot.particle.energy
-        const energy = this.getEnergy()
-        if (energy.isEnergy(spendEnergy)) {
-          energy.reduce(spendEnergy)
+
+        const gunEnergy = this.getGunEnergy()
+        if (gunEnergy.isEnergy(spendEnergy)) {
+          const groupEnergy = this.getGroupEnergy()
+          groupEnergy.reduceGunEnergy(spendEnergy)
           this.shotControls.shot(slot, target.model)
           this.userPanel.panelIndicator.update([3])
         } else {

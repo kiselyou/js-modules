@@ -249,9 +249,9 @@ class Shape {
 
   /**
    *
-   * @returns {Promise<Shape>}
+   * @returns {Shape}
    */
-  async build() {
+  build() {
     this.clear()
     this._beforeBuild()
 
@@ -265,7 +265,7 @@ class Shape {
       shape.fill()
     }
     if (attr.backgroundImage) {
-      await this.loadImage(attr.backgroundImage)
+      this.loadImage(attr.backgroundImage)
         .then((img) => {
           const mg = attr.backgroundImagePadding
           shape.save()
@@ -290,7 +290,7 @@ class Shape {
     }
 
     for (const childrenShape of this.childrenShape) {
-      await childrenShape.build()
+      childrenShape.build()
     }
 
     return this

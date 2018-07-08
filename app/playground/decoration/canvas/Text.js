@@ -168,7 +168,7 @@ class Text {
    * @return {Text}
    */
   clear() {
-    this.context.clearRect(this.attr.startX, this.attr.startY, this.attr.width, this.attr.height)
+    this.context.clearRect(this.attr.startX, this.attr.startY, this.attr.width +2, this.attr.height+2)
     return this
   }
 

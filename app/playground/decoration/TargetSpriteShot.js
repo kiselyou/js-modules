@@ -44,9 +44,9 @@ class TargetSpriteShot {
 
   /**
    *
-   * @returns {Promise<TargetSpriteShot>}
+   * @returns {TargetSpriteShot}
    */
-  async draw() {
+  draw() {
     const maxWidth = this.size * this.slots.length
     this.canvas.width = maxWidth
     this.canvas.height = this.size
@@ -65,7 +65,7 @@ class TargetSpriteShot {
         )
     }
 
-    await this.shapeTarget.build()
+    this.shapeTarget.build()
     return this
   }
 
@@ -73,8 +73,8 @@ class TargetSpriteShot {
    *
    * @returns {Sprite}
    */
-  async getSprite() {
-    await this.draw()
+  getSprite() {
+    this.draw()
     const numberTexture = new CanvasTexture(this.canvas)
     const spriteMaterial = new SpriteMaterial({ map: numberTexture })
     const sprite = new Sprite(spriteMaterial)

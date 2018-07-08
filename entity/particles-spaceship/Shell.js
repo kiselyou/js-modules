@@ -35,6 +35,90 @@ class Shell extends Particle {
         .setPercent(50)
         .setMin(15)
     ]
+
+    /**
+     * Размер восстановлния ед.
+     *
+     * @type {number}
+     */
+    this.restoreSize = 10
+
+    /**
+     * Скорость восстановлния милисек.
+     *
+     * @type {number}
+     */
+    this.restoreTime = 1000
+
+    /**
+     * Таймер для расчета запуска востановления
+     *
+     * @type {number}
+     * @private
+     */
+    this._timer = 0
+  }
+
+  /**
+   *
+   * @param {number} delta
+   * @param {Function} [onChangeCallback]
+   * @returns {Shell}
+   */
+  restore(delta, onChangeCallback) {
+    this.restoreTimer(delta, () => {
+      this.increase(this.restoreSize, onChangeCallback)
+    })
+    return this
+  }
+
+  /**
+   *
+   * @param {Number} delta
+   * @param {Function} restoreCallback
+   * @returns {Shell}
+   */
+  restoreTimer(delta, restoreCallback) {
+    this._timer += delta
+    if (this._timer * 1000 >= this.restoreTime) {
+      this._timer = 0
+      restoreCallback()
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @param {Function} [onIncreaseCallback]
+   * @return {Shell}
+   */
+  increase(value, onIncreaseCallback) {
+    const rememberState = this.state
+    let state = value * 100 / this.size
+    const frontValue = this.state + state
+    this.state = frontValue > 100 ? 100 : this.state + state
+    if (onIncreaseCallback && rememberState < this.state) {
+      onIncreaseCallback()
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @param {Function} [onReduceCallback]
+   * @return {Shell}
+   */
+  reduce(value, onReduceCallback) {
+    const rememberState = this.state
+    let state = value * 100 / this.size
+    this.state = (this.state - state < 0) ? 0 : this.state - state
+
+    if (onReduceCallback && rememberState > this.state) {
+      onReduceCallback()
+    }
+    return this
   }
 
   /**
@@ -79,27 +163,6 @@ class Shell extends Particle {
   /**
    *
    * @param {number} value
-   * @return {Shell}
-   */
-  increase(value) {
-    let state = value * 100 / this.size
-    this.state += (this.state + state > 100) ? 100 : state
-  }
-
-  /**
-   *
-   * @param {number} value
-   * @return {Shell}
-   */
-  reduce(value) {
-    let state = value * 100 / this.size
-    this.state -= (this.state - state < 0) ? 0 : state
-    return this
-  }
-
-  /**
-   *
-   * @param {number} value
    * @return {boolean}
    */
   isShell(value) {
@@ -111,7 +174,7 @@ class Shell extends Particle {
    *
    * @param {Object|null} data - if is null then values will be reset to null
    * @param {Array} [except]
-   * @returns {Armor}
+   * @returns {Shell}
    */
   copy(data, except = []) {
     super.copy(data, except.concat(['damage']))

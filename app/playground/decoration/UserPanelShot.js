@@ -48,9 +48,9 @@ class UserPanelShot {
    *
    * @param {number} [left]
    * @param {number} [top]
-   * @returns {Promise<UserPanelShot>}
+   * @returns {UserPanelShot}
    */
-  async draw(left = 0, top = 0) {
+  draw(left = 0, top = 0) {
     const slots = this.character.spaceship.getSlotsByType(Slot.TYPE_GUN)
 
     const size = this.size - this.margin * 2
@@ -63,23 +63,23 @@ class UserPanelShot {
         })
 
       if (slot) {
-        slot.onChangeStatus(async (slot) => {
+        slot.onChangeStatus((slot) => {
           switch (slot.status) {
             case Slot.STATUS_ACTIVE:
-              await shape
+              shape
                 .setBackground('rgb(50, 50, 50)')
                 .setBorder(2, 'rgb(0, 85, 85)')
                 .build()
               break;
             case Slot.STATUS_SELECTED:
-              await shape
+              shape
                 .setBackground('rgb(21, 21, 21)')
                 .setBorder(2, 'rgb(205, 205, 205)')
                 .build()
               break;
             case Slot.STATUS_ENABLED:
             default:
-              await shape
+              shape
                 .setBackground('rgb(21, 21, 21)')
                 .setBorder(2, 'rgb(2, 145, 145)')
                 .build()
@@ -97,7 +97,7 @@ class UserPanelShot {
           .setBackground('rgba(21, 21, 21, 0.6)')
       }
 
-      await shape.build()
+      shape.build()
     }
 
     return this
@@ -117,7 +117,7 @@ class UserPanelShot {
    */
   onMouseClick(event, clickCallback) {
     for (const button of this.buttons) {
-      button.shape.onClickEvent(event, async (shape) => {
+      button.shape.onClickEvent(event, (shape) => {
         clickCallback(button.slot, shape)
       })
     }

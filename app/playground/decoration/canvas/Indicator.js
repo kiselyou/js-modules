@@ -39,7 +39,7 @@ class Indicator extends Shape {
      * @type {Text}
      */
     this.indicatorPercent = new Text(this.canvas)
-    this.indicatorPercent.attr.setWidth(40)
+    this.indicatorPercent.attr.setWidth(45)
     this.indicatorPercent.setFontSize('9px').setFontColor('rgb(2, 145, 145)')
 
     /**
@@ -58,7 +58,22 @@ class Indicator extends Shape {
      *
      * @type {number}
      */
-    this.percentDigits = 0
+    this.percentDigits = 1
+  }
+
+  /**
+   *
+   * @param {number} weight
+   * @param {string} [color]
+   * @returns {Shape}
+   */
+  setBorder(weight, color) {
+    this.attr.width -= weight + 2
+    this.attr.height -= weight
+    this.attr.startX += weight + 2
+    this.attr.startY += weight
+    super.setBorder(weight, color)
+    return this
   }
 
   /**
@@ -110,6 +125,16 @@ class Indicator extends Shape {
    */
   reduce(value) {
     this.percent -= (this.percent - value) < 0 ? 0 : value
+    return this
+  }
+
+  /**
+   *
+   * @returns {Indicator}
+   */
+  clear() {
+    this.indicatorLabel.clear()
+    this.indicatorPercent.clear()
     return this
   }
 
@@ -175,30 +200,25 @@ class Indicator extends Shape {
     return this
   }
 
-  clear() {
-    this.indicatorLabel.clear()
-    this.indicatorPercent.clear()
-    return this
-  }
-
   /**
    *
-   * @return {Promise<Indicator>}
+   * @return {Indicator}
    */
-  async build() {
+  build() {
     const attr = this.attr
-    const borderWeight = Math.abs(attr.borderWeight)
-    const x = attr.startX + borderWeight / 2
-    const y = attr.startY + borderWeight / 2
+    const x = attr.startX
+    const y = attr.startY
 
-    const percent = (attr.width - borderWeight) * this.percent / 100
+    const mg = attr.borderWeight
+
+    const percent = (attr.width - attr.borderWeight * 2) * this.percent / 100
     const showIndicatorValue = this.percent.toFixed(this.percentDigits)
 
     this.indicator
       .setBackground(this.indicatorColor)
-      .squareForm(x, y, percent, attr.height - borderWeight, attr.radius / 2)
+      .squareForm(x + mg, y + mg / 2, percent, attr.height - attr.borderWeight, attr.radius / 2)
 
-    await super.build()
+    super.build()
 
     if (this.indicatorLabel.attr.width > 0) {
       this.indicatorPercent.attr.setText(`${showIndicatorValue}%`)

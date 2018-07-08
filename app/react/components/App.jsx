@@ -265,7 +265,6 @@ class App extends React.Component {
   }
 
   render() {
-
     const models = this.props.defaultModels.map((item, i) => {
       return {
         value: item.id,
@@ -290,17 +289,19 @@ class App extends React.Component {
         { this.state.processLoad && <AsyncLoader size={AsyncLoader.SIZE_SM}/> }
 
         { this.props.user.isAuthorized && this.state.showBtnPlay &&
-          <div className={styles.app}>
-            <div className={styles.start}>
-
-              <Button onclick={() => {
-                this.setState({ showBtnPlay: false, processLoad: true })
-                this.props.onPlay(this.props.user, () => {
-                  this.setState({ processLoad: false })
-                })
-              }} height={'40px'} width={'220px'}>
-                Play
-              </Button>
+          <div>
+            <div>User: { this.props.user.email }</div>
+            <div className={styles.app}>
+              <div className={styles.start}>
+                <Button onclick={() => {
+                  this.setState({ showBtnPlay: false, processLoad: true })
+                  this.props.onPlay(this.props.user, () => {
+                    this.setState({ processLoad: false })
+                  })
+                }} height={'40px'} width={'220px'}>
+                  Play
+                </Button>
+              </div>
             </div>
           </div>
         }

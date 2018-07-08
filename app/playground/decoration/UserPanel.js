@@ -53,48 +53,48 @@ class UserPanel {
 
   /**
    *
-   * @return {Promise<UserPanel>}
+   * @return {UserPanel}
    */
-  async drawIndicatorPanel() {
+  drawIndicatorPanel() {
     const top = 46
     const left = this.panelShot.margin
     const width = (this.panelShot.maxCount * this.panelShot.size) - (this.panelShot.margin * 2)
-    await this.panelIndicator.draw(left, top, width)
+    this.panelIndicator.draw(left, top, width)
     return this
   }
 
   /**
    *
-   * @return {Promise<UserPanel>}
+   * @return {UserPanel}
    */
-  async drawSpeedPanel() {
+  drawSpeedPanel() {
     const top = this.panelShot.margin
     const left = (this.panelShot.maxCount * this.panelShot.size) + this.panelShot.margin
-    await this.panelSpeed.draw(left, top, this.panelShot.margin)
+    this.panelSpeed.draw(left, top, this.panelShot.margin)
     return this
   }
 
   /**
    *
-   * @return {Promise<UserPanel>}
+   * @return {UserPanel}
    */
-  async drawShotPanel() {
-    await this.panelShot.draw(0, 0)
+  drawShotPanel() {
+    this.panelShot.draw(0, 0)
   }
 
-  async draw() {
+  draw() {
     this.prepareCanvas()
-    await this.drawIndicatorPanel()
-    await this.drawShotPanel()
-    await this.drawSpeedPanel()
+    this.drawIndicatorPanel()
+    this.drawShotPanel()
+    this.drawSpeedPanel()
   }
 
   /**
    *
-   * @returns {Promise<UserPanel>}
+   * @returns {UserPanel}
    */
-  async update() {
-    await this.panelSpeed.update()
+  update() {
+    this.panelSpeed.update()
     return this
   }
 }

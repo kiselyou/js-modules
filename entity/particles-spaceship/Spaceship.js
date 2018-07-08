@@ -1,5 +1,7 @@
 import Slot from './Slot'
+import Shell from './Shell'
 import Particle from './../Particle'
+import EnergyGroup from './EnergyGroup'
 
 class Spaceship extends Particle {
   constructor() {
@@ -10,6 +12,52 @@ class Spaceship extends Particle {
      * @type {Array.<Slot>}
      */
     this.slot = []
+
+    /**
+     *
+     * @type {EnergyGroup}
+     */
+    this.energyGroup = new EnergyGroup()
+
+    /**
+     *
+     * @type {Shell}
+     */
+    this.shell = new Shell()
+  }
+
+  /**
+   * @returns {void}
+   */
+  async beforeStart() {
+    this
+      .updateEnergy()
+      .updateShell()
+  }
+
+  /**
+   *
+   * @returns {Spaceship}
+   */
+  updateEnergy() {
+    const slots = this.getSlotsByType(Slot.TYPE_ENERGY)
+    for (const slot of slots) {
+      this.energyGroup
+        .restoreEnergy(slot.particle)
+        .addEnergy(slot.particle)
+    }
+    this.energyGroup.updateEnergy()
+    return this
+  }
+
+  /**
+   *
+   * @returns {Spaceship}
+   */
+  updateShell() {
+    const shell = this.getParticleByType(Slot.TYPE_SHELL)
+    this.shell.copy(shell)
+    return this
   }
 
   /**
@@ -49,20 +97,6 @@ class Spaceship extends Particle {
       }
     }
     return this
-  }
-
-  /**
-   *
-   * @param {string} slotId
-   * @returns {Slot|?}
-   */
-  getSlotById(slotId) {
-    for (const slot of this.slot) {
-      if (slot.id === slotId) {
-        return slot
-      }
-    }
-    return null
   }
 
   /**
@@ -120,6 +154,14 @@ class Spaceship extends Particle {
 
   /**
    *
+   * @returns {Shell}
+   */
+  getShell() {
+    return this.shell
+  }
+
+  /**
+   *
    * @returns {Engine|?}
    */
   getEngine() {
@@ -130,42 +172,44 @@ class Spaceship extends Particle {
    *
    * @returns {Armor|?}
    */
-  getArmor() {
-    return this.getParticleByType(Slot.TYPE_ARMOR)
-  }
-
-  /**
-   *
-   * @returns {Shell|?}
-   */
-  getShell() {
-    return this.getParticleByType(Slot.TYPE_SHELL)
+  getShipEnergy() {
+    return this.energyGroup.shipEnergy
   }
 
   /**
    *
    * @returns {Particle|?}
    */
-  getEnergy() {
-    return this.getParticleByType(Slot.TYPE_ENERGY)
+  getGunEnergy() {
+    return this.energyGroup.gunEnergy
   }
 
   /**
    *
-   * @param {string} id
-   * @returns {Shell|?}
+   * @returns {EnergyGroup}
    */
-  getGunBySlotId(id) {
-    const slots = this.getSlotById(id)
-    return slots ? slots.particle : null
+  getGroupEnergy() {
+    return this.energyGroup
   }
 
   /**
    *
-   * @returns {Array.<Gun>}
+   * @param {Number} delta
+   * @param {Function} [onChangeCallback]
+   * @returns {void}
    */
-  getGuns() {
-    return this.getParticlesByType(Slot.TYPE_GUN)
+  restoreEnergy(delta, onChangeCallback) {
+    this.energyGroup.restoreEnergy(delta, onChangeCallback)
+  }
+
+  /**
+   *
+   * @param {Number} delta
+   * @param {Function} [onChangeCallback]
+   * @returns {void}
+   */
+  restoreShell(delta, onChangeCallback) {
+    this.shell.restore(delta, onChangeCallback)
   }
 }
 

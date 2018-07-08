@@ -67,22 +67,31 @@ class ModelSpaceship extends Player {
    *
    * @returns {Energy|?}
    */
-  getEnergy() {
-    return this.spaceship.getEnergy()
+  getShipEnergy() {
+    return this.spaceship.getShipEnergy()
   }
 
   /**
    *
-   * @returns {Armor|?}
+   * @returns {Energy|?}
    */
-  getArmor() {
-    return this.spaceship.getArmor()
+  getGunEnergy() {
+    return this.spaceship.getGunEnergy()
+  }
+
+  /**
+   *
+   * @returns {Energy|?}
+   */
+  getGroupEnergy() {
+    return this.spaceship.getGroupEnergy()
   }
 
   /**
    * @returns {void}
    */
   async beforeStart() {
+    await this.spaceship.beforeStart()
     await this.buildModel()
   }
 
@@ -116,6 +125,26 @@ class ModelSpaceship extends Player {
   copy(data, except = []) {
     super.copy(data, except)
     return this
+  }
+
+  /**
+   *
+   * @param {Number} delta
+   * @param {Function} [onChangeCallback]
+   * @returns {void}
+   */
+  restoreEnergy(delta, onChangeCallback) {
+    this.spaceship.restoreEnergy(delta, onChangeCallback)
+  }
+
+  /**
+   *
+   * @param {Number} delta
+   * @param {Function} [onChangeCallback]
+   * @returns {void}
+   */
+  restoreShell(delta, onChangeCallback) {
+    this.spaceship.restoreShell(delta, onChangeCallback)
   }
 
   /**

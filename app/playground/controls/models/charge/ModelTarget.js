@@ -58,15 +58,15 @@ class ModelTarget {
    * Создает новый спрайт предварительно удаляя старый.
    * Если количество слотов 0 - то старый спрайт будет удален а новый построен не будет.
    *
-   * @returns {Promise<ModelTarget>}
+   * @returns {ModelTarget}
    */
-  async draw() {
+  draw() {
     if (this.sprite) {
       this.model.remove(this.sprite)
     }
     if (this.slots.length > 0) {
       const size = DetectObject3D.size(this.model)
-      this.sprite = await new TargetSpriteShot(this.slots).getSprite()
+      this.sprite = new TargetSpriteShot(this.slots).getSprite()
       this.sprite.position.y = (size.y / 2 + 2)
       this.model.add(this.sprite)
     }

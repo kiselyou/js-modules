@@ -123,7 +123,7 @@ class ShotControls {
           const charge = swapInfo['charge']
           const damageSize = randInt(charge['damageMin'], charge['damageMax'])
 
-          const armor = controls.getArmor()
+          const armor = controls.getGroupEnergy()
           const armorDamage = armor.getDamage(charge['type'])
           const damageArmorSize = armorDamage.getSize(damageSize)
 
@@ -132,8 +132,8 @@ class ShotControls {
 
 
           let damageShellSize = 0
-          if (armor.isArmor(damageArmorSize)) {
-            armor.reduce(damageArmorSize)
+          if (armor.isEnergy(damageArmorSize)) {
+            armor.reduceShipEnergy(damageArmorSize)
             damageShellSize = shellDamage.getSize(damageArmorSize)
           } else {
             damageShellSize = shellDamage.getSize(damageSize)
