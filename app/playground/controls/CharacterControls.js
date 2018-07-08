@@ -93,7 +93,12 @@ class CharacterControls extends ModelSpaceship {
         if (element.id === this.model.id && excludeCurrent) {
           continue
         }
-        models.push(element)
+
+        const distance = element.position.distanceTo(this.model.position)
+        //TODO 3000 - Радиус действия радара (нудно содать радар)
+        if (distance < 3000) {
+          models.push(element)
+        }
       }
     }
     return models
@@ -176,16 +181,6 @@ class CharacterControls extends ModelSpaceship {
   }
 
   /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  updateTooltip(intersect, mouseEvent) {
-
-  }
-
-  /**
    * Удалить слоты из списка выбранных.
    *
    * @param {Slot} slot
@@ -258,7 +253,7 @@ class CharacterControls extends ModelSpaceship {
    * @param {MouseEvent} mouseEvent
    * @returns {void}
    */
-  onMouseClick(intersect, mouseEvent) {
+  onLeftMouseClick(intersect, mouseEvent) {
     let shotEnabled = true
     if (this.selectedSlots.length > 0) {
       const models = this.getModels()

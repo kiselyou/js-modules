@@ -16,6 +16,12 @@ class Particle {
      *
      * @type {?string}
      */
+    this.categoryName = null
+
+    /**
+     *
+     * @type {?string}
+     */
     this.catalogId = null
 
     /**
@@ -48,6 +54,16 @@ class Particle {
    */
   setCatalogId(id) {
     this.catalogId = id
+    return this
+  }
+
+  /**
+   *
+   * @param {string} value
+   * @returns {Particle}
+   */
+  setCategoryName(value) {
+    this.categoryName = value
     return this
   }
 

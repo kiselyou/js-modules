@@ -104,6 +104,7 @@ class ModelSpaceship extends Player {
     const model = this.loader.getModel(shell.modelKey)
     this.model.build(model, this.id)
     this.model.position.copy(this.position)
+    this.model.setReference(this.spaceship)
     return this
   }
 

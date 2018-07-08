@@ -30,6 +30,7 @@ class Spaceship extends Particle {
    * @returns {void}
    */
   async beforeStart() {
+    this.setCategoryName('Spaceship')
     this
       .updateEnergy()
       .updateShell()

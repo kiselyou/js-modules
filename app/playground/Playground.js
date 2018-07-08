@@ -4,7 +4,7 @@ import {
   WebGLRenderer,
   Clock,
   MOUSE,
-  PCFSoftShadowMap, Math as tMath,
+  PCFSoftShadowMap, Math as tMath, Vector3, Vector2,
 } from 'three'
 
 import SpaceParticleControls from './controls/SpaceParticleControls'
@@ -18,6 +18,7 @@ import ParticlePlayGround from '@entity/ParticlePlayGround'
 import ParticlePlayer from '@entity/ParticlePlayer'
 import EventControls from './controls/EventControls'
 import Ajax from '@helper/ajax/Ajax'
+import Tooltip from './decoration/html/Tooltip'
 
 import DebugPanelShip from './debug/DebugPanelShip'
 import StatusFPS from './debug/StatusFPS'
@@ -159,6 +160,12 @@ class Playground {
      * @type {StatusFPS}
      */
     this.status = new StatusFPS()
+
+    /**
+     *
+     * @type {Tooltip}
+     */
+    this.tooltip = new Tooltip(this)
   }
 
   /**
@@ -307,7 +314,9 @@ class Playground {
   updateCore() {
     this.status.update()
     const delta = this.clockCore.getDelta()
+
     this.character.update(delta)
+
     this.character.shotControls.update(delta)
     this.character.userPanel.update()
 
@@ -319,6 +328,8 @@ class Playground {
     this.sectorControls.update(delta, position)
     this.lightControls.update(delta, position)
     this.spaceParticleControls.update(delta)
+    this.tooltip.update()
+
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.updateCore()
@@ -355,8 +366,6 @@ class Playground {
    */
   onMouseMove(e) {
     this.intersect.updateMouse(e)
-    this.character.updateTooltip(this.intersect, e)
-    this.sectorControls.updateTooltip(this.intersect, e)
   }
 
   /**
@@ -364,10 +373,25 @@ class Playground {
    * @param {MouseEvent} e
    * @returns {void}
    */
-  onMouseClick(e) {
+  onLeftMouseClick(e) {
     this.intersect.updateMouse(e)
-    this.sectorControls.onClick(this.intersect, e)
-    this.character.onMouseClick(this.intersect, e)
+    this.character.onLeftMouseClick(this.intersect, e)
+  }
+
+  /**
+   *
+   * @param {MouseEvent} e
+   * @returns {void}
+   */
+  onRightMouseClick(e) {
+    this.intersect.updateMouse(e)
+    const models = this.character.getModels(false)
+    const intersection = this.intersect.findIntersection(models, false, 3000)
+    if (intersection.length > 0) {
+      this.tooltip.draw(intersection[0]['object'])
+    } else {
+      this.tooltip.remove()
+    }
   }
 
   /**
@@ -400,6 +424,9 @@ class Playground {
         break
       case 32://Space
         this.character.moveControls.enableSlowdown(true)
+        break
+      case 27:
+        this.tooltip.remove()
         break
       default:
         // console.log(e, 'def')
@@ -439,7 +466,9 @@ class Playground {
    */
   registrationEvents() {
     this.renderer.domElement.addEventListener('mousemove', (mouseEvent) => this.onMouseMove(mouseEvent), false);
-    this.renderer.domElement.addEventListener('click', (mouseEvent) => this.onMouseClick(mouseEvent), false);
+    this.renderer.domElement.addEventListener('click', (mouseEvent) => this.onLeftMouseClick(mouseEvent), false);
+    this.renderer.domElement.addEventListener('contextmenu', (mouseEvent) => this.onRightMouseClick(mouseEvent), false);
+
     window.addEventListener('keydown', (keyboardEvent) => this.onKeyDown(keyboardEvent), false);
     window.addEventListener('keyup', (keyboardEvent) => this.onKeyUp(keyboardEvent), false);
     window.addEventListener('resize', () => this.onWindowResize(), false)

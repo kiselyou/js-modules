@@ -85,6 +85,7 @@ class ModelPlanet extends Planet {
     }
 
     this.model.build(this.mesh, this.id)
+    this.model.setReference(this)
     this.scene.add(this.model)
     return this
   }
@@ -153,6 +154,7 @@ class ModelPlanet extends Planet {
    * @returns {void}
    */
   async beforeStart(loader) {
+    this.setCategoryName('Planet')
     this.buildModel()
     this.calculatePosition(0)
   }
@@ -197,26 +199,6 @@ class ModelPlanet extends Planet {
     this.model.position.setX(x + this.distanceToCenter * Math.cos(this.angleToCenter))
     this.model.position.setZ(z + this.distanceToCenter * Math.sin(this.angleToCenter))
     return this
-  }
-
-  /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  updateTooltip(intersect, mouseEvent) {
-
-  }
-
-  /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  onClick(intersect, mouseEvent) {
-
   }
 }
 

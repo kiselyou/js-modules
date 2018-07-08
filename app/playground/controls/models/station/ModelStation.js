@@ -32,10 +32,11 @@ class ModelStation extends Station {
    *
    * @returns {void}
    */
-  buildMesh() {
+  buildModel() {
     const model = this.loader.getModel(this.modelKey)
     if (model) {
       this.model.build(model, this.id)
+      this.model.setReference(this)
       this.scene.add(this.model)
     } else {
       throw new Error('Couldn\'t find Asteroid model')
@@ -48,7 +49,8 @@ class ModelStation extends Station {
    * @returns {void}
    */
   async beforeStart(loader) {
-    this.buildMesh()
+    this.setCategoryName('Station')
+    this.buildModel()
   }
 
   /**
@@ -81,26 +83,6 @@ class ModelStation extends Station {
    */
   update(delta) {
     this.calculatePosition(delta)
-  }
-
-  /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  updateTooltip(intersect, mouseEvent) {
-
-  }
-
-  /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  onClick(intersect, mouseEvent) {
-
   }
 }
 

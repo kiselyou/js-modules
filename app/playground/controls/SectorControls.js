@@ -114,30 +114,6 @@ class SectorControls {
 
   /**
    *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  updateTooltip(intersect, mouseEvent) {
-    this.planetsControls.updateTooltip(intersect, mouseEvent)
-    this.stationControls.updateTooltip(intersect, mouseEvent)
-    this.asteroidControls.updateTooltip(intersect, mouseEvent)
-  }
-
-  /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  onClick(intersect, mouseEvent) {
-    this.planetsControls.onClick(intersect, mouseEvent)
-    this.stationControls.onClick(intersect, mouseEvent)
-    this.asteroidControls.onClick(intersect, mouseEvent)
-  }
-
-  /**
-   *
    * @returns {LightControls}
    */
   get lightControls() {
