@@ -1,4 +1,6 @@
 import Particle from './../Particle'
+import { Euler, Vector3 } from 'three'
+import { KEY_ASTEROID_1 } from './../../app/constants'
 
 class Asteroid extends Particle {
   constructor() {
@@ -30,9 +32,57 @@ class Asteroid extends Particle {
 
     /**
      *
-     * @type {string|?}
+     * @type {string}
      */
-    this.modelKey = null
+    this.modelKey = KEY_ASTEROID_1
+
+    /**
+     *
+     * @type {Euler}
+     */
+    this.rotation = new Euler()
+
+    /**
+     *
+     * @type {Vector3}
+     */
+    this.position = new Vector3()
+
+    /**
+     *
+     * @type {Vector3}
+     */
+    this.scale = new Vector3(1, 1, 1)
+  }
+
+  /**
+   *
+   * @param {Euler} e
+   * @returns {Asteroid}
+   */
+  setRotation(e) {
+    this.rotation.copy(e)
+    return this
+  }
+
+  /**
+   *
+   * @param {Vector3} v
+   * @returns {Asteroid}
+   */
+  setScale(v) {
+    this.scale.copy(v)
+    return this
+  }
+
+  /**
+   *
+   * @param {Vector3} v
+   * @returns {Asteroid}
+   */
+  setPosition(v) {
+    this.position.copy(v)
+    return this
   }
 
   /**

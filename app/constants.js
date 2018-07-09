@@ -40,6 +40,7 @@ export const KEY_STATION_2 = 'KEY_STATION_2'
 export const KEY_ASTEROID_1 = 'KEY_ASTEROID_1'
 export const KEY_ASTEROID_2 = 'KEY_ASTEROID_2'
 export const KEY_ASTEROID_3 = 'KEY_ASTEROID_3'
+export const KEY_ASTEROID_4 = 'KEY_ASTEROID_4'
 
 export const KEY_SPACESHIP_1 = 'KEY_SPACESHIP_1'
 export const KEY_SPACESHIP_2 = 'KEY_SPACESHIP_2'

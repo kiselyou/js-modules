@@ -28,7 +28,7 @@ class LightControls {
      *
      * @type {boolean}
      */
-    this.pointLightMoveWithModel = true
+    this.pointLightMoveWithModel = false
 
     /**
      *

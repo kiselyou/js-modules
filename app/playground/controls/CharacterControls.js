@@ -86,7 +86,7 @@ class CharacterControls extends ModelSpaceship {
    *
    * @returns {Array.<Model>}
    */
-  getModels(excludeCurrent = true) {
+  getModels(excludeCurrent = true, maxDistance = 3000) {
     const models = []
     for (const element of this.scene.children) {
       if (element instanceof Model) {
@@ -95,8 +95,7 @@ class CharacterControls extends ModelSpaceship {
         }
 
         const distance = element.position.distanceTo(this.model.position)
-        //TODO 3000 - Радиус действия радара (нудно содать радар)
-        if (distance < 3000) {
+        if (distance < maxDistance) {
           models.push(element)
         }
       }

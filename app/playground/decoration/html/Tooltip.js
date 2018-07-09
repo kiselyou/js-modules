@@ -1,6 +1,16 @@
-import {Vector3, CanvasTexture, SpriteMaterial, Sprite} from "three";
+import {Vector3} from 'three'
 
-const template = (model) => {
+/**
+ *
+ * @param {{distance: number, face: Face3, faceIndex: number, object: Model, point: Vector3, uv: Vector2}} intersection
+ * @param {Playground} playground
+ * @returns {string}
+ */
+const template = (intersection, playground) => {
+
+  const model = intersection.object.reference
+  const position = intersection.object.position
+  const distance = playground.character.model.position.distanceTo(position)
   return `
     <div class="tooltip__content">
       <div class="tooltip__title">
@@ -10,6 +20,10 @@ const template = (model) => {
         <b>Description: </b>
         ${model.description || ''}
       </div>
+      <b>Distance: </b>${distance.toFixed(0)}<br/>
+      <b>Position: </b>
+      x - ${position.x.toFixed(0)}, 
+      z - ${position.z.toFixed(0)}
     </div>
   `
 }
@@ -40,9 +54,9 @@ class Tooltip {
 
     /**
      *
-     * @type {?Model}
+     * @type {?{distance: number, face: Face3, faceIndex: number, object: Model, point: Vector3, uv: Vector2}}
      */
-    this.model = null
+    this.intersection = null
 
     /**
      *
@@ -56,8 +70,8 @@ class Tooltip {
    * @returns {?Vector3}
    */
   getPosition() {
-    if (this.model) {
-      const vector = this.position.copy(this.model.position)
+    if (this.intersection) {
+      const vector = this.position.copy(this.intersection.object.position)
       const canvas = this.playground.renderer.domElement;
       vector.project(this.playground.camera);
       vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
@@ -69,13 +83,13 @@ class Tooltip {
 
   /**
    *
-   * @param {Model} value
+   * @param {{distance: number, face: Face3, faceIndex: number, object: Model, point: Vector3, uv: Vector2}} value
    * @returns {Tooltip}
    */
   draw(value) {
-    this.model = value
+    this.intersection = value
     this.visible = true
-    this.template.innerHTML = template(this.model.reference)
+    this.template.innerHTML = template(this.intersection, this.playground)
     document.body.appendChild(this.template)
     return this
   }
@@ -87,6 +101,7 @@ class Tooltip {
   remove() {
     if (this.visible) {
       this.visible = false
+      this.intersection = null
       document.body.removeChild(this.template)
     }
     return this
@@ -102,7 +117,7 @@ class Tooltip {
 
       // Проверить находится ли объект поле видимости камеры
       const mousePosition = this.playground.intersect.prepareMousePosition(v.x, v.y)
-      const intersection = this.playground.intersect.findMouseIntersection(mousePosition.x, mousePosition.y, [this.model])
+      const intersection = this.playground.intersect.findMouseIntersection(mousePosition.x, mousePosition.y, [this.intersection.object])
 
       if (intersection.length === 0) {
         this.remove()

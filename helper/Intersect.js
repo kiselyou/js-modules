@@ -88,25 +88,18 @@ class Intersect {
    * @returns {Array}
    */
   findIntersection(elements, recursive = false, distance = Infinity) {
-    // this.dirrection.setX(this.mouse.x)
-    // this.dirrection.setY(this.mouse.y)
     return this.findMouseIntersection(this.mouse.x, this.mouse.y, elements, recursive, distance)
-    // this.dirrection.unproject(this.camera)
-    //
-    // this.rayStartFrom.copy(this.camera.position)
-    // this.rayStartFrom.add(this.gyroscope.parent.position)
-    // this.raycaster.ray.origin = this.rayStartFrom
-    // this.raycaster.far = distance
-    //
-    // this.raycaster.ray.direction = this.dirrection.sub(this.rayStartFrom).normalize()
-    //
-    // let intersects = []
-    // if (Array.isArray(elements)) {
-    //   intersects = this.raycaster.intersectObjects(elements, recursive)
-    // }
-    // return intersects
   }
 
+  /**
+   *
+   * @param {number} mouseX
+   * @param {number} mouseY
+   * @param {Array.<Mesh|Object3D>|Mesh|Object3D} elements
+   * @param {boolean} [recursive]
+   * @param {number} [distance]
+   * @returns {Array}
+   */
   findMouseIntersection(mouseX, mouseY, elements, recursive = false, distance = Infinity) {
     this.dirrection.setX(mouseX)
     this.dirrection.setY(mouseY)

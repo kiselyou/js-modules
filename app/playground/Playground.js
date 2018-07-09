@@ -385,10 +385,10 @@ class Playground {
    */
   onRightMouseClick(e) {
     this.intersect.updateMouse(e)
-    const models = this.character.getModels(false)
-    const intersection = this.intersect.findIntersection(models, false, 3000)
+    const models = this.character.getModels(false, 10000)
+    const intersection = this.intersect.findIntersection(models, false)
     if (intersection.length > 0) {
-      this.tooltip.draw(intersection[0]['object'])
+      this.tooltip.draw(intersection[0])
     } else {
       this.tooltip.remove()
     }

@@ -37,6 +37,9 @@ class ModelAsteroid extends Asteroid {
     if (model) {
       this.model.build(model, this.id)
       this.model.setReference(this)
+      this.model.scale.copy(this.scale)
+      this.model.position.copy(this.position)
+      this.model.rotation.copy(this.rotation)
       this.scene.add(this.model)
     } else {
       throw new Error('Couldn\'t find Asteroid model')
@@ -82,7 +85,7 @@ class ModelAsteroid extends Asteroid {
    * @returns {void}
    */
   update(delta) {
-    this.calculatePosition(delta)
+    // this.calculatePosition(delta)
   }
 }
 
