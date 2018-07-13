@@ -86,7 +86,7 @@ class CharacterControls extends ModelSpaceship {
    *
    * @returns {Array.<Model>}
    */
-  getModels(excludeCurrent = true, maxDistance = 3000) {
+  getModels(excludeCurrent = true, maxDistance = 15000) {
     const models = []
     for (const element of this.scene.children) {
       if (element instanceof Model) {
