@@ -1,5 +1,5 @@
 import ModelCharge from './models/charge/ModelCharge'
-import { Vector3, Raycaster } from 'three'
+import { Vector3, Raycaster, Math as M, Mesh, CubeGeometry, MeshBasicMaterial } from 'three'
 import { randInt } from '@helper/integer/Integer'
 
 class ShotControls {
@@ -181,13 +181,14 @@ class ShotControls {
    * @return {Vector3}
    */
   calculateShotDirection(slot, target, charge) {
+    const calculate = this.character.calculate
     switch (slot.particle.direction) {
       // Стрельба прямо
       case 'direct':
         return this.character.getDirection()
       // Стрельба по цели
       case 'target':
-        return this.character.calculate.getVectorDirection(charge.position, target.position)
+        return calculate.getVectorDirection(charge.position, target.position)
       // Стрельба с упреждением
       case 'deflection':
       default:
@@ -197,9 +198,30 @@ class ShotControls {
           const engine = controls.getEngine()
           targetSpeed = engine.speed
         }
-        const deflection = this.character.calculate.deflection(target, targetSpeed, charge, slot.particle.charge.speed)
-        return deflection.normalize()
+
+        const directTargetPosition = this.character.getNextPosition(slot.particle.charge.maxDistance)
+        const angle = calculate.angleBetween(this.character.model.position, target.position, directTargetPosition)
+
+        // стрельба в пределах радиуса
+        if (angle <= slot.particle.maxDeflection) {
+          const deflection = calculate.deflection(target, targetSpeed, charge, slot.particle.charge.speed)
+          return deflection.normalize()
+        }
+
+        return this.character.getDirection()
     }
+  }
+
+  /**
+   *
+   * @returns {number}
+   * @private
+   */
+  static angleDirection(a, b) {
+    // return Math.atan2(b.z - a.z, b.x - a.x);
+    let v = new Vector3();
+    v.subVectors(b, a);
+    return Math.atan2(v.z, v.x);
   }
 
   /**

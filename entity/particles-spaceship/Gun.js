@@ -35,7 +35,13 @@ class Gun extends Particle {
      *
      * @type {number}
      */
-    this.time = 1000
+    this.rechargeTime = 1000
+
+    /**
+     *
+     * @type {number}
+     */
+    this.maxDeflection = Math.PI / 4
   }
 
   /**
@@ -111,6 +117,7 @@ class Gun extends Particle {
   }
 
   /**
+   * Стрельба прямо
    *
    * @return {number}
    */
@@ -119,6 +126,7 @@ class Gun extends Particle {
   }
 
   /**
+   * Стрельба в сторону цели
    *
    * @return {number}
    */
@@ -127,6 +135,7 @@ class Gun extends Particle {
   }
 
   /**
+   * Стрельба в сторону цели с упреждением
    *
    * @return {number}
    */

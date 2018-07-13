@@ -115,10 +115,11 @@ class CharacterControls extends ModelSpaceship {
   /**
    * Get position of aim in world
    *
+   * @param {number} [distance]
    * @returns {Vector3}
    */
-  getTargetPosition() {
-    return this.calculate.getNextPosition(this.model, 150)
+  getNextPosition(distance = 150) {
+    return this.calculate.getNextPosition(this.model, distance)
   }
 
   /**
@@ -128,6 +129,15 @@ class CharacterControls extends ModelSpaceship {
    */
   getDirection() {
     return this.calculate.getDirection(this.model)
+  }
+
+  /**
+   *
+   * @param {Vector3} v
+   * @returns {number}
+   */
+  getDistanceTo(v) {
+    return this.model.position.distanceTo(v)
   }
 
   /**
@@ -267,7 +277,6 @@ class CharacterControls extends ModelSpaceship {
     if (shotEnabled) {
       this.eachSlot((slot, target) => {
         const spendEnergy = slot.particle.energy
-
         const gunEnergy = this.getGunEnergy()
         if (gunEnergy.isEnergy(spendEnergy)) {
           const groupEnergy = this.getGroupEnergy()
