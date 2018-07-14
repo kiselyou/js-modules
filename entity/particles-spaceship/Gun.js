@@ -31,17 +31,80 @@ class Gun extends Particle {
     this.energy = 10
 
     /**
-     * Время перезарядки
+     * Время перезарядки оружия
      *
      * @type {number}
      */
     this.rechargeTime = 1000
 
     /**
+     * Текущее состояние перезарядки оружия
+     *
+     * @type {number}
+     * @private
+     */
+    this.rechargeTimeState = 1000
+
+    /**
      *
      * @type {number}
      */
     this.maxDeflection = Math.PI / 4
+  }
+
+  /**
+   * Текущее состояние перезарядки в процентах
+   *
+   * @returns {number}
+   */
+  get rechargeStatePercent() {
+    return this.rechargeTimeState * 100 / this.rechargeTime
+  }
+
+  /**
+   *
+   * @param {Number} delta
+   * @param {Function} restoreCallback
+   * @returns {Gun}
+   */
+  restoreTimerState(delta, restoreCallback) {
+    if (this.rechargeTimeState < this.rechargeTime) {
+      this.increaseTimer(delta * 1000, restoreCallback)
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @param {Function} [onIncreaseCallback]
+   * @return {Gun}
+   */
+  increaseTimer(value, onIncreaseCallback) {
+    const rememberState = this.rechargeTimeState
+    const frontValue = this.rechargeTimeState + value
+    this.rechargeTimeState = frontValue > this.rechargeTime ? this.rechargeTime : frontValue
+    if (onIncreaseCallback && rememberState < this.rechargeTimeState) {
+      onIncreaseCallback(this)
+    }
+    return this
+  }
+
+  /**
+   *
+   * @returns {Gun}
+   */
+  discharge() {
+    this.rechargeTimeState = 0
+    return this
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  isRecharged() {
+    return this.rechargeTimeState === this.rechargeTime
   }
 
   /**
@@ -59,8 +122,19 @@ class Gun extends Particle {
    * @param {number} value
    * @return {Gun}
    */
-  setTime(value) {
-    this.time = value
+  setRechargeTime(value) {
+    this.rechargeTime = value
+    this.rechargeTimeState = value
+    return this
+  }
+
+  /**
+   *
+   * @param {Number} degree
+   * @returns {Gun}
+   */
+  setMaxDeflection(degree) {
+    this.maxDeflection = degree
     return this
   }
 
@@ -81,6 +155,46 @@ class Gun extends Particle {
    */
   copyCharge(data) {
     this.charge.copy(data)
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Gun}
+   */
+  setChargeSpeed(value) {
+    this.charge.speed = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Gun}
+   */
+  setDamageMin(value) {
+    this.charge.damageMin = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Gun}
+   */
+  setDamageMax(value) {
+    this.charge.damageMax = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Gun}
+   */
+  setMaxDistance(value) {
+    this.charge.maxDistance = value
     return this
   }
 

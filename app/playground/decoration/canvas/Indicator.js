@@ -38,15 +38,25 @@ class Indicator extends Shape {
      *
      * @type {Text}
      */
-    this.indicatorPercent = new Text(this.canvas)
-    this.indicatorPercent.attr.setWidth(45)
-    this.indicatorPercent.setFontSize('9px').setFontColor('rgb(2, 145, 145)')
+    this.indicatorLText = new Text(this.canvas)
+    this.indicatorLText.setFontSize('9px').setFontColor('rgb(2, 145, 145)')
 
     /**
      *
-     * @type {?string}
+     * @type {Text}
      */
-    this.label = null
+    this.indicatorRText = new Text(this.canvas)
+    this.indicatorRText.setFontSize('9px').setFontColor('rgb(2, 145, 145)')
+
+    /**
+     *
+     * @type {Text}
+     */
+    this.indicatorPercent = new Text(this.canvas)
+    this.indicatorPercent.attr.setWidth(45)
+    this.indicatorPercent
+      .setFontSize('9px')
+      .setFontColor('rgb(2, 145, 145)')
 
     /**
      *
@@ -63,15 +73,66 @@ class Indicator extends Shape {
 
   /**
    *
+   * @param {string|number} value
+   * @param {string} [fontSize]
+   * @param {string} [color]
+   * @returns {Indicator}
+   */
+  setLeftText(value, fontSize = '8px', color = '#000000') {
+    this.indicatorLText.attr.setText(value)
+    this.indicatorLText
+      .setHorizontalAlign('left')
+      .setVerticalAlign('middle')
+      .setFontSize(fontSize)
+      .setFontColor(color)
+    return this
+  }
+
+  /**
+   *
+   * @param {string|number} value
+   * @param {string} [fontSize]
+   * @param {string} [color]
+   * @returns {Indicator}
+   */
+  setRightText(value, fontSize = '8px', color = '#FFFFFF') {
+    this.indicatorRText.attr.setText(value)
+    this.indicatorRText
+      .setHorizontalAlign('right')
+      .setVerticalAlign('middle')
+      .setFontSize(fontSize)
+      .setFontColor(color)
+    return this
+  }
+
+  /**
+   * @param {Indicator} indicator
+   * @callback beforeBuildCallback
+   */
+
+  /**
+   *
+   * @param {beforeBuildCallback} value
+   * @returns {Indicator}
+   */
+  beforeBuild(value) {
+    super.beforeBuild(value)
+    return this
+  }
+
+  /**
+   *
    * @param {number} weight
    * @param {string} [color]
    * @returns {Shape}
    */
   setBorder(weight, color) {
-    this.attr.width -= weight + 2
-    this.attr.height -= weight
-    this.attr.startX += weight + 2
-    this.attr.startY += weight
+    if (weight > 0) {
+      this.attr.width -= weight + 2
+      this.attr.height -= weight
+      this.attr.startX += weight + 2
+      this.attr.startY += weight
+    }
     super.setBorder(weight, color)
     return this
   }
@@ -135,6 +196,23 @@ class Indicator extends Shape {
   clear() {
     this.indicatorLabel.clear()
     this.indicatorPercent.clear()
+    return this
+  }
+
+  /**
+   *
+   * @param {number} startX
+   * @param {number} startY
+   * @param {number} width
+   * @param {number} height
+   * @param {number} [border]
+   * @return {Indicator}
+   */
+  horizontalForm(startX, startY, width, height, border = 0) {
+    this.indicatorPercent.attr.setWidth(0)
+    this.indicator.setBorder(-1, 'transparent')
+    this.addShape(this.indicator)
+    this.squareForm(startX, startY, width, height, border)
     return this
   }
 
@@ -219,6 +297,20 @@ class Indicator extends Shape {
       .squareForm(x + mg, y + mg / 2, percent, attr.height - attr.borderWeight, attr.radius / 2)
 
     super.build()
+
+    const leftText = this.indicatorLText.attr.text
+    if (leftText) {
+      this.indicatorLText
+        .text(leftText, attr.startX, attr.startY, attr.width, attr.height)
+        .build()
+    }
+
+    const rightText = this.indicatorRText.attr.text
+    if (rightText) {
+      this.indicatorRText
+        .text(leftText, attr.startX, attr.startY, attr.width, attr.height)
+        .build()
+    }
 
     if (this.indicatorLabel.attr.width > 0) {
       this.indicatorPercent.attr.setText(`${showIndicatorValue}%`)

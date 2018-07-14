@@ -164,6 +164,26 @@ class EnergyGroup extends Energy {
     }
     return this
   }
+
+  /**
+   *
+   * @param {Object|null} data - if is null then values will be reset to null
+   * @param {Array} [except]
+   * @returns {Particle}
+   */
+  copy(data, except = []) {
+    super.copy(data, except.concat(['shipEnergy', 'gunEnergy']))
+    for (const property in data) {
+      switch (property) {
+        case 'entity':
+          break
+        case 'shipEnergy':
+        case 'gunEnergy':
+          this[property].copy(data[property])
+          break
+      }
+    }
+  }
 }
 
 export default EnergyGroup

@@ -186,6 +186,9 @@ class CharacterControls extends ModelSpaceship {
         // Обновить индикаторы енергии
         this.userPanel.panelIndicator.update([2, 3])
       })
+      super.rechargeGuns(delta, (gun) => {
+        this.userPanel.panelShot.rebuild(gun)
+      })
     }
   }
 
@@ -276,16 +279,20 @@ class CharacterControls extends ModelSpaceship {
 
     if (shotEnabled) {
       this.eachSlot((slot, target) => {
-        const spendEnergy = slot.particle.energy
-        const gunEnergy = this.getGunEnergy()
-        if (gunEnergy.isEnergy(spendEnergy)) {
-          const groupEnergy = this.getGroupEnergy()
-          groupEnergy.reduceGunEnergy(spendEnergy)
-          this.shotControls.shot(slot, target.model)
-          this.userPanel.panelIndicator.update([3])
-        } else {
-          // TODO нет энергии делаем что-то
+        if (!slot.particle.isRecharged()) {
+          return
         }
+
+        const gunEnergy = this.getGunEnergy()
+        if (!gunEnergy.isEnergy(slot.particle.energy)) {
+          return
+        }
+
+        const groupEnergy = this.getGroupEnergy()
+        groupEnergy.reduceGunEnergy(slot.particle.energy)
+        this.shotControls.shot(slot, target.model)
+        this.userPanel.panelIndicator.update([3])
+        slot.particle.discharge()
       })
     }
   }

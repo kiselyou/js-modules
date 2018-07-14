@@ -1,5 +1,6 @@
-import Shape from "@app/playground/decoration/canvas/Shape";
-import Slot from "@entity/particles-spaceship/Slot";
+import Shape from '@app/playground/decoration/canvas/Shape'
+import Slot from '@entity/particles-spaceship/Slot'
+import Indicator from '@app/playground/decoration/canvas/Indicator'
 
 class UserPanelShot {
   /**
@@ -42,22 +43,32 @@ class UserPanelShot {
      * @type {Array.<{shape: Shape, slot: Slot}>}
      */
     this.buttons = []
+
+    /**
+     *
+     * @type {number}
+     */
+    this.startX = 0
+
+    /**
+     *
+     * @type {number}
+     */
+    this.startY = 0
   }
 
   /**
    *
-   * @param {number} [left]
-   * @param {number} [top]
    * @returns {UserPanelShot}
    */
-  draw(left = 0, top = 0) {
+  draw() {
     const slots = this.character.spaceship.getSlotsByType(Slot.TYPE_GUN)
 
     const size = this.size - this.margin * 2
     for (let i = this.margin, num = 0; i < (this.maxCount * this.size + this.margin); i += this.size, num++ ) {
       const slot = slots[num]
       const shape = new Shape(this.canvas)
-        .squareForm(left + i, top + this.margin, size, size, 0)
+        .squareForm(this.startX + i, this.startY + this.margin, size, size, 2)
         .addText(num + 1, (text) => {
           text.setHorizontalAlign('right').setPadding(4, 2)
         })
@@ -86,10 +97,21 @@ class UserPanelShot {
               break;
           }
         })
+
         shape
           .setBorder(2, 'rgb(2, 145, 145)')
           .setBackground('rgb(21, 21, 21)')
-          .setBackgroundImage('./app/web/images/icon/rocket-slot-a.png', 4);
+          .setBackgroundImage('./app/web/images/icon/rocket-slot-a.png', 6)
+          .addShape(
+            new Indicator(this.canvas)
+              .horizontalForm(this.startX + i, this.startY + this.margin + size - 6, size - 4, 4)
+              .setBorder(1, 'rgb(2, 145, 145)')
+              .setIndicatorColor('#FFFF00')
+              .beforeBuild((indicator) => {
+                indicator.setPercent(slot.particle.rechargeStatePercent)
+              })
+          )
+
         this.buttons.push({shape, slot})
       } else {
         shape
@@ -122,6 +144,18 @@ class UserPanelShot {
       })
     }
     return this
+  }
+
+  /**
+   *
+   * @param {Gun} gun
+   * @returns {void}
+   */
+  rebuild(gun) {
+    const item = this.buttons.find((item) => item.slot.particle.id === gun.id)
+    if (item) {
+      item.shape.build()
+    }
   }
 }
 

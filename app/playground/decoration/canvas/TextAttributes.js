@@ -124,7 +124,7 @@ class TextAttributes {
       case 'end':
         return this.startY + this.height - this.padding.y
       case 'middle':
-        return (this.startY / 2 + this.height / 2) - this.padding.y
+        return (this.startY + this.height / 2) - this.padding.y
     }
     return this.startY + this.padding.y
   }

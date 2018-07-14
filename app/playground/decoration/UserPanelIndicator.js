@@ -82,9 +82,9 @@ class UserPanelIndicator {
         .horizontalLForm(x, y, indicatorWidth, this.indicatorHeight, this.labelWidth, item.label)
         .setBorder(2, 'rgb(2, 145, 145)')
         .setIndicatorColor(item.color)
-        .beforeBuild((shape) => {
+        .beforeBuild((indicator) => {
           const entity = item.entity()
-          shape.setPercent(entity.state)
+          indicator.setPercent(entity.state)
         })
         .build()
 

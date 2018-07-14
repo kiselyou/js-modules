@@ -21,6 +21,16 @@ export const spaceship = [
     )
     .addSlot(
       new Slot()
+        .setParticleId('b265df0c-0192-4c64-8f27-33409929b8b3')
+        .setType(Slot.TYPE_ENERGY)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('eeaf29c2-9d43-40ce-921a-f6765a528a68')
+        .setType(Slot.TYPE_ENERGY)
+    )
+    .addSlot(
+      new Slot()
         .setParticleId('a546531f-a38e-43db-8604-06b3b36d7291')
         .setType(Slot.TYPE_ENGINE)
     )
@@ -40,6 +50,30 @@ export const spaceship = [
       new Slot()
         .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
         .setPosition(new Vector3(0, 1, 1.8))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('62dc9713-a63f-442b-988d-6f87ffa4da8e')
+        .setPosition(new Vector3(-1.9, 1.1, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('62dc9713-a63f-442b-988d-6f87ffa4da8e')
+        .setPosition(new Vector3(1.9, 1.1, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('778f45f7-3820-423a-a75b-caaac3530a52')
+        .setPosition(new Vector3(-2, 0.9, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('778f45f7-3820-423a-a75b-caaac3530a52')
+        .setPosition(new Vector3(2, 0.9, 0))
         .setType(Slot.TYPE_GUN)
     )
     .addSlot(
@@ -66,6 +100,16 @@ export const spaceship = [
     )
     .addSlot(
       new Slot()
+        .setParticleId('b265df0c-0192-4c64-8f27-33409929b8b3')
+        .setType(Slot.TYPE_ENERGY)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('eeaf29c2-9d43-40ce-921a-f6765a528a68')
+        .setType(Slot.TYPE_ENERGY)
+    )
+    .addSlot(
+      new Slot()
         .setParticleId('a1f8c408-b804-41ad-9659-8f04fe8c22cb')
         .setType(Slot.TYPE_ENGINE)
     )
@@ -79,6 +123,30 @@ export const spaceship = [
       new Slot()
         .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
         .setPosition(new Vector3(1.8, 1, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('62dc9713-a63f-442b-988d-6f87ffa4da8e')
+        .setPosition(new Vector3(-1.9, 1.1, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('62dc9713-a63f-442b-988d-6f87ffa4da8e')
+        .setPosition(new Vector3(1.9, 1.1, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('778f45f7-3820-423a-a75b-caaac3530a52')
+        .setPosition(new Vector3(-2, 0.9, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('778f45f7-3820-423a-a75b-caaac3530a52')
+        .setPosition(new Vector3(2, 0.9, 0))
         .setType(Slot.TYPE_GUN)
     )
     .addSlot(
@@ -105,6 +173,16 @@ export const spaceship = [
     )
     .addSlot(
       new Slot()
+        .setParticleId('b265df0c-0192-4c64-8f27-33409929b8b3')
+        .setType(Slot.TYPE_ENERGY)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('eeaf29c2-9d43-40ce-921a-f6765a528a68')
+        .setType(Slot.TYPE_ENERGY)
+    )
+    .addSlot(
+      new Slot()
         .setParticleId('ef285367-cd53-490f-a32c-a235dd0f0132')
         .setType(Slot.TYPE_ENGINE)
     )
@@ -118,6 +196,30 @@ export const spaceship = [
       new Slot()
         .setParticleId('4443c766-ccd8-4bff-b12d-8353bc024617')
         .setPosition(new Vector3(1.8, 1, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('62dc9713-a63f-442b-988d-6f87ffa4da8e')
+        .setPosition(new Vector3(-1.9, 1.1, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('62dc9713-a63f-442b-988d-6f87ffa4da8e')
+        .setPosition(new Vector3(1.9, 1.1, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('778f45f7-3820-423a-a75b-caaac3530a52')
+        .setPosition(new Vector3(-2, 0.9, 0))
+        .setType(Slot.TYPE_GUN)
+    )
+    .addSlot(
+      new Slot()
+        .setParticleId('778f45f7-3820-423a-a75b-caaac3530a52')
+        .setPosition(new Vector3(2, 0.9, 0))
         .setType(Slot.TYPE_GUN)
     )
     .addSlot(

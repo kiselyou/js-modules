@@ -150,6 +150,16 @@ class ModelSpaceship extends Player {
 
   /**
    *
+   * @param {Number} delta
+   * @param {Function} [onChangeCallback]
+   * @returns {void}
+   */
+  rechargeGuns(delta, onChangeCallback) {
+    this.spaceship.rechargeGuns(delta, onChangeCallback)
+  }
+
+  /**
+   *
    * @param {number} delta
    * @returns {void}
    */

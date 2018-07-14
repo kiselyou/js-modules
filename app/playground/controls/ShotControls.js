@@ -202,7 +202,7 @@ class ShotControls {
         const directTargetPosition = this.character.getNextPosition(slot.particle.charge.maxDistance)
         const angle = calculate.angleBetween(this.character.model.position, target.position, directTargetPosition)
 
-        // стрельба в пределах радиуса
+        // стрельба в пределах радиуса с упреждением
         if (angle <= slot.particle.maxDeflection) {
           const deflection = calculate.deflection(target, targetSpeed, charge, slot.particle.charge.speed)
           return deflection.normalize()
@@ -214,23 +214,10 @@ class ShotControls {
 
   /**
    *
-   * @returns {number}
-   * @private
-   */
-  static angleDirection(a, b) {
-    // return Math.atan2(b.z - a.z, b.x - a.x);
-    let v = new Vector3();
-    v.subVectors(b, a);
-    return Math.atan2(v.z, v.x);
-  }
-
-  /**
-   *
    * @param {Slot} slot
    * @param {Model|?} [target]
    */
   shot(slot, target) {
-    // TODO добавить время перезарядки
     const objects = this.character.getModels()
     const modelCharge = new ModelCharge()
       .copyCharge(slot.particle.charge)

@@ -37,6 +37,7 @@ class DebugPanel {
   /**
    * @param {*} value
    * @param {string} name
+   * @param {string} label
    * @callback onChangeLister
    */
 
@@ -78,13 +79,13 @@ class DebugPanel {
    *
    * @param {Object} props
    * @param {string} key
-   * @param {string} [name]
+   * @param {string} [label]
    * @param {(number|null)} [minValue]
    * @param {(number|null)} [maxValue]
    * @param {boolean} [isColor]
    * @returns {DebugPanel}
    */
-  add(props, key, name, minValue, maxValue, isColor = false) {
+  add(props, key, label, minValue, maxValue, isColor = false) {
     this.gui.remember(props)
     if (this.disabled) {
       return this
@@ -97,9 +98,9 @@ class DebugPanel {
 
     let controller = null
     if (isColor) {
-      controller = folder.addColor(props, key).name(name)
+      controller = folder.addColor(props, key).name(label)
     } else {
-      controller = folder.add(props, key, minValue, maxValue).name(name)
+      controller = folder.add(props, key, minValue, maxValue).name(label)
     }
 
     if (this.listen) {
@@ -111,7 +112,7 @@ class DebugPanel {
         props[key] = new Color().copy(value);
       }
       for (const event of this.events) {
-        event(value, key)
+        event(value, key, label)
       }
     })
 

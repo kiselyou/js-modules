@@ -60,6 +60,24 @@ class Shell extends Particle {
   }
 
   /**
+   * Текущее состояние в еденицах
+   *
+   * @returns {number}
+   */
+  get stateSize() {
+    return this.state * this.size / 100
+  }
+
+  /**
+   * Установить текущее состояние в еденицах
+   *
+   * @returns {void}
+   */
+  set stateSize(value) {
+    this.state = value * 100 / this.size
+  }
+
+  /**
    *
    * @param {number} delta
    * @param {Function} [onChangeCallback]
@@ -98,7 +116,7 @@ class Shell extends Particle {
     let state = value * 100 / this.size
     const frontValue = this.state + state
     this.state = frontValue > 100 ? 100 : this.state + state
-    if (onIncreaseCallback && rememberState < this.state) {
+    if (onIncreaseCallback && rememberState < 100) {
       onIncreaseCallback()
     }
     return this

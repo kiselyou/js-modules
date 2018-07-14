@@ -86,6 +86,10 @@ class Spaceship extends Particle {
         switch (property) {
           case 'entity':
             break
+          case 'energyGroup':
+          case 'shell':
+            this[property].copy(data[property])
+            break
           case 'slot':
             for (const slotData of data[property]) {
               this.slot.push(new Slot().copy(slotData))
@@ -165,6 +169,14 @@ class Spaceship extends Particle {
    *
    * @returns {Engine|?}
    */
+  getGuns() {
+    return this.getParticlesByType(Slot.TYPE_GUN)
+  }
+
+  /**
+   *
+   * @returns {Engine|?}
+   */
   getEngine() {
     return this.getParticleByType(Slot.TYPE_ENGINE)
   }
@@ -191,6 +203,19 @@ class Spaceship extends Particle {
    */
   getGroupEnergy() {
     return this.energyGroup
+  }
+
+  /**
+   *
+   * @param {Number} delta
+   * @param {Function} [onChangeCallback]
+   * @returns {void}
+   */
+  rechargeGuns(delta, onChangeCallback) {
+    const guns = this.getParticlesByType(Slot.TYPE_GUN)
+    for (const gun of guns) {
+      gun.restoreTimerState(delta, onChangeCallback)
+    }
   }
 
   /**

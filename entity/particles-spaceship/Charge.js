@@ -37,6 +37,46 @@ class Charge extends Particle {
   }
 
   /**
+   *
+   * @param {number} value
+   * @returns {Charge}
+   */
+  setSpeed(value) {
+    this.speed = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Charge}
+   */
+  setDamageMin(value) {
+    this.damageMin = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Charge}
+   */
+  setDamageMax(value) {
+    this.damageMax = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Charge}
+   */
+  setMaxDistance(value) {
+    this.maxDistance = value
+    return this
+  }
+
+  /**
    * @returns {Object}
    */
   getChargeSwapInfo() {

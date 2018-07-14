@@ -79,7 +79,7 @@ class UserPanel {
    * @return {UserPanel}
    */
   drawShotPanel() {
-    this.panelShot.draw(0, 0)
+    this.panelShot.draw()
   }
 
   draw() {
