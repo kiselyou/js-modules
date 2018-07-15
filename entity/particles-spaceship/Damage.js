@@ -74,7 +74,7 @@ class Damage {
    */
   copy(data, except = []) {
     for (const property in data) {
-      if (!this.hasOwnProperty(property)) {
+      if ( ! this.hasOwnProperty(property)) {
         continue
       }
       if (except.includes(property)) {

@@ -42,7 +42,11 @@ class EnergyGroup extends Energy {
    * @returns {EnergyGroup}
    */
   addEnergy(value) {
-    this.elements.push(value)
+    if (value instanceof Energy) {
+      this.elements.push(value)
+    } else {
+      console.warn('You are trying to set not correct type on: new EnergyGroup().addEnergy(?) - expected "new Energy()"')
+    }
     return this
   }
 
@@ -169,10 +173,10 @@ class EnergyGroup extends Energy {
    *
    * @param {Object|null} data - if is null then values will be reset to null
    * @param {Array} [except]
-   * @returns {Particle}
+   * @returns {EnergyGroup}
    */
   copy(data, except = []) {
-    super.copy(data, except.concat(['shipEnergy', 'gunEnergy']))
+    super.copy(data, except.concat(['shipEnergy', 'gunEnergy', 'elements']))
     for (const property in data) {
       switch (property) {
         case 'entity':
@@ -181,8 +185,13 @@ class EnergyGroup extends Energy {
         case 'gunEnergy':
           this[property].copy(data[property])
           break
+        case 'elements':
+          for (const element of data[property]) {
+            this.element.push(new Energy().copy(element))
+          }
       }
     }
+    return this
   }
 }
 

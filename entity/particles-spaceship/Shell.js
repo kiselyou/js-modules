@@ -196,10 +196,17 @@ class Shell extends Particle {
    */
   copy(data, except = []) {
     super.copy(data, except.concat(['damage']))
-    if (data.hasOwnProperty('damage')) {
-      this.damage = []
-      for (const damage of data['damage']) {
-        this.damage.push(new Damage().copy(damage))
+    for (const property in data) {
+      if ( ! this.hasOwnProperty(property)) {
+        continue
+      }
+
+      switch (property) {
+        case 'damage':
+          for (const damage of data[property]) {
+            this.damage.push(new Damage().copy(damage))
+          }
+          break
       }
     }
     return this

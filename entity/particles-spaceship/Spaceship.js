@@ -31,9 +31,7 @@ class Spaceship extends Particle {
    */
   async beforeStart() {
     this.setCategoryName('Spaceship')
-    this
-      .updateEnergy()
-      .updateShell()
+    this.updateEnergy().updateShell()
   }
 
   /**
@@ -42,10 +40,13 @@ class Spaceship extends Particle {
    */
   updateEnergy() {
     const slots = this.getSlotsByType(Slot.TYPE_ENERGY)
+
+    // console.log(this.id)
+    //
+    // console.log('Spaceship -> updateEnergy', this.energyGroup, slots, '========')
+
     for (const slot of slots) {
-      this.energyGroup
-        .restoreEnergy(slot.particle)
-        .addEnergy(slot.particle)
+      this.energyGroup.addEnergy(slot.particle)
     }
     this.energyGroup.updateEnergy()
     return this
@@ -87,6 +88,8 @@ class Spaceship extends Particle {
           case 'entity':
             break
           case 'energyGroup':
+            this[property].copy(data[property])
+            break
           case 'shell':
             this[property].copy(data[property])
             break

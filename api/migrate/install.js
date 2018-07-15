@@ -16,7 +16,7 @@ import { installPlanet } from './map-planet'
  */
 async function install() {
   const db = await mgDBAsync()
-  await clearCollection(db, ['Catalog', 'Sector', 'SectorHasParticle'])
+  await clearCollection(db, ['Catalog', 'Sector', 'SectorHasParticle', 'User', 'Player', 'PlayerHasParticle'])
   await installCatalog()
 
   const catalog = await getCatalog(db)

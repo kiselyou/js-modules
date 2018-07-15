@@ -82,17 +82,20 @@ class PlayerHasParticle {
    */
   copy(data, except = []) {
     for (const property in data) {
+      if ( ! data.hasOwnProperty(property)) {
+        continue
+      }
+
       if (except.includes(property)) {
         continue
       }
-      if (data.hasOwnProperty(property)) {
-        switch (property) {
-          case 'entity':
-            break
-          default:
-            this[property] = data[property]
-            break
-        }
+
+      switch (property) {
+        case 'entity':
+          break
+        default:
+          this[property] = data[property]
+          break
       }
     }
     return this

@@ -160,7 +160,8 @@ class ParticlePlayGround {
       if (item.particle.id === player.spaceshipId && item.particle.entity === 'Spaceship') {
         const spaceship = new Spaceship().copy(item.particle)
         for (const slot of spaceship.slot) {
-          slot.copyParticle(this.getPlayerParticleBySlotId(player.id, slot.id))
+          const particle = this.getPlayerParticleBySlotId(player.id, slot.id)
+          slot.copyParticle(particle)
         }
         return spaceship
       }

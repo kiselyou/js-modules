@@ -164,18 +164,18 @@ class Slot extends Particle {
   /**
    *
    * @param {Object} particle
-   * @returns {void}
+   * @returns {Slot}
    */
   copyParticle(particle) {
     if ( ! particle) {
       this.particle = null
-      return
+      return this
     }
 
     const entity = particle['entity']
     if (this.particle && this.particle['entity'] === entity) {
       this.particle.copy(particle)
-      return
+      return this
     }
 
     switch (entity) {
@@ -195,6 +195,7 @@ class Slot extends Particle {
         this.particle = new Energy().copy(particle)
         break
     }
+    return this
   }
 
   /**

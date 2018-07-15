@@ -33,28 +33,30 @@ export const createAndInsertPlayer = async function (user, spaceshipId) {
 /**
  *
  * @param {Db} db
- * @param {Player} entity
+ * @param {Player} player
  * @param {Catalog} catalog
  * @returns {Promise<void>}
  */
-export const insertPlayer = async function (db, entity, catalog) {
-  const catalogSpaceship = catalog.getSpaceshipById(entity.spaceshipId)
+export const insertPlayer = async function (db, player, catalog) {
+  const catalogSpaceship = catalog.getSpaceshipById(player.spaceshipId)
   const catalogId = catalogSpaceship.id
   catalogSpaceship.rebuildId().setCatalogId(catalogId)
 
-  entity.setSpaceshipId(catalogSpaceship.id)
+  player.setSpaceshipId(catalogSpaceship.id)
 
   for (const slot of catalogSpaceship.slot) {
     slot.rebuildId()
-    await insertPlayerParticle(db, entity.id, slot, catalog)
+    if (slot.particleId) {
+      await insertPlayerParticle(db, player.id, slot, catalog)
+    }
   }
 
   const playerHasParticle = new PlayerHasParticle()
-    .setPlayerId(entity.id)
+    .setPlayerId(player.id)
     .setParticle(catalogSpaceship)
 
   const collectionPlayer = await db.collection('Player');
-  await collectionPlayer.updateOne({ id: entity.id }, { $set: entity }, { upsert: true })
+  await collectionPlayer.updateOne({ id: player.id }, { $set: player }, { upsert: true })
 
   const collectionSpaceship = await db.collection('PlayerHasParticle');
   await collectionSpaceship.updateOne({ id: playerHasParticle.id }, { $set: playerHasParticle }, { upsert: true })
@@ -100,6 +102,8 @@ async function insertPlayerParticle(db, playerId, slot, catalog) {
 
     const collection = await db.collection('PlayerHasParticle')
     await collection.updateOne({ playerId, slotId: slot.id }, { $set: entity }, { upsert: true })
+  } else {
+    throw new Error('Couldn\'t find particle in Catalog')
   }
 }
 

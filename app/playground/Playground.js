@@ -247,6 +247,10 @@ class Playground {
     this.character.copy(player)
 
     const spaceship = data.getPlayerSpaceship(player)
+
+    // console.log(spaceship)
+    //particlePlayGround
+
     this.character.spaceship.copy(spaceship)
     return this
   }

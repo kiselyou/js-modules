@@ -15,6 +15,11 @@ export default async function startPlay(appConfig) {
   const playGroundJson = await Ajax.post('/playground/data', { id: appConfig.user.id })
   const particlePlayGround = new ParticlePlayGround().jsonToObject(playGroundJson)
 
+  if ( ! particlePlayGround.player.userId) {
+    // вероятно сессия пользователя разорвана. нужно перелогинится
+    window.location.href = 'user/logout'
+  }
+
   const loader = new Loader()
   await loader.startLoad()
 
@@ -96,4 +101,9 @@ export default async function startPlay(appConfig) {
         .copy(swapInfo)
     )
   })
+
+  // socket.on('disconnect', () => {
+  //   alert('Lost connection to server');
+  //   // controls.player.enable(false);
+  // });
 }

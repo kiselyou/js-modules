@@ -186,6 +186,30 @@ class Energy extends Particle {
     this.restoreSize = value
     return this
   }
+
+  /**
+   *
+   * @param {Object|null} data - if is null then values will be reset to null
+   * @param {Array} [except]
+   * @returns {Particle}
+   */
+  copy(data, except = []) {
+    super.copy(data, except.concat(['damage']))
+    for (const property in data) {
+      if ( ! this.hasOwnProperty(property)) {
+        continue
+      }
+
+      switch (property) {
+        case 'damage':
+          for (const damage of data[property]) {
+            this.damage.push(new Damage().copy(damage))
+          }
+          break
+      }
+    }
+    return this;
+  }
 }
 
 export default Energy

@@ -112,14 +112,12 @@ class Particle {
         continue
       }
 
-      if (data.hasOwnProperty(property)) {
-        switch (property) {
-          case 'entity':
-            break
-          default:
-            this[property] = data[property]
-            break
-        }
+      switch (property) {
+        case 'entity':
+          break
+        default:
+          this[property] = data[property]
+          break
       }
     }
     return this
