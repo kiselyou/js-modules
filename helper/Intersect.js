@@ -51,9 +51,7 @@ class Intersect {
    * @returns {Intersect}
    */
   updateMouse(mouseEvent) {
-    const p = this.prepareMousePosition(mouseEvent.clientX, mouseEvent.clientY)
-    this.mouse.x = p.x
-    this.mouse.y = p.y
+    this.prepareMousePosition(mouseEvent.clientX, mouseEvent.clientY)
     return this
   }
 
@@ -61,13 +59,12 @@ class Intersect {
    *
    * @param {number} clientX
    * @param {number} clientY
-   * @returns {{x: number, y: number}}
+   * @returns {Vector2}
    */
   prepareMousePosition(clientX, clientY) {
-    return {
-      x: (clientX / window.innerWidth) * 2 - 1,
-      y: - (clientY / window.innerHeight) * 2 + 1
-    }
+    this.mouse.x = (clientX / window.innerWidth) * 2 - 1
+    this.mouse.y = - (clientY / window.innerHeight) * 2 + 1
+    return this.mouse
   }
 
   /**
@@ -103,13 +100,16 @@ class Intersect {
   findMouseIntersection(mouseX, mouseY, elements, recursive = false, distance = Infinity) {
     this.dirrection.setX(mouseX)
     this.dirrection.setY(mouseY)
+
+    this.gyroscope.parent.updateMatrixWorld()
+    this.rayStartFrom.setFromMatrixPosition(this.camera.matrixWorld)
     this.dirrection.unproject(this.camera)
 
-    this.rayStartFrom.copy(this.camera.position)
-    this.rayStartFrom.add(this.gyroscope.parent.position)
-    this.raycaster.ray.origin = this.rayStartFrom
-    this.raycaster.far = distance
+    // this.rayStartFrom.copy(this.camera.position)
+    // this.rayStartFrom.add(this.gyroscope.parent.position)
 
+    this.raycaster.far = distance
+    this.raycaster.ray.origin = this.rayStartFrom
     this.raycaster.ray.direction = this.dirrection.sub(this.rayStartFrom).normalize()
 
     let intersects = []

@@ -8,6 +8,7 @@ import Model from '@app/playground/controls/models/Model'
 
 import Slot from '@entity/particles-spaceship/Slot'
 import ModelTarget from './models/charge/ModelTarget'
+import TooltipShot from '@app/playground/decoration/html/TooltipShot'
 import { Vector3 } from 'three'
 
 class CharacterControls extends ModelSpaceship {
@@ -58,6 +59,12 @@ class CharacterControls extends ModelSpaceship {
      * @type {Array.<ModelTarget>}
      */
     this.targets = []
+
+    /**
+     *
+     * @type {Array.<TooltipShot|Tooltip>}
+     */
+    this.tooltips = []
   }
 
   /**
@@ -189,6 +196,12 @@ class CharacterControls extends ModelSpaceship {
       super.rechargeGuns(delta, (gun) => {
         this.userPanel.panelShot.rebuild(gun)
       })
+
+      this.userPanel.update()
+
+      for (const tooltip of this.tooltips) {
+        tooltip.update()
+      }
     }
   }
 
@@ -221,17 +234,27 @@ class CharacterControls extends ModelSpaceship {
       slot.setStatus(Slot.STATUS_ACTIVE)
     }
 
-    let modelTarget = this.targets.find((modelTarget) => {
-      return modelTarget.model.id === model.id
+    // let modelTarget = this.targets.find((modelTarget) => {
+    //   return modelTarget.model.id === model.id
+    // })
+    let modelTarget = this.tooltips.find((tooltip) => {
+      return tooltip.target.id === model.id
     })
 
     if (modelTarget) {
       // Если цель выбрана нужно обновить слоты и перегенерить цель
-      modelTarget.addSlots(slots).draw()
+      modelTarget.setSlots(slots).redraw()
     } else {
       // Создать и запомнить цель
-      const modelTarget = new ModelTarget(model, slots).draw()
-      this.targets.push(modelTarget)
+      // const modelTarget = new ModelTarget(model, slots).draw()
+      // this.targets.push(modelTarget)
+
+      this.tooltips.push(
+        new TooltipShot(this.playground)
+          .setSlots(slots)
+          .setTarget(model)
+          .draw()
+      )
     }
     return this
   }
@@ -252,8 +275,11 @@ class CharacterControls extends ModelSpaceship {
         slot.setStatus(Slot.STATUS_ENABLED)
         this.removeSelectedSlot(slot)
       }
-      for (const modelTarget of this.targets) {
-        modelTarget.removeSlot(slot).draw()
+      // for (const modelTarget of this.targets) {
+      //   modelTarget.removeSlot(slot).draw()
+      // }
+      for (const tooltip of this.tooltips) {
+        tooltip.removeSlot(slot).redraw()
       }
     })
   }
@@ -278,7 +304,7 @@ class CharacterControls extends ModelSpaceship {
     }
 
     if (shotEnabled) {
-      this.eachSlot((slot, target) => {
+      this.eachTooltip((slot, tooltip) => {
         if (!slot.particle.isRecharged()) {
           return
         }
@@ -290,7 +316,7 @@ class CharacterControls extends ModelSpaceship {
 
         const groupEnergy = this.getGroupEnergy()
         groupEnergy.reduceGunEnergy(slot.particle.energy)
-        this.shotControls.shot(slot, target.model)
+        this.shotControls.shot(slot, tooltip.target)
         this.userPanel.panelIndicator.update([3])
         slot.particle.discharge()
       })
@@ -299,21 +325,26 @@ class CharacterControls extends ModelSpaceship {
 
   /**
    * @param {Slot} slot
-   * @param {ModelTarget} target
-   * @callback eachSlotCallback
+   * @param {TooltipShot} target
+   * @callback eachTooltipCallback
    */
 
   /**
    *
-   * @param {eachSlotCallback} callback
+   * @param {eachTooltipCallback} callback
    * @returns {CharacterControls}
    */
-  eachSlot(callback) {
-    for (const target of this.targets) {
-      for (const slot of target.slots) {
-        callback(slot, target)
+  eachTooltip(callback) {
+    for (const tooltip of this.tooltips) {
+      for (const slot of tooltip.slots) {
+        callback(slot, tooltip)
       }
     }
+    // for (const target of this.targets) {
+    //   for (const slot of target.slots) {
+    //     callback(slot, target)
+    //   }
+    // }
     return this
   }
 }

@@ -314,12 +314,6 @@ class Playground {
   updateCore() {
     this.status.update()
     const delta = this.clockCore.getDelta()
-
-    this.character.update(delta)
-
-    this.character.shotControls.update(delta)
-    this.character.userPanel.update()
-
     for (const player of this.playersControls) {
       player.update(delta)
       player.shotControls.update(delta)
@@ -330,10 +324,14 @@ class Playground {
     this.spaceParticleControls.update(delta)
     this.tooltip.update()
 
+    this.character.shotControls.update(delta)
+    this.character.update(delta)
+
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
       this.updateCore()
     })
+
     return this
   }
 
@@ -388,7 +386,9 @@ class Playground {
     const models = this.character.getModels(false, 10000)
     const intersection = this.intersect.findIntersection(models, false)
     if (intersection.length > 0) {
-      this.tooltip.draw(intersection[0])
+      this.tooltip
+        .setTarget(intersection[0]['object'])
+        .draw()
     } else {
       this.tooltip.remove()
     }

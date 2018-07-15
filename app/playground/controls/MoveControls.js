@@ -175,6 +175,9 @@ class MoveControls {
 
     const speedShip = (engine.speed / engine.maxSpeed)
     let speed = speedShip * engine.inclineSpeed / 1000
+    if (isSlowDown || isBackward) {
+      speed = 2 * engine.inclineSpeed / 1000
+    }
 
     const currentAngle = this.model.rotation.z
     const maxLeftAngle = - (engine.maxInclineAngle + speed)

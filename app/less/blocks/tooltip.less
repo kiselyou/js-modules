@@ -4,14 +4,7 @@
   top: 0;
   left: 0;
   z-index: 1;
-  margin-left: 0;
-  margin-top: -60px;
-  padding: 1em;
-  width: 200px;
   color: var(--c-green-bright);
-  background: rgba(0, 0, 0, 0.8);
-  border-radius: .5em;
-  border: solid 1px var(--c-green-bright);
   font-size: 10px;
   line-height: 1.2;
   transition: opacity .5s;
@@ -24,7 +17,12 @@
   pointer-events: none;
 
   &__content {
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.8);
 
+    &_flex {
+      display: flex;
+    }
   }
 
   &__title {
@@ -33,5 +31,10 @@
 
   &__body {
 
+  }
+
+  &__bordered {
+    border-radius: .5em;
+    border: solid 1px var(--c-green-bright);
   }
 }

@@ -1,32 +1,5 @@
-import {Vector3} from 'three'
-
-/**
- *
- * @param {{distance: number, face: Face3, faceIndex: number, object: Model, point: Vector3, uv: Vector2}} intersection
- * @param {Playground} playground
- * @returns {string}
- */
-const template = (intersection, playground) => {
-
-  const model = intersection.object.reference
-  const position = intersection.object.position
-  const distance = playground.character.model.position.distanceTo(position)
-  return `
-    <div class="tooltip__content">
-      <div class="tooltip__title">
-        <b>${model.name}</b>
-      </div>
-      <div class="tooltip__body">
-        <b>Description: </b>
-        ${model.description || ''}
-      </div>
-      <b>Distance: </b>${distance.toFixed(0)}<br/>
-      <b>Position: </b>
-      x - ${position.x.toFixed(0)}, 
-      z - ${position.z.toFixed(0)}
-    </div>
-  `
-}
+import { Vector3 } from 'three'
+import { templateTooltipInfo } from './templates'
 
 class Tooltip {
   /**
@@ -48,21 +21,91 @@ class Tooltip {
 
     /**
      *
+     * @type {Function}
+     */
+    this.templateHTML = templateTooltipInfo
+
+    /**
+     *
      * @type {Vector3}
      */
     this.position = new Vector3()
 
     /**
      *
-     * @type {?{distance: number, face: Face3, faceIndex: number, object: Model, point: Vector3, uv: Vector2}}
+     * @type {?Model}
      */
-    this.intersection = null
+    this.target = null
 
     /**
      *
      * @type {boolean}
      */
     this.visible = false
+
+    /**
+     *
+     * @type {number}
+     */
+    this.left = 0
+
+    /**
+     *
+     * @type {number}
+     */
+    this.top = 0
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.horizontal = false
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.vertical = false
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Tooltip}
+   */
+  setLeft(value) {
+    this.left = value
+    return this
+  }
+
+  /**
+   *
+   * @param {number} value
+   * @returns {Tooltip}
+   */
+  setTop(value) {
+    this.top = value
+    return this
+  }
+
+  /**
+   *
+   * @param {boolean} value
+   * @returns {Tooltip}
+   */
+  verticalAlign(value) {
+    this.vertical = value
+    return this
+  }
+
+  /**
+   *
+   * @param {boolean} value
+   * @returns {Tooltip}
+   */
+  horizontalAlign(value) {
+    this.horizontal = value
+    return this
   }
 
   /**
@@ -70,8 +113,8 @@ class Tooltip {
    * @returns {?Vector3}
    */
   getPosition() {
-    if (this.intersection) {
-      const vector = this.position.copy(this.intersection.object.position)
+    if (this.target) {
+      const vector = this.position.copy(this.target.position)
       const canvas = this.playground.renderer.domElement;
       vector.project(this.playground.camera);
       vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
@@ -83,14 +126,41 @@ class Tooltip {
 
   /**
    *
-   * @param {{distance: number, face: Face3, faceIndex: number, object: Model, point: Vector3, uv: Vector2}} value
+   * @param {Model} value
    * @returns {Tooltip}
    */
-  draw(value) {
-    this.intersection = value
+  setTarget(value) {
+    this.target = value
+    return this
+  }
+
+  /**
+   *
+   * @returns {Tooltip}
+   */
+  draw() {
     this.visible = true
-    this.template.innerHTML = template(this.intersection, this.playground)
+    this.template.innerHTML = this.templateHTML(this)
     document.body.appendChild(this.template)
+    return this
+  }
+
+  /**
+   *
+   * @returns {Tooltip}
+   */
+  redraw() {
+    this.remove().draw()
+    return this
+  }
+
+  /**
+   *
+   * @returns {Tooltip}
+   */
+  clear() {
+    this.target = null
+    this.remove()
     return this
   }
 
@@ -101,7 +171,6 @@ class Tooltip {
   remove() {
     if (this.visible) {
       this.visible = false
-      this.intersection = null
       document.body.removeChild(this.template)
     }
     return this
@@ -116,16 +185,25 @@ class Tooltip {
       const v = this.getPosition()
 
       // Проверить находится ли объект поле видимости камеры
-      const mousePosition = this.playground.intersect.prepareMousePosition(v.x, v.y)
-      const intersection = this.playground.intersect.findMouseIntersection(mousePosition.x, mousePosition.y, [this.intersection.object])
+      const mouse = this.playground.intersect.prepareMousePosition(v.x, v.y)
+      const intersection = this.playground.intersect.findMouseIntersection(mouse.x, mouse.y, [this.target])
 
       if (intersection.length === 0) {
         this.remove()
         return
       }
 
-      this.template.style.top = `${v.y}px`;
-      this.template.style.left = `${v.x}px`;
+      let top = v.y + this.top
+      if (this.vertical) {
+        top += this.template.clientHeight / 2
+      }
+      this.template.style.top = `${top}px`;
+
+      let left = v.x + this.left
+      if (this.horizontal) {
+        left -= this.template.clientWidth / 2
+      }
+      this.template.style.left = `${left}px`;
     }
   }
 }
