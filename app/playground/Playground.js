@@ -314,6 +314,10 @@ class Playground {
   updateCore() {
     this.status.update()
     const delta = this.clockCore.getDelta()
+
+    this.character.shotControls.update(delta)
+    this.character.update(delta)
+
     for (const player of this.playersControls) {
       player.update(delta)
       player.shotControls.update(delta)
@@ -323,9 +327,6 @@ class Playground {
     this.lightControls.update(delta, position)
     this.spaceParticleControls.update(delta)
     this.tooltip.update()
-
-    this.character.shotControls.update(delta)
-    this.character.update(delta)
 
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {
