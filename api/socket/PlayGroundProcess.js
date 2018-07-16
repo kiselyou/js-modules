@@ -31,37 +31,35 @@ class PlayGroundProcess extends Server {
           playerInfo.copy(character)
           playerInfo.setSocketId(socket.id)
           const data = playerInfo.getSwapInfo()
+
+          socket.join(data.sectorId);
+
           // отправить инвормацию текущему игроку A измененные данные
           socket.emit('swap-current-player', data)
           // добавление текущего игрока A в секторе удаленных игроков B
-          // TODO: нужно как то фильтровать по сектор ID
-          socket.broadcast.emit('swap-add-player', data)
+          socket.in(data.sectorId).broadcast.emit('swap-add-player', data)
         })
 
         // перенаправить данные конкретному игроку
-        socket.on('swap-add-specific-player', (data) => {
-          // TODO: нужно как то фильтровать по сектор ID
-          socket.broadcast.to(data.destinationSocketId).emit('swap-add-specific-player', data.character);
+        socket.in(playerInfo.sectorId).on('swap-add-specific-player', (data) => {
+          socket.in(playerInfo.sectorId).broadcast.to(data.destinationSocketId).emit('swap-add-specific-player', data.character);
         });
 
         // перенаправить данные удаленным игрокам B в секторе крое текущего игрока A
-        socket.on('swap-player-action-move', (data) => {
-          // TODO: нужно как то фильтровать по сектор ID
-          socket.broadcast.emit('swap-player-action-move', data);
+        socket.in(playerInfo.sectorId).on('swap-player-action-move', (data) => {
+          socket.in(playerInfo.sectorId).broadcast.emit('swap-player-action-move', data);
         });
 
-        socket.on('swap-player-action-shot', (characterId, action, options) => {
-          // TODO: нужно как то фильтровать по сектор ID
-          socket.broadcast.emit('swap-player-action-shot', characterId, action, options);
+        socket.in(playerInfo.sectorId).on('swap-player-action-shot', (characterId, action, options) => {
+          socket.in(playerInfo.sectorId).broadcast.emit('swap-player-action-shot', characterId, action, options);
         });
 
         socket.on('disconnect', () => {
           const data = playerInfo.getSwapInfo()
           // удалить текущего игрока A в секторе у игроков B
-          socket.broadcast.emit('remove-player', data);
+          socket.in(playerInfo.sectorId).broadcast.emit('remove-player', data);
         });
       });
-
     })
   }
 }
