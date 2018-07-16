@@ -95,15 +95,11 @@ export default async function startPlay(appConfig) {
     }
   });
 
-  socket.on('each-minute', (swapInfo) => {
-    playground.setSwapInfo(
-      new SwapInfo()
-        .copy(swapInfo)
-    )
-  })
+  socket.on('remove-player', (swapPlayer) => {
+    playground.removePlayer(swapPlayer.id)
+  });
 
-  // socket.on('disconnect', () => {
-  //   alert('Lost connection to server');
-  //   // controls.player.enable(false);
-  // });
+  socket.on('disconnect', () => {
+    alert('Lost connection to server');
+  });
 }

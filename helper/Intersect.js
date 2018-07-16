@@ -105,6 +105,7 @@ class Intersect {
     this.rayStartFrom.setFromMatrixPosition(this.camera.matrixWorld)
     this.dirrection.unproject(this.camera)
 
+
     // this.rayStartFrom.copy(this.camera.position)
     // this.rayStartFrom.add(this.gyroscope.parent.position)
 

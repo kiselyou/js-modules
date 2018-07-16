@@ -289,7 +289,7 @@ class Playground {
     for (let i = 0; i < this.playersControls.length; i++) {
       const playerControls = this.playersControls[i]
       if (playerControls.id === playerId) {
-        this.scene.remove(playerControls)
+        this.scene.remove(playerControls.model)
         this.playersControls.splice(i, 1)
         break;
       }
@@ -319,16 +319,15 @@ class Playground {
     this.status.update()
     const delta = this.clockCore.getDelta()
 
-    this.character.shotControls.update(delta)
-    this.character.update(delta)
-
     for (const player of this.playersControls) {
       player.update(delta)
       player.shotControls.update(delta)
     }
-    const position = this.character.model.position
-    this.sectorControls.update(delta, position)
-    this.lightControls.update(delta, position)
+
+    this.character.update(delta)
+    this.character.shotControls.update(delta)
+    this.sectorControls.update(delta, this.character.model.position)
+    this.lightControls.update(delta, this.character.model.position)
     this.spaceParticleControls.update(delta)
     this.tooltip.update()
 

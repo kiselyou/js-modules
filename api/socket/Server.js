@@ -1,5 +1,6 @@
 import http from 'http';
 import socket from 'socket.io';
+import redis from 'socket.io-redis'
 import { apiConfig } from './../config/config'
 
 class Server {
@@ -11,6 +12,7 @@ class Server {
     let server = http.createServer(app);
     server.listen(apiConfig.socket.port, apiConfig.socket.host);
     this.io = socket(server);
+    this.io.adapter(redis({ host: apiConfig.redis.host, port: apiConfig.redis.port }))
   }
 
   /**

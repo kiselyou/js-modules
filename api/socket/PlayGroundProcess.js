@@ -18,9 +18,7 @@ class PlayGroundProcess extends Server {
   }
 
   listen() {
-
     this.playGroundTimer.onLiveStart(() => {
-
       this.connect('play-process', (socket) => {
 
         // WARNING
@@ -57,18 +55,10 @@ class PlayGroundProcess extends Server {
           socket.broadcast.emit('swap-player-action-shot', characterId, action, options);
         });
 
-        const eachMinuteEmit = () => {
-          if (playerInfo.sectorId) {
-            const swapInfo = this.playGroundTimer.getSwapInfo(playerInfo.sectorId)
-            // Отправлять каждую минуту актуальную информацию об игровом процессе текущему игроку
-            socket.emit('each-minute', swapInfo)
-          }
-        }
-
-        this.playGroundTimer.addEventEachMinute(eachMinuteEmit)
-
         socket.on('disconnect', () => {
-          this.playGroundTimer.removeEventEachMinute(eachMinuteEmit)
+          const data = playerInfo.getSwapInfo()
+          // удалить текущего игрока A в секторе у игроков B
+          socket.broadcast.emit('remove-player', data);
         });
       });
 
