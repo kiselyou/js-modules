@@ -1,6 +1,5 @@
 import Tooltip from './Tooltip'
 import { templateTooltipShot } from './templates'
-import {Math as M, Vector3} from "three";
 
 class TooltipShot extends Tooltip {
   /**
@@ -14,9 +13,38 @@ class TooltipShot extends Tooltip {
 
     /**
      *
+     * @type {number}
+     */
+    this.top = -65
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.horizontal = true
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.vertical = true
+
+    /**
+     *
      * @type {Array.<Slot>}
      */
     this.slots = []
+
+    /**
+     * 0 - center
+     * 1 - left
+     * 2 - top
+     * 3 - right
+     * 4 - bottom
+     *
+     * @type {Number}
+     */
+    this.side = 0
   }
 
   /**
@@ -58,21 +86,17 @@ class TooltipShot extends Tooltip {
 
   /**
    *
+   * @param {Number} delta
    * @returns {void}
    */
-  update() {
+  update(delta) {
     if (this.visible) {
       const v = this.getPosition()
 
-      // Проверить находится ли объект поле видимости камеры
-      const mouse = this.playground.intersect.prepareMousePosition(v.x, v.y)
-      const intersection = this.playground.intersect.findMouseIntersection(mouse.x, mouse.y, [this.target])
-
       const canvas = this.playground.renderer.domElement;
 
-      if (intersection.length === 0) {
-        // противоположная сторона
-
+      // противоположная сторона
+      if (this.isTargetVisible(delta, v)/*intersection.length === 0*/) {
         const halfWidth = canvas.width / 2
         if (v.x <= halfWidth) {
           v.x = canvas.width
@@ -81,20 +105,37 @@ class TooltipShot extends Tooltip {
         }
       }
 
+      let side = 0
+
       if (v.x < 0) {
         v.x = 0
+        side = 1
       }
 
       if (v.x >= canvas.width) {
         v.x = canvas.width - this.left - this.template.clientWidth
+        side = 3
       }
 
       if (v.y < 0) {
         v.y = 0
+        side = 2
       }
 
       if (v.y >= canvas.height) {
         v.y = canvas.height - this.top - this.template.clientHeight
+        side = 4
+      }
+
+      if (this.side !== side) {
+        this.side = side
+        this.redraw()
+      }
+
+      if (this.side !== 0) {
+        this.template.style.top = `${v.y}px`;
+        this.template.style.left = `${v.x}px`;
+        return
       }
 
       let top = v.y + this.top

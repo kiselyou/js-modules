@@ -303,25 +303,6 @@ class ShotControls {
       charge.update(delta)
     }
   }
-
-  /**
-   *
-   * @return {Promise<void>}
-   */
-  async beforeStart() {
-    // await this.gunArea.beforeStart()
-    // this.character.model.addToGroup(this.gunArea)
-  }
-
-  /**
-   *
-   * @param {Intersect} intersect
-   * @param {MouseEvent} mouseEvent
-   * @returns {void}
-   */
-  onMouseClick(intersect, mouseEvent) {
-
-  }
 }
 
 export default ShotControls

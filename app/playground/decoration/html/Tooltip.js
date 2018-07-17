@@ -66,6 +66,20 @@ class Tooltip {
      * @type {boolean}
      */
     this.vertical = false
+
+    /**
+     *
+     * @type {boolean}
+     * @private
+     */
+    this._visible = true
+
+    /**
+     *
+     * @type {number}
+     * @private
+     */
+    this._visibleTimer = 0
   }
 
   /**
@@ -114,12 +128,13 @@ class Tooltip {
    */
   getPosition() {
     if (this.target) {
-      const vector = this.position.copy(this.target.position)
+      this.position.copy(this.target.position)
+      this.position.project(this.playground.camera);
+
       const canvas = this.playground.renderer.domElement;
-      vector.project(this.playground.camera);
-      vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
-      vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
-      return vector.round()
+      this.position.x = Math.round((0.5 + this.position.x / 2) * (canvas.width / window.devicePixelRatio));
+      this.position.y = Math.round((0.5 - this.position.y / 2) * (canvas.height / window.devicePixelRatio));
+      return this.position
     }
     return null
   }
@@ -177,18 +192,33 @@ class Tooltip {
   }
 
   /**
+   * Проверить находится ли объект поле видимости камеры
    *
-   * @returns {void}
+   * @param {number} delta
+   * @param {Vector3|Vector2} v
+   * @returns {boolean}
    */
-  update() {
-    if (this.visible) {
-      const v = this.getPosition()
-
-      // Проверить находится ли объект поле видимости камеры
+  isTargetVisible(delta, v) {
+    this._visibleTimer += delta
+    if (this._visibleTimer * 1000 >= 100) {
+      this._visibleTimer = 0
       const mouse = this.playground.intersect.prepareMousePosition(v.x, v.y)
       const intersection = this.playground.intersect.findMouseIntersection(mouse.x, mouse.y, [this.target])
+      this._visible = (intersection.length === 0)
+    }
 
-      if (intersection.length === 0) {
+    return this._visible
+  }
+
+  /**
+   *
+   * @param {Number} delta
+   * @returns {void}
+   */
+  update(delta) {
+    if (this.visible) {
+      const v = this.getPosition()
+      if (this.isTargetVisible(delta, v)) {
         this.remove()
         return
       }

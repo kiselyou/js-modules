@@ -1,11 +1,42 @@
 
 .target-slot {
-  width: 20px;
-  height: 20px;
-  margin: 2px;
-  background: #000;
-  border: solid 1px var(--c-green-bright);
 
+  &__left,
+  &__right,
+  &__top,
+  &__bottom {
+    & div {
+      display: none;
+    }
+  }
+
+  &__left {
+    border: 5px solid transparent;
+    border-right: 10px solid var(--c-green-bright);
+  }
+
+  &__right {
+    border: 5px solid transparent;
+    border-left: 10px solid var(--c-green-bright);
+  }
+
+  &__top {
+    border: 5px solid transparent;
+    border-bottom: 10px solid var(--c-green-bright);
+  }
+
+  &__bottom {
+    border: 5px solid transparent;
+    border-top: 10px solid var(--c-green-bright);
+  }
+
+  &__item {
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    background: #000;
+    border: solid 1px var(--c-green-bright);
+  }
   &__img {
     width: calc(~'100% - 4px');
     height: calc(~'100% - 4px');

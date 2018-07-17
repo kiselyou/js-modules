@@ -27,23 +27,40 @@ export const templateTooltipInfo = (tooltip) => {
 
 /**
  *
- * @param {Tooltip} tooltip
+ * @param {Tooltip|TooltipShot} tooltip
  * @returns {string}
  */
 export const templateTooltipShot = function (tooltip) {
-  // console.log(tooltip.slots)
   let htmlSlots = ''
   for (const slot of tooltip.slots) {
     htmlSlots += `
-      <div class="target-slot">
+      <div class="target-slot__item">
         <img src="/app/web/images/icon/rocket-slot-a.png" class="target-slot__img">
       </div>
     `
   }
 
+  let side = ''
+  switch (tooltip.side) {
+    case 1:
+      side = 'target-slot__left'
+      break
+    case 2:
+      side = 'target-slot__top'
+      break
+    case 3:
+      side = 'target-slot__right'
+      break
+    case 4:
+      side = 'target-slot__bottom'
+      break
+  }
+
   return `
-    <div class="tooltip__context tooltip__content_flex">
-      ${htmlSlots}
+    <div class="tooltip__context">
+      <div class="tooltip__content_flex ${side}">
+        ${htmlSlots}
+      </div>
     </div>
   `
 }

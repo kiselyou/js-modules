@@ -1,5 +1,6 @@
 import Spaceship from '@entity/particles-spaceship/Spaceship'
 import Player from '@entity/particles-sector/Player'
+import Calculate from './../../../lib/Calculate'
 import MoveControls from './../../MoveControls'
 import Model from './../Model'
 
@@ -45,6 +46,51 @@ class ModelSpaceship extends Player {
      * @type {MoveControls}
      */
     this.moveControls = new MoveControls(this.model, this.spaceship)
+
+    /**
+     *
+     * @type {Calculate}
+     */
+    this.calculate = new Calculate()
+  }
+
+  /**
+   * Get position of aim in world
+   *
+   * @param {number} [distance]
+   * @returns {Vector3}
+   */
+  getNextPosition(distance = 150) {
+    return this.calculate.getNextPosition(this.model, distance)
+  }
+
+  /**
+   * Get ships direction
+   *
+   * @returns {Vector3}
+   */
+  getDirection() {
+    return this.calculate.getDirection(this.model)
+  }
+
+  /**
+   *
+   * @param {Vector3} v
+   * @returns {number}
+   */
+  getDistanceTo(v) {
+    return this.model.position.distanceTo(v)
+  }
+
+  /**
+   * Get angle of current model to target
+   *
+   * @param {Vector3} v
+   * @returns {number}
+   */
+  getAngleTo(v) {
+    const direction = this.getDirection()
+    return direction.angleTo(v)
   }
 
   /**
@@ -161,11 +207,12 @@ class ModelSpaceship extends Player {
   /**
    *
    * @param {number} delta
-   * @returns {void}
+   * @returns {ModelSpaceship}
    */
   update(delta) {
     this.moveControls.update(delta)
     this.position.copy(this.model.position)
+    return this
   }
 }
 

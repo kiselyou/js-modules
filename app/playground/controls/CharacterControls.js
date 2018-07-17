@@ -1,5 +1,5 @@
 import ModelSpaceship from './models/spaceship/ModelSpaceship'
-import Calculate from './../lib/Calculate'
+
 import RaceControls from './RaceControls'
 import ShotControls from './ShotControls'
 
@@ -9,7 +9,6 @@ import Model from '@app/playground/controls/models/Model'
 import Slot from '@entity/particles-spaceship/Slot'
 import ModelTarget from './models/charge/ModelTarget'
 import TooltipShot from '@app/playground/decoration/html/TooltipShot'
-import { Vector3 } from 'three'
 
 class CharacterControls extends ModelSpaceship {
   /**
@@ -35,12 +34,6 @@ class CharacterControls extends ModelSpaceship {
      * @type {UserPanel}
      */
     this.userPanel = new UserPanel(this)
-
-    /**
-     *
-     * @type {Calculate}
-     */
-    this.calculate = new Calculate()
 
     /**
      *
@@ -120,45 +113,6 @@ class CharacterControls extends ModelSpaceship {
   }
 
   /**
-   * Get position of aim in world
-   *
-   * @param {number} [distance]
-   * @returns {Vector3}
-   */
-  getNextPosition(distance = 150) {
-    return this.calculate.getNextPosition(this.model, distance)
-  }
-
-  /**
-   * Get ships direction
-   *
-   * @returns {Vector3}
-   */
-  getDirection() {
-    return this.calculate.getDirection(this.model)
-  }
-
-  /**
-   *
-   * @param {Vector3} v
-   * @returns {number}
-   */
-  getDistanceTo(v) {
-    return this.model.position.distanceTo(v)
-  }
-
-  /**
-   * Get angle of current model to target
-   *
-   * @param {Vector3} target
-   * @returns {number}
-   */
-  getAngleTo(target) {
-    const direction = this.getDirection()
-    return direction.angleTo(target)
-  }
-
-  /**
    *
    * @returns {CharacterControls}
    */
@@ -173,36 +127,60 @@ class CharacterControls extends ModelSpaceship {
   async beforeStart() {
     await super.beforeStart()
     await this.raceControls.beforeStart()
-    await this.shotControls.beforeStart()
     this.enabled = true
   }
 
   /**
    *
    * @param {number} delta
-   * @returns {void}
+   * @returns {CharacterControls}
+   */
+  updatePanel(delta) {
+    if ( ! this.enabled) {
+      return this
+    }
+    super.restoreShell(delta, () => {
+      // Обновить индикаторы брони корпуса
+      this.userPanel.panelIndicator.update([1])
+    })
+    super.restoreEnergy(delta, () => {
+      // Обновить индикаторы енергии
+      this.userPanel.panelIndicator.update([2, 3])
+    })
+    super.rechargeGuns(delta, (gun) => {
+      this.userPanel.panelShot.rebuild(gun)
+    })
+
+    this.userPanel.update()
+    return this
+  }
+
+  /**
+   *
+   * @param {number} delta
+   * @returns {CharacterControls}
+   */
+  updateTooltipTarget(delta) {
+    if ( ! this.enabled) {
+      return this
+    }
+    for (const tooltip of this.tooltips) {
+      tooltip.update(delta)
+    }
+    return this
+  }
+
+  /**
+   *
+   * @param {number} delta
+   * @returns {CharacterControls}
    */
   update(delta) {
     if (this.enabled) {
       super.update(delta)
-      super.restoreShell(delta, () => {
-        // Обновить индикаторы брони корпуса
-        this.userPanel.panelIndicator.update([1])
-      })
-      super.restoreEnergy(delta, () => {
-        // Обновить индикаторы енергии
-        this.userPanel.panelIndicator.update([2, 3])
-      })
-      super.rechargeGuns(delta, (gun) => {
-        this.userPanel.panelShot.rebuild(gun)
-      })
-
-      this.userPanel.update()
-
-      for (const tooltip of this.tooltips) {
-        tooltip.update()
-      }
+      this.shotControls.update(delta)
     }
+    return this
   }
 
   /**
@@ -234,9 +212,6 @@ class CharacterControls extends ModelSpaceship {
       slot.setStatus(Slot.STATUS_ACTIVE)
     }
 
-    // let modelTarget = this.targets.find((modelTarget) => {
-    //   return modelTarget.model.id === model.id
-    // })
     let modelTarget = this.tooltips.find((tooltip) => {
       return tooltip.target.id === model.id
     })
@@ -246,9 +221,6 @@ class CharacterControls extends ModelSpaceship {
       modelTarget.setSlots(slots).redraw()
     } else {
       // Создать и запомнить цель
-      // const modelTarget = new ModelTarget(model, slots).draw()
-      // this.targets.push(modelTarget)
-
       this.tooltips.push(
         new TooltipShot(this.playground)
           .setSlots(slots)
@@ -275,9 +247,6 @@ class CharacterControls extends ModelSpaceship {
         slot.setStatus(Slot.STATUS_ENABLED)
         this.removeSelectedSlot(slot)
       }
-      // for (const modelTarget of this.targets) {
-      //   modelTarget.removeSlot(slot).draw()
-      // }
       for (const tooltip of this.tooltips) {
         tooltip.removeSlot(slot).redraw()
       }
@@ -340,11 +309,6 @@ class CharacterControls extends ModelSpaceship {
         callback(slot, tooltip)
       }
     }
-    // for (const target of this.targets) {
-    //   for (const slot of target.slots) {
-    //     callback(slot, target)
-    //   }
-    // }
     return this
   }
 }

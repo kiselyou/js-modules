@@ -96,6 +96,6 @@ export default async function startPlay(appConfig) {
   });
 
   socket.on('disconnect', () => {
-    alert('Lost connection to server');
+    console.warn('Lost connection to server');
   });
 }

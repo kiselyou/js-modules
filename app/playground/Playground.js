@@ -247,10 +247,6 @@ class Playground {
     this.character.copy(player)
 
     const spaceship = data.getPlayerSpaceship(player)
-
-    // console.log(spaceship)
-    //particlePlayGround
-
     this.character.spaceship.copy(spaceship)
     return this
   }
@@ -319,17 +315,19 @@ class Playground {
     this.status.update()
     const delta = this.clockCore.getDelta()
 
+    this.character
+      .update(delta)
+      .updatePanel(delta)
+      .updateTooltipTarget(delta)
+
     for (const player of this.playersControls) {
       player.update(delta)
-      player.shotControls.update(delta)
     }
 
-    this.character.update(delta)
-    this.character.shotControls.update(delta)
     this.sectorControls.update(delta, this.character.model.position)
     this.lightControls.update(delta, this.character.model.position)
     this.spaceParticleControls.update(delta)
-    this.tooltip.update()
+    this.tooltip.update(delta)
 
     this.renderer.render(this.scene, this.camera)
     this.requestId = requestAnimationFrame(() => {

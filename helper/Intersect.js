@@ -100,11 +100,8 @@ class Intersect {
   findMouseIntersection(mouseX, mouseY, elements, recursive = false, distance = Infinity) {
     this.dirrection.setX(mouseX)
     this.dirrection.setY(mouseY)
-
-    this.gyroscope.parent.updateMatrixWorld()
-    this.rayStartFrom.setFromMatrixPosition(this.camera.matrixWorld)
     this.dirrection.unproject(this.camera)
-
+    this.rayStartFrom.setFromMatrixPosition(this.camera.matrixWorld)
 
     // this.rayStartFrom.copy(this.camera.position)
     // this.rayStartFrom.add(this.gyroscope.parent.position)
