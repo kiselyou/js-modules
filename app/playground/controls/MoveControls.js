@@ -1,4 +1,4 @@
-import { Math as TMath } from 'three'
+import { Math as TMath, Quaternion, Vector3 } from 'three'
 import Spaceship from '@entity/particles-spaceship/Spaceship'
 import Model from './models/Model'
 
@@ -63,7 +63,7 @@ class MoveControls {
    * @returns {void}
    */
   async beforeStart() {
-    // this.engine = this.spaceship.getEngine()
+
   }
 
   /**
@@ -234,6 +234,8 @@ class MoveControls {
 
     const engine = this.spaceship.getEngine()
 
+    let sss = 0
+
     if (isLeft) {
       if (isBackward && engine.speed < 0) {
         engine.bodyOrientation -= delta * engine.angularSpeed
@@ -271,8 +273,15 @@ class MoveControls {
     this.updateIncline(engine)
 
     let forwardDelta = engine.speed * delta
-    this.model.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
-    this.model.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
+    this.model.boxBody.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
+    this.model.boxBody.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
+    this.model.boxBody.position.y = 0
+
+    this.model.boxBody.quaternion.copy(this.model.quaternion)
+    this.model.position.copy(this.model.boxBody.position)
+
+    // this.model.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
+    // this.model.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
     this.model.rotation.y = engine.bodyOrientation
   }
 

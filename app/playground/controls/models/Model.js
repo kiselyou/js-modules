@@ -1,8 +1,9 @@
-import {Group, Object3D, Mesh, CubeGeometry, MeshBasicMaterial} from 'three'
+import {Group, Object3D, Mesh, CubeGeometry, MeshBasicMaterial, Vector3, Quaternion} from 'three'
 import DetectObject3D from '@helper/DetectObject3D'
+import CANNON from 'cannon'
 
 class Model extends Mesh {
-  constructor() {
+  constructor(mass) {
     super()
 
     /**
@@ -22,6 +23,26 @@ class Model extends Mesh {
      * @type {Object3D}
      */
     this.decoration = new Object3D()
+
+    /**
+     *
+     * @type {CANNON.Body}
+     */
+    this.boxBody = new CANNON.Body({
+      mass: mass
+    });
+
+    /**
+     *
+     * @type {Vector3}
+     */
+    this.size = new Vector3()
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.enabled = false
   }
 
   /**
@@ -55,6 +76,23 @@ class Model extends Mesh {
       depthWrite: false,
     })
 
+    let boxShape = new CANNON.Box(new CANNON.Vec3(size.x / 2, size.y, size.z / 2));
+    this.boxBody.linearDamping = 0.5;
+    this.boxBody.addShape(boxShape);
+
+
+    this.enabled = true
+    return this
+  }
+
+  /**
+   *
+   * @returns {Model}
+   */
+  updateModel() {
+    if (this.enabled) {
+      this.position.copy(this.boxBody.position)
+    }
     return this
   }
 }

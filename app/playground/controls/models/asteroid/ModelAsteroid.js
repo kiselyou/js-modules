@@ -4,17 +4,10 @@ import Model from './../Model'
 class ModelAsteroid extends Asteroid {
   /**
    *
-   * @param {Scene} scene
    * @param {Loader} loader
    */
-  constructor(scene, loader) {
+  constructor(loader) {
     super()
-
-    /**
-     *
-     * @type {Scene}
-     */
-    this.scene = scene
 
     /**
      * @type {Loader}
@@ -25,7 +18,7 @@ class ModelAsteroid extends Asteroid {
      *
      * @type {Model}
      */
-    this.model = new Model()
+    this.model = new Model(0)
   }
 
   /**
@@ -35,12 +28,11 @@ class ModelAsteroid extends Asteroid {
   buildModel() {
     const model = this.loader.getModel(this.modelKey)
     if (model) {
+      model.scale.copy(this.scale)
+      model.rotation.copy(this.rotation)
       this.model.build(model, this.id)
       this.model.setReference(this)
-      this.model.scale.copy(this.scale)
-      this.model.position.copy(this.position)
-      this.model.rotation.copy(this.rotation)
-      this.scene.add(this.model)
+      this.model.boxBody.position.copy(this.position)
     } else {
       throw new Error('Couldn\'t find Asteroid model')
     }
@@ -70,22 +62,10 @@ class ModelAsteroid extends Asteroid {
   /**
    *
    * @param {number} delta
-   * @returns {ModelAsteroid}
-   */
-  calculatePosition(delta = 1) {
-    this.angleToCenter += this.speedMove * delta
-    this.model.position.setX(this.distanceToCenter * Math.cos(this.angleToCenter))
-    this.model.position.setZ(this.distanceToCenter * Math.sin(this.angleToCenter))
-    return this
-  }
-
-  /**
-   *
-   * @param {number} delta
    * @returns {void}
    */
   update(delta) {
-    // this.calculatePosition(delta)
+    this.model.updateModel()
   }
 }
 

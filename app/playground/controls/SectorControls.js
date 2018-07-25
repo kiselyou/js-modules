@@ -3,27 +3,20 @@ import StationControls from './StationControls'
 import AsteroidControls from './AsteroidControls'
 import Sector from '@entity/particles-sector/Sector'
 import SkyBoxControls from './SkyBoxControls'
-import StarLightControls from './StarLightControls'
 import { Vector3 } from 'three'
 import ParticlePlayGround from "@entity/ParticlePlayGround";
 
 class SectorControls {
   /**
    *
-   * @param {Scene} scene
-   * @param {Loader} loader
+   * @param {Playground} playground
    */
-  constructor(scene, loader) {
-
-    /**
-     * @type {Scene}
-     */
-    this.scene = scene
+  constructor(playground) {
 
     /**
      * @type {Loader}
      */
-    this.loader = loader
+    this.loader = playground.loader
 
     /**
      *
@@ -35,31 +28,25 @@ class SectorControls {
      *
      * @type {SkyBoxControls}
      */
-    this.skyBoxControls = new SkyBoxControls(this.scene, this.loader)
+    this.skyBoxControls = new SkyBoxControls(this.loader)
 
     /**
      *
      * @type {PlanetControls}
      */
-    this.planetsControls = new PlanetControls(this.scene, this.loader)
+    this.planetsControls = new PlanetControls(this.loader)
 
     /**
      *
      * @type {StationControls}
      */
-    this.stationControls = new StationControls(this.scene, this.loader)
+    this.stationControls = new StationControls(this.loader)
 
     /**
      *
      * @type {AsteroidControls}
      */
-    this.asteroidControls = new AsteroidControls(this.scene, this.loader)
-
-    /**
-     *
-     * @type {StarLightControls}
-     */
-    this.starLightControls = new StarLightControls(this.skyBoxControls.sky)
+    this.asteroidControls = new AsteroidControls(this.loader)
   }
 
   /**
@@ -70,7 +57,6 @@ class SectorControls {
     await this.planetsControls.beforeStart(this.loader)
     await this.stationControls.beforeStart(this.loader)
     await this.asteroidControls.beforeStart(this.loader)
-    await this.starLightControls.beforeStart(this.loader)
   }
 
   /**
@@ -84,7 +70,6 @@ class SectorControls {
     this.planetsControls.copy(data.getPlanets())
     this.stationControls.copy(data.getStations())
     this.asteroidControls.copy(data.getAsteroids())
-    this.starLightControls.copy(data.getStarLights())
     return this
   }
 
@@ -92,14 +77,14 @@ class SectorControls {
    *
    * @param {number} delta
    * @param {Vector3} playerPosition
-   * @returns {void}
+   * @returns {SectorControls}
    */
   update(delta, playerPosition) {
     this.planetsControls.update(delta)
     this.stationControls.update(delta)
     this.asteroidControls.update(delta)
     this.skyBoxControls.update(delta, playerPosition)
-    this.starLightControls.update(delta)
+    return this
   }
 
   /**

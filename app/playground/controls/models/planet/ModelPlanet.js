@@ -1,5 +1,4 @@
 import Planet from '@entity/particles-sector/Planet'
-import ModelPlanetClouds from './ModelPlanetClouds'
 import Model from './../Model'
 import { MeshPhongMaterial, SphereGeometry, Color, Mesh } from 'three'
 import { getGlowInsideMesh, getGlowOutsideMesh } from '../../../../shader/glow'
@@ -7,17 +6,10 @@ import { getGlowInsideMesh, getGlowOutsideMesh } from '../../../../shader/glow'
 class ModelPlanet extends Planet {
   /**
    *
-   * @param {Scene} scene
    * @param {Loader} loader
    */
-  constructor(scene, loader) {
+  constructor(loader) {
     super()
-
-    /**
-     *
-     * @type {Scene}
-     */
-    this.scene = scene
 
     /**
      * @type {Loader}
@@ -26,15 +18,9 @@ class ModelPlanet extends Planet {
 
     /**
      *
-     * @type {ModelPlanetClouds}
-     */
-    this.modelClouds = new ModelPlanetClouds()
-
-    /**
-     *
      * @type {Model}
      */
-    this.model = new Model()
+    this.model = new Model(1000)
 
     /**
      *
@@ -86,7 +72,6 @@ class ModelPlanet extends Planet {
 
     this.model.build(this.mesh, this.id)
     this.model.setReference(this)
-    this.scene.add(this.model)
     return this
   }
 
@@ -112,7 +97,6 @@ class ModelPlanet extends Planet {
       this.mesh.remove(this.glowOutsideModel)
     }
     this.model.remove(this.mesh)
-    this.scene.remove(this.model)
     return this
   }
 
@@ -178,9 +162,6 @@ class ModelPlanet extends Planet {
   update(delta) {
     this.calculatePosition(delta)
     this.model.rotation.y -= 0.05 * delta
-    if (this.modelClouds.enabled) {
-      this.modelClouds.update(delta)
-    }
   }
 
   /**

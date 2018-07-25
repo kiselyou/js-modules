@@ -33,7 +33,7 @@ class ModelSpaceship extends Player {
      *
      * @type {Model}
      */
-    this.model = new Model()
+    this.model = new Model(5)
 
     /**
      *
@@ -150,6 +150,7 @@ class ModelSpaceship extends Player {
     const model = this.loader.getModel(shell.modelKey)
     this.model.build(model, this.id)
     this.model.position.copy(this.position)
+    this.model.boxBody.position.copy(this.position)
     this.model.setReference(this.spaceship)
     return this
   }
@@ -212,6 +213,7 @@ class ModelSpaceship extends Player {
   update(delta) {
     this.moveControls.update(delta)
     this.position.copy(this.model.position)
+
     return this
   }
 }

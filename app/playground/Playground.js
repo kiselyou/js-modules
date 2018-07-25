@@ -5,6 +5,7 @@ import {
   Clock,
   MOUSE,
   PCFSoftShadowMap, Math as tMath, Vector3, Vector2,
+  PlaneGeometry, Matrix4, MeshLambertMaterial, Mesh
 } from 'three'
 
 import SpaceParticleControls from './controls/SpaceParticleControls'
@@ -22,6 +23,11 @@ import Tooltip from './decoration/html/Tooltip'
 
 import DebugPanelShip from './debug/DebugPanelShip'
 import StatusFPS from './debug/StatusFPS'
+
+import CANNON from 'cannon'
+
+import CannonDebugRenderer from './../three-dependense/CannonDebugRenderer'
+
 
 class Playground {
   /**
@@ -91,7 +97,7 @@ class Playground {
      *
      * @type {SectorControls}
      */
-    this.sectorControls = new SectorControls(this.scene, this.loader)
+    this.sectorControls = new SectorControls(this)
 
     /**
      *
@@ -142,12 +148,21 @@ class Playground {
 
     /**
      *
+     * @type {CANNON.World}
+     */
+    this.world = new CANNON.World();
+    this.world.iterations = 1;
+    this.world.gravity.set(0, -3000, 0);
+    this.world.broadphase = new CANNON.NaiveBroadphase();
+
+    /**
+     *
      * @type {Gyroscope}
      */
     this.gyroscope = new Gyroscope()
     this.gyroscope.add(this.camera);
     this.character.model.add(this.gyroscope)
-    this.scene.add(this.character.model)
+    this.scene.add(this.sectorControls.skyBoxControls.sky)
 
     /**
      *
@@ -166,6 +181,61 @@ class Playground {
      * @type {Tooltip}
      */
     this.tooltip = new Tooltip(this)
+
+    this.cannonDebugRenderer = new CannonDebugRenderer( this.scene, this.world );
+  }
+
+  /**
+   *
+   * @returns {Playground}
+   */
+  addModelsToScene() {
+
+    this.scene.add(this.character.model)
+    this.world.addBody(this.character.model.boxBody);
+
+    const planets = this.sectorControls.planetsControls.elements
+    for (const planet of planets) {
+      this.scene.add(planet.model)
+      this.world.addBody(planet.model.boxBody)
+    }
+
+    const stations = this.sectorControls.stationControls.elements
+    for (const station of stations) {
+      this.scene.add(station.model)
+      this.world.addBody(station.model.boxBody)
+    }
+
+    const asteroids = this.sectorControls.asteroidControls.elements
+    for (const asteroid of asteroids) {
+      this.scene.add(asteroid.model)
+      this.world.addBody(asteroid.model.boxBody)
+    }
+
+
+    var groundMaterial = new CANNON.Material("groundMaterial");
+    var groundShape = new CANNON.Plane();
+    var groundBody = new CANNON.Body({ mass: 0, material: groundMaterial });
+    groundBody.addShape(groundShape);
+    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), - Math.PI / 2)
+    this.world.addBody(groundBody);
+
+    // const groundShape = new CANNON.Plane()
+    // const groundBody = new CANNON.Body({ mass: 0, groundShape });
+    // groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), - Math.PI / 2)
+    // this.world.addBody(groundBody);
+
+    //
+    //
+    const geometry = new PlaneGeometry( 10000, 10000, 50, 50 );
+    // geometry.applyMatrix( new Matrix4().makeRotationX( - Math.PI / 2 ) );
+    const material = new MeshLambertMaterial( { color: 0x777777, transparent: true, opacity: 0.1 } );
+    const mesh = new Mesh( geometry, material );
+    mesh.quaternion.setFromAxisAngle(new Vector3(1, 0, 0), - Math.PI / 2)
+    this.scene.add( mesh );
+
+
+    return this
   }
 
   /**
@@ -187,6 +257,7 @@ class Playground {
     this.beforeStart()
       .then(() => {
         this
+          .addModelsToScene()
           .updateCore()
           .afterStart()
           .buildPanel(rootContainerId)
@@ -272,6 +343,7 @@ class Playground {
         playerControls.beforeStart()
         this.playersControls.push(playerControls)
         this.scene.add(playerControls.model)
+        this.world.addBody(playerControls.model.boxBody)
       })
       .catch((error) => console.log(error, 'Something went wrong. Cannot add new player to scene.'))
   }
@@ -312,8 +384,11 @@ class Playground {
    * @returns {Playground}
    */
   updateCore() {
+    this.requestId = requestAnimationFrame(() => this.updateCore())
+
     this.status.update()
     const delta = this.clockCore.getDelta()
+    this.world.step(1 / 60);
 
     this.character
       .update(delta)
@@ -329,11 +404,9 @@ class Playground {
     this.spaceParticleControls.update(delta)
     this.tooltip.update(delta)
 
-    this.renderer.render(this.scene, this.camera)
-    this.requestId = requestAnimationFrame(() => {
-      this.updateCore()
-    })
 
+    this.cannonDebugRenderer.update();
+    this.renderer.render(this.scene, this.camera)
     return this
   }
 

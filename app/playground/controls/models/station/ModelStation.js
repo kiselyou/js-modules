@@ -4,17 +4,10 @@ import Model from './../Model'
 class ModelStation extends Station {
   /**
    *
-   * @param {Scene} scene
    * @param {Loader} loader
    */
-  constructor(scene, loader) {
+  constructor(loader) {
     super()
-
-    /**
-     *
-     * @type {Scene}
-     */
-    this.scene = scene
 
     /**
      * @type {Loader}
@@ -25,7 +18,7 @@ class ModelStation extends Station {
      *
      * @type {Model}
      */
-    this.model = new Model()
+    this.model = new Model(0)
   }
 
   /**
@@ -37,7 +30,8 @@ class ModelStation extends Station {
     if (model) {
       this.model.build(model, this.id)
       this.model.setReference(this)
-      this.scene.add(this.model)
+      this.calculatePosition(0)
+      this.model.boxBody.position.copy(this.model.position)
     } else {
       throw new Error('Couldn\'t find Asteroid model')
     }
@@ -79,10 +73,11 @@ class ModelStation extends Station {
   /**
    *
    * @param {number} delta
-   * @returns {void}
+   * @returns {ModelStation}
    */
   update(delta) {
-    this.calculatePosition(delta)
+    this.model.updateModel()
+    return this
   }
 }
 
