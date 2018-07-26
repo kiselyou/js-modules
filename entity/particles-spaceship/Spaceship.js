@@ -1,9 +1,9 @@
 import Slot from './Slot'
 import Shell from './Shell'
-import Particle from './../Particle'
 import EnergyGroup from './EnergyGroup'
+import ModelParticle from './../ModelParticle'
 
-class Spaceship extends Particle {
+class Spaceship extends ModelParticle {
   constructor() {
     super()
 

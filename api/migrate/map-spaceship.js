@@ -80,6 +80,7 @@ export const spaceship = [
       new Slot()
         .setType(Slot.TYPE_GUN_TURRET)
     )
+    .setMass(2)
     .setId('842d5a80-6880-4047-b10b-a69850cf577b')
     .setName('Spaceship - 1'),
   new Spaceship()
@@ -153,6 +154,7 @@ export const spaceship = [
       new Slot()
         .setType(Slot.TYPE_GUN_TURRET)
     )
+    .setMass(2.5)
     .setId('c4148d8b-d1f0-4a51-96c8-7fa28c767813')
     .setName('Spaceship - 2'),
   new Spaceship()
@@ -226,6 +228,7 @@ export const spaceship = [
       new Slot()
         .setType(Slot.TYPE_GUN_TURRET)
     )
+    .setMass(3)
     .setId('4cfb2c5e-475d-4113-ad7e-929e84d41b60')
     .setName('Spaceship - 3')
 ]

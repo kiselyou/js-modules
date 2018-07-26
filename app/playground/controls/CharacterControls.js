@@ -9,6 +9,8 @@ import Model from '@app/playground/controls/models/Model'
 import Slot from '@entity/particles-spaceship/Slot'
 import ModelTarget from './models/charge/ModelTarget'
 import TooltipShot from '@app/playground/decoration/html/TooltipShot'
+import ModelStation from "@app/playground/controls/models/station/ModelStation";
+import ModelAsteroid from "@app/playground/controls/models/asteroid/ModelAsteroid";
 
 class CharacterControls extends ModelSpaceship {
   /**
@@ -309,6 +311,41 @@ class CharacterControls extends ModelSpaceship {
         callback(slot, tooltip)
       }
     }
+    return this
+  }
+
+  /**
+   *
+   * @returns {CharacterControls}
+   */
+  initCollideEvent() {
+    this.addEventListener('collide', (e) => {
+      const kBase = 200;
+      const engine = this.spaceship.getEngine()
+      const v1 = engine.speed
+      const m1 = this.spaceship.mass;
+      const kl1 = this.spaceship.coefficientReduceDomage;
+      const kh1 = this.spaceship.coefficientIncraceDomage;
+
+
+      const reference = e.body.parent.reference
+      const m2 = 2000
+      const v2 = 1
+      const kl2 = reference.coefficientReduceDomage;
+      const kh2 = reference.coefficientIncraceDomage;
+
+      const d1 = kBase * (m2 * ((v1 + v2) * (v1 + v2))) / 2 * (kh2 - kl1);
+      const d2 = kBase * (m1 * ((v1 + v2) * (v1 + v2))) / 2 * (kh1 - kl2);
+
+      console.log(v1, m1, kl1, kh1)
+      console.log(v2, m2, kl2, kh2)
+console.log(d1, d2)
+
+      console.log(e.body.parent.reference)
+      console.log(e.contact)
+      console.log(e.target.parent.reference)
+
+    })
     return this
   }
 }

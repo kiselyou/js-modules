@@ -33,7 +33,7 @@ class ModelSpaceship extends Player {
      *
      * @type {Model}
      */
-    this.model = new Model(5)
+    this.model = new Model()
 
     /**
      *
@@ -148,10 +148,21 @@ class ModelSpaceship extends Player {
   buildModel() {
     const shell = this.spaceship.getShell()
     const model = this.loader.getModel(shell.modelKey)
-    this.model.build(model, this.id)
+    this.model.build(model, this.id, this.spaceship.mass)
     this.model.position.copy(this.position)
     this.model.boxBody.position.copy(this.position)
     this.model.setReference(this.spaceship)
+    return this
+  }
+
+  /**
+   *
+   * @param {string} event - possible values 'collide'
+   * @param {Function} callback
+   * @returns {ModelSpaceship}
+   */
+  addEventListener(event, callback) {
+    this.model.boxBody.addEventListener(event, callback);
     return this
   }
 

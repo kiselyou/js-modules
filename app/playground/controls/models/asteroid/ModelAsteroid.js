@@ -18,7 +18,7 @@ class ModelAsteroid extends Asteroid {
      *
      * @type {Model}
      */
-    this.model = new Model(0)
+    this.model = new Model()
   }
 
   /**

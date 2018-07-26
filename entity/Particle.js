@@ -130,7 +130,7 @@ class Particle {
   /**
    *
    * @param {Object} data
-   * @returns {Engine}
+   * @returns {Particle}
    */
   setSwapInfo(data) {
     for (const property of this.swapProperties) {

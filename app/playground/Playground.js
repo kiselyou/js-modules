@@ -182,7 +182,10 @@ class Playground {
      */
     this.tooltip = new Tooltip(this)
 
-    this.cannonDebugRenderer = new CannonDebugRenderer( this.scene, this.world );
+    /**
+     * @type {CannonDebugRenderer}
+     */
+    this.cannonDebugRenderer = new CannonDebugRenderer(this.scene, this.world)
   }
 
   /**
@@ -190,7 +193,6 @@ class Playground {
    * @returns {Playground}
    */
   addModelsToScene() {
-
     this.scene.add(this.character.model)
     this.world.addBody(this.character.model.boxBody);
 
@@ -212,28 +214,18 @@ class Playground {
       this.world.addBody(asteroid.model.boxBody)
     }
 
-
-    var groundMaterial = new CANNON.Material("groundMaterial");
-    var groundShape = new CANNON.Plane();
-    var groundBody = new CANNON.Body({ mass: 0, material: groundMaterial });
-    groundBody.addShape(groundShape);
+    const groundMaterial = new CANNON.Material('groundMaterial')
+    const groundShape = new CANNON.Plane()
+    const groundBody = new CANNON.Body({ mass: 0, material: groundMaterial })
+    groundBody.addShape(groundShape)
     groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), - Math.PI / 2)
-    this.world.addBody(groundBody);
+    this.world.addBody(groundBody)
 
-    // const groundShape = new CANNON.Plane()
-    // const groundBody = new CANNON.Body({ mass: 0, groundShape });
-    // groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), - Math.PI / 2)
-    // this.world.addBody(groundBody);
-
-    //
-    //
-    const geometry = new PlaneGeometry( 10000, 10000, 50, 50 );
-    // geometry.applyMatrix( new Matrix4().makeRotationX( - Math.PI / 2 ) );
-    const material = new MeshLambertMaterial( { color: 0x777777, transparent: true, opacity: 0.1 } );
-    const mesh = new Mesh( geometry, material );
+    const geometry = new PlaneGeometry( 10000, 10000, 50, 50 )
+    const material = new MeshLambertMaterial( { color: 0x777777, transparent: true, opacity: 0.1 } )
+    const mesh = new Mesh( geometry, material )
     mesh.quaternion.setFromAxisAngle(new Vector3(1, 0, 0), - Math.PI / 2)
-    this.scene.add( mesh );
-
+    this.scene.add(mesh)
 
     return this
   }
@@ -261,6 +253,8 @@ class Playground {
           .updateCore()
           .afterStart()
           .buildPanel(rootContainerId)
+
+        this.character.initCollideEvent()
       })
 
     return this

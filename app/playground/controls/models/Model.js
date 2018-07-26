@@ -1,9 +1,9 @@
-import {Group, Object3D, Mesh, CubeGeometry, MeshBasicMaterial, Vector3, Quaternion} from 'three'
+import { Group, Object3D, Mesh, CubeGeometry, MeshBasicMaterial, Vector3, SphereGeometry } from 'three'
 import DetectObject3D from '@helper/DetectObject3D'
 import CANNON from 'cannon'
 
 class Model extends Mesh {
-  constructor(mass) {
+  constructor() {
     super()
 
     /**
@@ -28,9 +28,8 @@ class Model extends Mesh {
      *
      * @type {CANNON.Body}
      */
-    this.boxBody = new CANNON.Body({
-      mass: mass
-    });
+    this.boxBody = new CANNON.Body({mass: 1});
+    this.boxBody.parent = this
 
     /**
      *
@@ -59,28 +58,34 @@ class Model extends Mesh {
    *
    * @param {Object3D|Group|Mesh} model
    * @param {string} name
+   * @param {number} [mass]
    * @returns {Model}
    */
-  build(model, name) {
+  build(model, name, mass = 0) {
     this.name = name
     this.add(model)
     this.add(this.decoration)
 
-    const size = DetectObject3D.size(model)
-    this.geometry = new CubeGeometry(size.x, size.y, size.z)
+    const maxSize = DetectObject3D.maxSize(model) * 1.6
+    // const size = DetectObject3D.size(model)
+    // this.geometry = new CubeGeometry(size.x, size.y, size.z)
+    this.geometry = new SphereGeometry(maxSize, 32, 32)
 
     this.material = new MeshBasicMaterial({
       color: 0xFFFFFF,
       transparent: true,
-      opacity: 0,
+      opacity: 0.2,
       depthWrite: false,
     })
 
-    let boxShape = new CANNON.Box(new CANNON.Vec3(size.x / 2, size.y, size.z / 2));
+    // let boxShape = new CANNON.Box(new CANNON.Vec3(size.x / 2, size.y, size.z / 2));
+
+    let boxShape = new CANNON.Sphere(maxSize);
     this.boxBody.linearDamping = 0.5;
+    this.boxBody.fixedRotation = true;
+    this.boxBody.mass = mass;
+    this.boxBody.updateMassProperties()
     this.boxBody.addShape(boxShape);
-
-
     this.enabled = true
     return this
   }

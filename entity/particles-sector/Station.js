@@ -1,6 +1,6 @@
-import Particle from './../Particle'
+import ModelParticle from './../ModelParticle'
 
-class Station extends Particle {
+class Station extends ModelParticle {
   constructor() {
     super()
 

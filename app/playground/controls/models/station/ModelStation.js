@@ -18,7 +18,7 @@ class ModelStation extends Station {
      *
      * @type {Model}
      */
-    this.model = new Model(0)
+    this.model = new Model()
   }
 
   /**

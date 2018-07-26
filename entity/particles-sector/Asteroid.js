@@ -1,8 +1,8 @@
-import Particle from './../Particle'
 import { Euler, Vector3 } from 'three'
+import ModelParticle from './../ModelParticle'
 import { KEY_ASTEROID_1 } from './../../app/constants'
 
-class Asteroid extends Particle {
+class Asteroid extends ModelParticle {
   constructor() {
     super()
 
