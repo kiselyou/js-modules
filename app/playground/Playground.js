@@ -254,7 +254,9 @@ class Playground {
           .afterStart()
           .buildPanel(rootContainerId)
 
-        this.character.initCollideEvent()
+        this.character
+          .swapAutoUpdate()
+          .initCollideEvent()
       })
 
     return this

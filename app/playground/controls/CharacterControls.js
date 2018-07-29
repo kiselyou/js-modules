@@ -174,6 +174,15 @@ class CharacterControls extends ModelSpaceship {
 
   /**
    *
+   * @returns {CharacterControls}
+   */
+  swapAutoUpdate() {
+    this.moveControls.swapAutoUpdate()
+    return this
+  }
+
+  /**
+   *
    * @param {number} delta
    * @returns {CharacterControls}
    */
@@ -365,7 +374,7 @@ class CharacterControls extends ModelSpaceship {
         this.userPanel.panelIndicator.update([2])
       })
 
-
+      this.moveControls.swapUpdate('collide')
     })
     return this
   }

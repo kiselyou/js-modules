@@ -7,6 +7,7 @@ export const BACKWARD = 'backward'
 export const LEFT = 'left'
 export const RIGHT = 'right'
 export const SLOWDOWN = 'slowdown'
+export const SWAP_AUTO_UPDATE = 'swap-auto-update'
 
 class MoveControls {
   /**
@@ -56,6 +57,18 @@ class MoveControls {
      * @type {Array.<moveActionCallback>}
      */
     this.moveEvents = []
+
+    /**
+     *
+     * @type {Vector3}
+     */
+    this.lastPosition = new Vector3()
+
+    /**
+     *
+     * @type {?|string}
+     */
+    this.swapIntervalId = null
   }
 
   /**
@@ -91,9 +104,7 @@ class MoveControls {
    */
   _listen(action) {
     if (this.moveActions[action] !== this.prevMoveActions[action]) {
-      for (const listener of this.moveEvents) {
-        listener(this.getMoveSwapInfo(), action)
-      }
+      this.swapUpdate(action)
     }
     return this
   }
@@ -277,6 +288,7 @@ class MoveControls {
 
     this.model.boxBody.quaternion.copy(this.model.quaternion)
     this.model.position.copy(this.model.boxBody.position)
+    //this.lastPosition.copy(this.model.boxBody.position)
 
     // this.model.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
     // this.model.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
@@ -290,6 +302,39 @@ class MoveControls {
    */
   exponentialEaseOut(k) {
     return k === 1 ? 1 : - Math.pow(2, - 10 * k) + 1
+  }
+
+  /**
+   * Swap info if speed is 0 but collide and ship is moving to some side.
+   *
+   * @returns {MoveControls}
+   */
+  swapAutoUpdate() {
+    if (this.swapIntervalId) {
+      clearInterval(this.swapIntervalId)
+    }
+
+    const engine = this.spaceship.getEngine()
+    this.lastPosition.copy(this.model.boxBody.position)
+    this.swapIntervalId = setInterval(() => {
+      if (engine.speed === 0 && !this.lastPosition.equals(this.model.boxBody.position)) {
+        this.lastPosition.copy(this.model.boxBody.position)
+        this.swapUpdate(SWAP_AUTO_UPDATE)
+      }
+    }, 1000 / 10)
+    return this
+  }
+
+  /**
+   *
+   * @param {string} action - constants of current class
+   * @returns {MoveControls}
+   */
+  swapUpdate(action) {
+    for (const listener of this.moveEvents) {
+      listener(this.getMoveSwapInfo(), action)
+    }
+    return this
   }
 
   /**
@@ -313,9 +358,12 @@ class MoveControls {
             const engine = this.spaceship.getEngine()
             engine.setSwapInfo(data[property])
             break
-          case 'position':
           case 'rotation':
             this.model[property].copy(data[property])
+            break
+          case 'position':
+            this.model[property].copy(data[property])
+            this.model.boxBody[property].copy(data[property])
             break
           default:
             this[property] = data[property]
@@ -337,7 +385,7 @@ class MoveControls {
       'prevMoveActions',
       'engine',
       'position',
-      'rotation'
+      'rotation',
     ]
     for (const property of properties) {
       switch (property) {
