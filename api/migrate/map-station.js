@@ -7,24 +7,28 @@ export const station = [
     .setDistanceToCenter(2400)
     .setAngleToCenter(Math.PI / 2.5)
     .setModelKey(CONST.KEY_STATION_1)
+    .setMass(2000)
     .setName('Солнечная станция')
     .setId('7b857a0d-b128-42cf-9471-d1053a100a2c'),
   new Station()
     .setDistanceToCenter(2200)
     .setAngleToCenter( - Math.PI / 4)
     .setModelKey(CONST.KEY_STATION_1)
+    .setMass(2000)
     .setName('Солнечная станция')
     .setId('d512cad4-d856-4559-8766-b811b998d39d'),
   new Station()
     .setDistanceToCenter(1600)
     .setAngleToCenter( - Math.PI / 6)
     .setModelKey(CONST.KEY_STATION_2)
+    .setMass(2000)
     .setName('Промышленная станция')
     .setId('47295f7e-2645-450a-8036-1445ee500a6b'),
   new Station()
     .setDistanceToCenter(3800)
     .setAngleToCenter(Math.PI / 4)
     .setModelKey(CONST.KEY_STATION_2)
+    .setMass(2000)
     .setName('Промышленная станция')
     .setId('8cfa0370-d177-45cb-adfa-bac1d0581d0a')
 ]

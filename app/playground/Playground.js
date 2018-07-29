@@ -151,8 +151,8 @@ class Playground {
      * @type {CANNON.World}
      */
     this.world = new CANNON.World();
-    this.world.iterations = 1;
-    this.world.gravity.set(0, -3000, 0);
+    this.world.iterations = 0.1;
+    this.world.gravity.set(0, 0, 0);
     this.world.broadphase = new CANNON.NaiveBroadphase();
 
     /**
@@ -221,11 +221,11 @@ class Playground {
     groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), - Math.PI / 2)
     this.world.addBody(groundBody)
 
-    const geometry = new PlaneGeometry( 10000, 10000, 50, 50 )
-    const material = new MeshLambertMaterial( { color: 0x777777, transparent: true, opacity: 0.1 } )
-    const mesh = new Mesh( geometry, material )
-    mesh.quaternion.setFromAxisAngle(new Vector3(1, 0, 0), - Math.PI / 2)
-    this.scene.add(mesh)
+    // const geometry = new PlaneGeometry( 10000, 10000, 50, 50 )
+    // const material = new MeshLambertMaterial( { color: 0x777777, transparent: true, opacity: 0.1 } )
+    // const mesh = new Mesh( geometry, material )
+    // mesh.quaternion.setFromAxisAngle(new Vector3(1, 0, 0), - Math.PI / 2)
+    // this.scene.add(mesh)
 
     return this
   }
@@ -399,7 +399,7 @@ class Playground {
     this.tooltip.update(delta)
 
 
-    this.cannonDebugRenderer.update();
+    // this.cannonDebugRenderer.update();
     this.renderer.render(this.scene, this.camera)
     return this
   }

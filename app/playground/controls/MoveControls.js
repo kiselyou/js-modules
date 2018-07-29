@@ -234,8 +234,6 @@ class MoveControls {
 
     const engine = this.spaceship.getEngine()
 
-    let sss = 0
-
     if (isLeft) {
       if (isBackward && engine.speed < 0) {
         engine.bodyOrientation -= delta * engine.angularSpeed

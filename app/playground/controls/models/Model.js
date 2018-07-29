@@ -74,7 +74,7 @@ class Model extends Mesh {
     this.material = new MeshBasicMaterial({
       color: 0xFFFFFF,
       transparent: true,
-      opacity: 0.2,
+      opacity: 0.02,
       depthWrite: false,
     })
 

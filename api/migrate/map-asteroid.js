@@ -41,6 +41,7 @@ for (let i = 0; i < 60; i++) {
     .setRotation(randomEuler(- Math.PI, Math.PI))
     .setPosition(randomVector3(-15000, 15000, [1]))
     .setScale(new Vector3(scale, scale, scale))
+    .setMass(2000)
     .setName(`Asteroid-${i + 1}`)
 
   let keyNumber = randInt(1, 4)

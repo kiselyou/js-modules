@@ -11,16 +11,18 @@ class ModelParticle extends Particle {
     this.mass = 0
 
     /**
+     * The value from 0 to 0.99
      *
      * @type {number}
      */
     this.coefficientReduceDomage = 0.5
 
     /**
+     * The value from 1 to n
      *
      * @type {number}
      */
-    this.coefficientIncraceDomage = 0.5
+    this.coefficientIncraceDomage = 2
   }
 
   /**
