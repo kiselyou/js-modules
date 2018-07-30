@@ -22,6 +22,7 @@ import Ajax from '@helper/ajax/Ajax'
 import Tooltip from './decoration/html/Tooltip'
 
 import DebugPanelShip from './debug/DebugPanelShip'
+import DebugCannonWorld from './debug/DebugCannonWorld'
 import StatusFPS from './debug/StatusFPS'
 
 import CANNON from 'cannon'
@@ -151,9 +152,18 @@ class Playground {
      * @type {CANNON.World}
      */
     this.world = new CANNON.World();
-    this.world.iterations = 0.1;
+    // this.world.iterations = 25;
     this.world.gravity.set(0, 0, 0);
     this.world.broadphase = new CANNON.NaiveBroadphase();
+
+    this.world.solver.iterations = 25;
+    this.world.defaultContactMaterial.contactEquationStiffness = 1e6;
+    this.world.defaultContactMaterial.contactEquationRelaxation = 1;
+
+    // this.world.solver.iterations = 10;
+    //
+    // this.world.defaultContactMaterial.contactEquationStiffness = 5e6;
+    // this.world.defaultContactMaterial.contactEquationRelaxation = 3;
 
     /**
      *
@@ -193,8 +203,8 @@ class Playground {
    * @returns {Playground}
    */
   addModelsToScene() {
-    this.scene.add(this.character.model)
-    this.world.addBody(this.character.model.boxBody);
+
+    const groundMaterial = new CANNON.Material('groundMaterial')
 
     const planets = this.sectorControls.planetsControls.elements
     for (const planet of planets) {
@@ -205,6 +215,7 @@ class Playground {
     const stations = this.sectorControls.stationControls.elements
     for (const station of stations) {
       this.scene.add(station.model)
+      station.model.boxBody.material = groundMaterial
       this.world.addBody(station.model.boxBody)
     }
 
@@ -214,18 +225,24 @@ class Playground {
       this.world.addBody(asteroid.model.boxBody)
     }
 
-    const groundMaterial = new CANNON.Material('groundMaterial')
-    const groundShape = new CANNON.Plane()
-    const groundBody = new CANNON.Body({ mass: 0, material: groundMaterial })
-    groundBody.addShape(groundShape)
-    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), - Math.PI / 2)
-    this.world.addBody(groundBody)
+
+    // const groundShape = new CANNON.Plane()
+    // const groundBody = new CANNON.Body({ mass: 0, material: groundMaterial })
+    // groundBody.addShape(groundShape)
+    // groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), - Math.PI / 2)
+    // this.world.addBody(groundBody)
 
     // const geometry = new PlaneGeometry( 10000, 10000, 50, 50 )
     // const material = new MeshLambertMaterial( { color: 0x777777, transparent: true, opacity: 0.1 } )
     // const mesh = new Mesh( geometry, material )
     // mesh.quaternion.setFromAxisAngle(new Vector3(1, 0, 0), - Math.PI / 2)
     // this.scene.add(mesh)
+
+
+    this.scene.add(this.character.model)
+    this.world.addBody(this.character.model.boxBody);
+    // const material = new CANNON.ContactMaterial(groundMaterial, this.character.model.boxBodyMaterial, { friction: 0.0, restitution: 0 });
+    // this.world.addContactMaterial(material)
 
     return this
   }
@@ -255,8 +272,8 @@ class Playground {
           .buildPanel(rootContainerId)
 
         this.character
+          .setCollideEvent()
           .swapAutoUpdate()
-          .initCollideEvent()
       })
 
     return this
@@ -279,6 +296,7 @@ class Playground {
    */
   afterStart() {
     new DebugPanelShip(this.character).build()
+    new DebugCannonWorld(this).build()
     this.status.build()
     return this
   }
@@ -401,7 +419,7 @@ class Playground {
     this.tooltip.update(delta)
 
 
-    // this.cannonDebugRenderer.update();
+    this.cannonDebugRenderer.update();
     this.renderer.render(this.scene, this.camera)
     return this
   }

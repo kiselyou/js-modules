@@ -159,6 +159,26 @@ class CharacterControls extends ModelSpaceship {
 
   /**
    *
+   * @returns {CharacterControls}
+   */
+  setCollideEvent() {
+    this.moveControls.onCollide((action) => {
+      switch (action) {
+        case 'shell':
+          // Обновить индикаторы брони корпуса
+          this.userPanel.panelIndicator.update([1])
+          break
+        case 'energy':
+          // Обновить индикатор енергии
+          this.userPanel.panelIndicator.update([2])
+          break
+      }
+    })
+    return this
+  }
+
+  /**
+   *
    * @param {number} delta
    * @returns {CharacterControls}
    */
@@ -320,62 +340,6 @@ class CharacterControls extends ModelSpaceship {
         callback(slot, tooltip)
       }
     }
-    return this
-  }
-
-  /**
-   *
-   * @returns {CharacterControls}
-   */
-  initCollideEvent() {
-    this.addEventListener('collide', (e) => {
-      const kBase = .0002;
-      const engine = this.spaceship.getEngine()
-      const v1 = engine.speed
-      const m1 = this.spaceship.mass;
-      const kl1 = this.spaceship.coefficientReduceDomage;
-      const kh1 = this.spaceship.coefficientIncraceDomage;
-
-
-      const reference = e.body.parent.reference
-      const v2 = 0
-      const m2 = reference.mass
-      const kl2 = reference.coefficientReduceDomage;
-      const kh2 = reference.coefficientIncraceDomage;
-
-      const d1 = kBase * (m2 * ((v1 + v2) * (v1 + v2))) / 2 * (kh2 - kl1);
-
-      console.log(`kBase = ${kBase};`)
-      console.log(`m2 = ${m2};`)
-      console.log(`v1 = ${v1};`)
-      console.log(`v2 = ${v2};`)
-      console.log(`kh2 = ${kh2};`)
-      console.log(`kl1 = ${kl1};`)
-      console.log(`d1 = ${d1};`)
-
-
-      // const d2 = kBase * (m1 * ((v1 + v2) * (v1 + v2))) / 2 * (kh1 - kl2);
-
-
-
-
-
-
-
-      const groupEnergy = this.spaceship.getGroupEnergy()
-      const shell = this.spaceship.getShell()
-      engine.lock()
-      shell.reduce(d1, () => {
-        console.log('shell reduce')
-        this.userPanel.panelIndicator.update([1])
-      })
-      groupEnergy.reduceShipEnergy(d1, () => {
-        console.log('energy reduce')
-        this.userPanel.panelIndicator.update([2])
-      })
-
-      this.moveControls.swapUpdate('collide')
-    })
     return this
   }
 }

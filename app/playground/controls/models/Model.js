@@ -78,14 +78,15 @@ class Model extends Mesh {
       depthWrite: false,
     })
 
+
     // let boxShape = new CANNON.Box(new CANNON.Vec3(size.x / 2, size.y, size.z / 2));
 
-    let boxShape = new CANNON.Sphere(maxSize);
-    this.boxBody.linearDamping = 0.5;
-    this.boxBody.fixedRotation = true;
-    this.boxBody.mass = mass;
+    let boxShape = new CANNON.Sphere(maxSize)
+    this.boxBody.linearDamping = 0
+    this.boxBody.fixedRotation = true
+    this.boxBody.mass = mass
     this.boxBody.updateMassProperties()
-    this.boxBody.addShape(boxShape);
+    this.boxBody.addShape(boxShape)
     this.enabled = true
     return this
   }

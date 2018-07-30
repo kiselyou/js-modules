@@ -1,6 +1,7 @@
 import { Math as TMath, Quaternion, Vector3 } from 'three'
 import Spaceship from '@entity/particles-spaceship/Spaceship'
 import Model from './models/Model'
+import CANNON from 'cannon'
 
 export const FORWARD = 'forward'
 export const BACKWARD = 'backward'
@@ -93,6 +94,101 @@ class MoveControls {
    */
   addMoveEventListener(callback) {
     this.moveEvents.push(callback)
+    return this
+  }
+
+  /**
+   * @param {string} action possible values 'shell'|'energy'
+   * @callback collideEvent
+   */
+
+  /**
+   *
+   * @param {collideEvent} callback
+   * @returns {MoveControls}
+   */
+  onCollide(callback) {
+    this.model.boxBody.addEventListener('collide', (event) => {
+      if (!event.body.parent) {
+        return
+      }
+      const kBase = .0002;
+      const engine = this.spaceship.getEngine()
+      const v1 = engine.speed
+      const m1 = this.spaceship.mass;
+      const kl1 = this.spaceship.coefficientReduceDomage;
+      const kh1 = this.spaceship.coefficientIncraceDomage;
+
+
+      const reference = event.body.parent.reference
+      const v2 = 0
+      const m2 = reference.mass
+      const kl2 = reference.coefficientReduceDomage;
+      const kh2 = reference.coefficientIncraceDomage;
+
+      const d1 = kBase * (m2 * ((v1 + v2) * (v1 + v2))) / 2 * (kh2 - kl1);
+
+      console.log(`kBase = ${kBase};`)
+      console.log(`m2 = ${m2};`)
+      console.log(`v1 = ${v1};`)
+      console.log(`v2 = ${v2};`)
+      console.log(`kh2 = ${kh2};`)
+      console.log(`kl1 = ${kl1};`)
+      console.log(`d1 = ${d1};`)
+
+
+      // console.log(this.model.boxBody.position, this.model.boxBody.previousPosition,
+      //   this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt)
+
+      // setTimeout(() => {
+      //   // console.log(this.model.boxBody.position, this.model.boxBody.previousPosition,
+      //   //   this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt)
+      //   engine.speed = - Math.abs(this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt)
+      // }, 1 / 120)
+
+      // const d2 = kBase * (m1 * ((v1 + v2) * (v1 + v2))) / 2 * (kh1 - kl2);
+
+
+
+
+
+      // var velocity = new CANNON.Vec3();
+      // worldForward.y = 0; // don't need up velocity, so clamp it
+      // worldForward.normalize();
+      // worldForward.scale(speed, velocity);
+
+
+      const groupEnergy = this.spaceship.getGroupEnergy()
+      const shell = this.spaceship.getShell()
+      engine.lock()
+
+
+      setTimeout(() => {
+        // console.log(
+        //   // this.model.boxBody.position,
+        //   // this.model.boxBody.previousPosition,
+        //   this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt,
+        //   this.model.boxBody.position.distanceTo(this.model.boxBody.previousPosition) / this.model.boxBody.world.dt
+        // )
+
+        const speed = this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt
+        engine.speed = - speed
+        console.log(speed)
+
+      }, 1 / 60)
+
+
+      shell.reduce(d1, () => {
+        console.log('shell reduce ---')
+        callback('shell')
+      })
+      groupEnergy.reduceShipEnergy(d1, () => {
+        console.log('energy reduce ---')
+        callback('energy')
+      })
+
+      this.swapUpdate('collide')
+    });
     return this
   }
 
@@ -284,15 +380,22 @@ class MoveControls {
     let forwardDelta = engine.speed * delta
     this.model.boxBody.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
     this.model.boxBody.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
-    this.model.boxBody.position.y = 0
+    // this.model.boxBody.position.y = 0
 
-    this.model.boxBody.quaternion.copy(this.model.quaternion)
+    this.model.boxBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), engine.bodyOrientation)
+
+    this.model.quaternion.copy(this.model.boxBody.quaternion)
     this.model.position.copy(this.model.boxBody.position)
-    //this.lastPosition.copy(this.model.boxBody.position)
+
+    if (engine.speed > 0 || this.moveActions[SLOWDOWN]) {
+      this.model.boxBody.velocity.set(0, 0, 0);
+    }
+
+    // this.model.boxBody.velocity.set(Math.sin(engine.bodyOrientation) * forwardDelta, 0, Math.cos(engine.bodyOrientation) * forwardDelta);
 
     // this.model.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
     // this.model.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
-    this.model.rotation.y = engine.bodyOrientation
+    // this.model.rotation.y = engine.bodyOrientation
   }
 
   /**

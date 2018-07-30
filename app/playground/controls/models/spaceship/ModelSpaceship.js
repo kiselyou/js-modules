@@ -157,17 +157,6 @@ class ModelSpaceship extends Player {
 
   /**
    *
-   * @param {string} event - possible values 'collide'
-   * @param {Function} callback
-   * @returns {ModelSpaceship}
-   */
-  addEventListener(event, callback) {
-    this.model.boxBody.addEventListener(event, callback);
-    return this
-  }
-
-  /**
-   *
    * @returns {ModelSpaceship}
    */
   removeModel() {

@@ -132,8 +132,6 @@ class DebugPanelShip {
           }
         })
     }
-
-    this.debug.open()
   }
 }
 
