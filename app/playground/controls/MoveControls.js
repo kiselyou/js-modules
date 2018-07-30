@@ -160,23 +160,14 @@ class MoveControls {
 
       const groupEnergy = this.spaceship.getGroupEnergy()
       const shell = this.spaceship.getShell()
-      engine.lock()
 
 
       setTimeout(() => {
-        // console.log(
-        //   // this.model.boxBody.position,
-        //   // this.model.boxBody.previousPosition,
-        //   this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt,
-        //   this.model.boxBody.position.distanceTo(this.model.boxBody.previousPosition) / this.model.boxBody.world.dt
-        // )
 
         const speed = this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt
         engine.speed = - speed
-        console.log(speed)
 
       }, 1 / 60)
-
 
       shell.reduce(d1, () => {
         console.log('shell reduce ---')

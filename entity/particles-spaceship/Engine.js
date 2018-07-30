@@ -71,46 +71,6 @@ class Engine extends Particle {
      * @type {string|?}
      */
     this.raceId = null
-
-    /**
-     *
-     * @type {boolean}
-     */
-    this.lockStatus = false
-
-    /**
-     * Default is 2 sec.
-     *
-     * @type {number}
-     */
-    this.lockTime = 2000
-  }
-
-  /**
-   *
-   * @param {number} value
-   * @returns {Engine}
-   */
-  setLockTime(value) {
-    this.lockTime = value
-    return this
-  }
-
-  /**
-   * @returns {Engine}
-   */
-  lock() {
-    this.speed = 0
-    this.lockStatus = true
-    return this
-  }
-
-  /**
-   * @returns {Engine}
-   */
-  unlock() {
-    this.lockStatus = false
-    return this
   }
 
   /**
