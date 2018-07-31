@@ -70,6 +70,18 @@ class MoveControls {
      * @type {?|string}
      */
     this.swapIntervalId = null
+
+    /**
+     *
+     * @type {Vector3}
+     */
+    this.velocity = new Vector3(0, 0, 0)
+
+    /**
+     *
+     * @type {Vector3}
+     */
+    this.vectorTmp = new Vector3(0, 1, 0)
   }
 
   /**
@@ -152,6 +164,7 @@ class MoveControls {
 
 
 
+
       // var velocity = new CANNON.Vec3();
       // worldForward.y = 0; // don't need up velocity, so clamp it
       // worldForward.normalize();
@@ -165,7 +178,11 @@ class MoveControls {
       setTimeout(() => {
 
         const speed = this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt
-        engine.speed = - speed
+
+        console.log(event, speed)
+
+        // engine.speed = - speed
+        engine.speed = 0
 
       }, 1 / 60)
 
@@ -325,6 +342,9 @@ class MoveControls {
    * @returns {void}
    */
   update(delta) {
+    this.model.updateModel()
+
+
     const isLeft = this.moveActions[LEFT]
     const isRight = this.moveActions[RIGHT]
     const isForward = this.moveActions[FORWARD]
@@ -369,14 +389,19 @@ class MoveControls {
     this.updateIncline(engine)
 
     let forwardDelta = engine.speed * delta
-    this.model.boxBody.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
-    this.model.boxBody.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
+
+    this.velocity.x = Math.sin(engine.bodyOrientation) * forwardDelta
+    this.velocity.z = Math.cos(engine.bodyOrientation) * forwardDelta
+
+    this.model.position.add(this.velocity)
+    // this.model.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
+    // this.model.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
     // this.model.boxBody.position.y = 0
 
-    this.model.boxBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), engine.bodyOrientation)
+    this.model.quaternion.setFromAxisAngle(this.vectorTmp, engine.bodyOrientation)
 
-    this.model.quaternion.copy(this.model.boxBody.quaternion)
-    this.model.position.copy(this.model.boxBody.position)
+    // this.model.quaternion.copy(this.model.boxBody.quaternion)
+    // this.model.position.copy(this.model.boxBody.position)
 
     if (engine.speed > 0 || this.moveActions[SLOWDOWN]) {
       this.model.boxBody.velocity.set(0, 0, 0);
@@ -387,6 +412,8 @@ class MoveControls {
     // this.model.position.x += Math.sin(engine.bodyOrientation) * forwardDelta
     // this.model.position.z += Math.cos(engine.bodyOrientation) * forwardDelta
     // this.model.rotation.y = engine.bodyOrientation
+
+    this.model.updateBody()
   }
 
   /**

@@ -33,6 +33,12 @@ class Model extends Mesh {
 
     /**
      *
+     * @type {CANNON.Material}
+     */
+    this.boxBodyMaterial = new CANNON.Material();
+
+    /**
+     *
      * @type {Vector3}
      */
     this.size = new Vector3()
@@ -81,10 +87,13 @@ class Model extends Mesh {
 
     // let boxShape = new CANNON.Box(new CANNON.Vec3(size.x / 2, size.y, size.z / 2));
 
+    // console.log(this.boxBodyMaterial)
+
     let boxShape = new CANNON.Sphere(maxSize)
-    this.boxBody.linearDamping = 0
-    this.boxBody.fixedRotation = true
+    this.boxBody.linearDamping = 0.001
+    this.boxBody.fixedRotation = false
     this.boxBody.mass = mass
+    this.boxBody.material = this.boxBodyMaterial
     this.boxBody.updateMassProperties()
     this.boxBody.addShape(boxShape)
     this.enabled = true
@@ -95,9 +104,22 @@ class Model extends Mesh {
    *
    * @returns {Model}
    */
+  updateBody() {
+    if (this.enabled) {
+      this.boxBody.position.copy(this.position)
+      this.boxBody.quaternion.copy(this.quaternion)
+    }
+    return this
+  }
+
+  /**
+   *
+   * @returns {Model}
+   */
   updateModel() {
     if (this.enabled) {
       this.position.copy(this.boxBody.position)
+      this.quaternion.copy(this.boxBody.quaternion)
     }
     return this
   }

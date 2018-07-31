@@ -157,8 +157,8 @@ class Playground {
     this.world.broadphase = new CANNON.NaiveBroadphase();
 
     this.world.solver.iterations = 25;
-    this.world.defaultContactMaterial.contactEquationStiffness = 1e6;
-    this.world.defaultContactMaterial.contactEquationRelaxation = 1;
+    this.world.defaultContactMaterial.contactEquationStiffness = 5e6;
+    this.world.defaultContactMaterial.contactEquationRelaxation = 10;
 
     // this.world.solver.iterations = 10;
     //
