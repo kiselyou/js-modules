@@ -5,7 +5,8 @@ import {
   Clock,
   MOUSE,
   PCFSoftShadowMap, Math as tMath, Vector3, Vector2,
-  PlaneGeometry, Matrix4, MeshLambertMaterial, Mesh
+  PlaneGeometry, Matrix4, MeshLambertMaterial, Mesh,
+  AxesHelper
 } from 'three'
 
 import SpaceParticleControls from './controls/SpaceParticleControls'
@@ -196,6 +197,20 @@ class Playground {
      * @type {CannonDebugRenderer}
      */
     this.cannonDebugRenderer = new CannonDebugRenderer(this.scene, this.world)
+
+    /**
+     *
+     * @type {AxesHelper}
+     */
+    this.axesHelperCenter = new AxesHelper(500)
+    this.scene.add(this.axesHelperCenter)
+
+    /**
+     *
+     * @type {AxesHelper}
+     */
+    this.axesHelper = new AxesHelper(100)
+    this.scene.add(this.axesHelper)
   }
 
   /**
@@ -408,6 +423,8 @@ class Playground {
       .update(delta)
       .updatePanel(delta)
       .updateTooltipTarget(delta)
+
+    this.axesHelper.position.copy(this.character.model.position)
 
     for (const player of this.playersControls) {
       player.update(delta)

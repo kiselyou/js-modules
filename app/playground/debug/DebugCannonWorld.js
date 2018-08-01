@@ -31,11 +31,18 @@ class DebugCannonWorld {
       .addFolder('Body')
       .add(this.playground.character.model.boxBody, 'mass', 'Mass', 0, 1000)
       .add(this.playground.character.model.boxBody, 'linearDamping', 'Linear Damping', 0, 1)
+      .add(this.playground.character.model.boxBody, 'boundingRadius', 'Bounding Radius', 0, 1000)
       .addFolder('Body Velocity')
       .listenFields(true)
       .add(this.playground.character.model.boxBody.velocity, 'x', 'X')
       .add(this.playground.character.model.boxBody.velocity, 'y', 'Y')
       .add(this.playground.character.model.boxBody.velocity, 'z', 'Z')
+      .listenFields(false)
+      .addFolder('Body position')
+      .listenFields(true)
+      .add(this.playground.character.model.boxBody.position, 'x', 'X')
+      .add(this.playground.character.model.boxBody.position, 'y', 'Y')
+      .add(this.playground.character.model.boxBody.position, 'z', 'Z')
       .listenFields(false)
       .addEventOnChange((value, name) => {
         switch (name) {

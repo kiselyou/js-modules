@@ -179,7 +179,7 @@ class MoveControls {
 
         const speed = this.model.boxBody.previousPosition.distanceTo(this.model.boxBody.position) / this.model.boxBody.world.dt
 
-        console.log(event, speed)
+        console.log(- speed)
 
         // engine.speed = - speed
         engine.speed = 0
